@@ -9,7 +9,7 @@
 | [Shreya Agrawal]    | [sagrawa2] | [@shreyaagrawal30] |
 | [Brian Tang]        | [brtang]   | [@koalaztang] |
 | [Faiaz Bin Nesar]   | [faiazbin] | [@FaiazBN] |
-| [Full Name]         | [CCID]     | [@username] |
+| [Bashir Bello]      | [babello]     | [@bellonaut] |
 
 ## Project Description
 
