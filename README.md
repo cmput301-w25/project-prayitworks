@@ -1,15 +1,15 @@
-# CMPUT 301 W25 - Team [Team Name]
+# CMPUT 301 W25 - Team [PrayItWorks!]
 
 ## Team Members
 
-| Name        | CCID   | GitHub Username |
-| ----------- | ------ | --------------- |
-| [Full Name] | [CCID] | [@username]     |
-| [Full Name] | [CCID] | [@username]     |
-| [Full Name] | [CCID] | [@username]     |
-| [Full Name] | [CCID] | [@username]     |
-| [Full Name] | [CCID] | [@username]     |
-| [Full Name] | [CCID] | [@username]     |
+| Name                | CCID       | GitHub Username |
+|---------------------|------------| ------- |
+| [Mayank Khandelwal] | [mkhandel] | [@Executioner-Cs]     |
+| [Full Name]         | [CCID]     | [@username] |
+| [Full Name]         | [CCID]     | [@username] |
+| [Full Name]         | [CCID]     | [@username] |
+| [Full Name]         | [CCID]     | [@username] |
+| [Full Name]         | [CCID]     | [@username] |
 
 ## Project Description
 
