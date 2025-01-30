@@ -7,7 +7,7 @@
 | [Mayank Khandelwal] | [mkhandel] | [@Executioner-Cs]     |
 | [Riya Shah]         | [rvshah]     | [riyashahh] |
 | [Shreya Agrawal]    | [sagrawa2] | [@shreyaagrawal30] |
-| [Full Name]         | [CCID]     | [@username] |
+| [Brian Tang]        | [brtang]   | [@koalaztang] |
 | [Full Name]         | [CCID]     | [@username] |
 | [Full Name]         | [CCID]     | [@username] |
 
