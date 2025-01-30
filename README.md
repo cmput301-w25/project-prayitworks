@@ -6,7 +6,7 @@
 |---------------------|------------| ------- |
 | [Mayank Khandelwal] | [mkhandel] | [@Executioner-Cs]     |
 | [Riya Shah]         | [rvshah]     | [riyashahh] |
-| [Full Name]         | [CCID]     | [@username] |
+| [Shreya Agrawal]    | [sagrawa2] | [@shreyaagrawal30] |
 | [Full Name]         | [CCID]     | [@username] |
 | [Full Name]         | [CCID]     | [@username] |
 | [Full Name]         | [CCID]     | [@username] |
