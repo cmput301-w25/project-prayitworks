@@ -5,7 +5,7 @@
 | Name                | CCID       | GitHub Username |
 |---------------------|------------| ------- |
 | [Mayank Khandelwal] | [mkhandel] | [@Executioner-Cs]     |
-| [Full Name]         | [CCID]     | [@username] |
+| [Riya Shah]         | [rvshah]     | [riyashahh] |
 | [Full Name]         | [CCID]     | [@username] |
 | [Full Name]         | [CCID]     | [@username] |
 | [Full Name]         | [CCID]     | [@username] |
