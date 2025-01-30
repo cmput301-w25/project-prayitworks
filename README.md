@@ -8,7 +8,7 @@
 | [Riya Shah]         | [rvshah]     | [riyashahh] |
 | [Shreya Agrawal]    | [sagrawa2] | [@shreyaagrawal30] |
 | [Brian Tang]        | [brtang]   | [@koalaztang] |
-| [Full Name]         | [CCID]     | [@username] |
+| [Faiaz Bin Nesar]   | [faiazbin] | [@FaiazBN] |
 | [Full Name]         | [CCID]     | [@username] |
 
 ## Project Description
