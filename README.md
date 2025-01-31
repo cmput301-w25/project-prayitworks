@@ -5,7 +5,7 @@
 | Name                | CCID       | GitHub Username |
 |---------------------|------------| ------- |
 | [Mayank Khandelwal] | [mkhandel] | [@Executioner-Cs]     |
-| [Riya Shah]         | [rvshah]     | [riyashahh] |
+| [Riya Shah]         | [rvshah]     | [@riyashahh] |
 | [Shreya Agrawal]    | [sagrawa2] | [@shreyaagrawal30] |
 | [Brian Tang]        | [brtang]   | [@koalaztang] |
 | [Faiaz Bin Nesar]   | [faiazbin] | [@FaiazBN] |
