@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Moodology"
+rootProject.name = "Moodster"
 include(":app")
  

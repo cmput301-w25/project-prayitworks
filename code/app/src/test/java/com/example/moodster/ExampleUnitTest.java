@@ -1,4 +1,4 @@
-package com.example.moodology;
+package com.example.moodster;
 
 import org.junit.Test;
 
