@@ -1,0 +1,126 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="20dp">
+
+    <!-- Back Button (Top-Left Corner) -->
+    <ImageView
+        android:id="@+id/btn_back"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/back"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="1dp" />
+
+    <!-- Content Container (Rest of UI) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_below="@id/btn_back">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello! Register to get started"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="40dp" />
+
+        <!-- Name Input -->
+        <EditText
+            android:id="@+id/et_name"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Name"
+            android:background="@drawable/input_background"
+            android:padding="10dp"
+            android:textColorHint="#B0B0B0"
+            android:textColor="#000000"
+            android:gravity="center_vertical"
+            android:layout_marginTop="57dp" />
+
+        <!-- Email Input -->
+        <EditText
+            android:id="@+id/et_email"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Email"
+            android:background="@drawable/input_background"
+            android:padding="10dp"
+            android:textColorHint="#B0B0B0"
+            android:textColor="#000000"
+            android:gravity="center_vertical"
+            android:layout_marginTop="15dp" />
+
+        <!-- Password Input -->
+        <EditText
+            android:id="@+id/et_password"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Password"
+            android:background="@drawable/input_background"
+            android:padding="10dp"
+            android:layout_marginTop="15dp"
+            android:textColorHint="#B0B0B0"
+            android:textColor="#000000"
+            android:gravity="center_vertical"
+            android:inputType="textPassword" />
+
+        <!-- Confirm Password Input -->
+        <EditText
+            android:id="@+id/et_confirm_password"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Confirm Password"
+            android:background="@drawable/input_background"
+            android:padding="10dp"
+            android:layout_marginTop="15dp"
+            android:textColorHint="#B0B0B0"
+            android:textColor="#000000"
+            android:gravity="center_vertical"
+            android:inputType="textPassword" />
+
+        <!-- Extra Space Before Register Button -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="60dp" />
+
+        <!-- Register Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_register"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Register"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:backgroundTint="#000000"
+            android:cornerRadius="12dp"
+            android:elevation="4dp"
+            android:paddingVertical="10dp"
+            android:fontFamily="sans-serif-medium" />
+
+        <!-- Extra Space Below Register Button -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="150dp" />
+
+        <!-- Login Link -->
+        <TextView
+            android:id="@+id/tv_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Already have an account? Login Now"
+            android:textSize="16sp"
+            android:textColor="#6495ED"
+            android:layout_gravity="center_horizontal" />
+
+    </LinearLayout>
+</RelativeLayout>
