@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutMapMoodDetails"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_app_gradient"
+    android:padding="16dp"
+    tools:context=".ui.MapMoodDetailsActivity">
+
+    <!-- TOP-LEFT ICON (Mood Logo) -->
+    <ImageView
+        android:id="@+id/imageMoodLogo"
+        android:layout_width="109dp"
+        android:layout_height="87dp"
+        android:layout_marginTop="4dp"
+        android:contentDescription="Mood Logo"
+        android:src="@mipmap/ic_app_logo_foreground"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- TOP-RIGHT AVATAR -->
+    <ImageView
+        android:id="@+id/imageUserAvatar"
+        android:layout_width="99dp"
+        android:layout_height="105dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="4dp"
+        android:contentDescription="User Avatar"
+        android:src="@mipmap/ic_user_logo_foreground"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- OPTIONAL TOGGLE PILL (List / Map) -->
+    <LinearLayout
+        android:id="@+id/layoutToggleView"
+        android:layout_width="82dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginRight="12dp"
+        android:background="@drawable/bg_filter_bar_rounded"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textTitleMoodHistory">
+
+        <!-- LIST VIEW ICON (Fixed missing bracket) -->
+        <ImageView
+            android:id="@+id/iconListView"
+            android:layout_width="24dp"
+            android:layout_height="20dp"
+            android:layout_marginRight="12dp"
+            android:src="@drawable/ic_list_view" />
+
+        <!-- MAP VIEW ICON -->
+        <ImageView
+            android:id="@+id/iconMapView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_map_view" />
+    </LinearLayout>
+
+    <!-- SCREEN TITLE: "Mood History" -->
+    <TextView
+        android:id="@+id/textTitleMoodHistory"
+        android:layout_width="137dp"
+        android:layout_height="43dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="44dp"
+        android:gravity="center_vertical"
+        android:text="Mood History"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintHorizontal_bias="0.213"
+        app:layout_constraintLeft_toRightOf="@+id/imageMoodLogo"
+        app:layout_constraintRight_toLeftOf="@+id/imageUserAvatar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- MOOD & DATE/TIME PILL ROW -->
+    <LinearLayout
+        android:id="@+id/layoutMoodDateTime"
+        android:layout_width="366dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textTitleMoodHistory">
+
+        <!-- MOOD PILL -->
+        <LinearLayout
+            android:id="@+id/layoutMoodPill"
+            android:layout_width="170dp"
+            android:layout_height="39dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/bg_filter_bar"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/textMoodLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mood :"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <!-- Mood Emoji as Unicode text -->
+            <TextView
+                android:id="@+id/textMoodEmoji"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:text="😁"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <!-- DATE/TIME PILL -->
+        <LinearLayout
+            android:id="@+id/layoutDateTimePill"
+            android:layout_width="179dp"
+            android:layout_height="39dp"
+            android:background="@drawable/bg_filter_bar"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/textMoodDateTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="02/13/2025   16:00"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- MAP CONTAINER -->
+    <FrameLayout
+        android:id="@+id/layoutMapContainer"
+        android:layout_width="364dp"
+        android:layout_height="350dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_filter_bar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutMoodDateTime">
+
+        <!-- Map Image -->
+        <ImageView
+            android:id="@+id/imageMap"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_map_example" />
+
+        <!-- Centered TextView for the Pin Emoji -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="📍"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/textMapPin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:translationX="25dp"
+            android:translationY="-10dp"
+            android:text="😀"
+            android:textSize="20sp" />
+
+    </FrameLayout>
+
+    <!-- ACTION BUTTONS: DELETE & EDIT -->
+    <LinearLayout
+        android:id="@+id/layoutActions"
+        android:layout_width="366dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutMapContainer">
+
+        <TextView
+            android:id="@+id/buttonDelete"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginRight="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_delete_button"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="Delete"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/buttonEdit"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_edit_button"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="Edit"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

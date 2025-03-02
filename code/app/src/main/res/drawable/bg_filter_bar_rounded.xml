@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/bg_rounded_muted_forest_green.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Your chosen muted forest-green color -->
+    <solid android:color="#768D76" />
+
+    <!-- Rounded corners; adjust if you want a sharper or more rounded edge -->
+    <corners android:radius="40dp" />
+
+    <!-- Optional: specify a fixed size if desired; remove or adjust if you want it to scale automatically -->
+    <size
+        android:width="200dp"
+        android:height="56dp" />
+
+</shape>

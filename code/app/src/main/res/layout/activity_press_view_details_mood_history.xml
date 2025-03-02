@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutEditMoodDetails"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_app_gradient"
+    android:padding="16dp">
+
+    <!-- TITLE: "Mood History" (same as before) -->
+
+    <ImageView
+        android:id="@+id/imageMoodLogo"
+        android:layout_width="109dp"
+        android:layout_height="87dp"
+        android:layout_marginTop="4dp"
+        android:contentDescription="Mood Logo"
+        android:src="@mipmap/ic_app_logo_foreground"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageUserAvatar"
+        android:layout_width="99dp"
+        android:layout_height="105dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="4dp"
+        android:contentDescription="User Avatar"
+        android:src="@mipmap/ic_user_logo_foreground"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/layoutToggleView"
+        android:layout_width="82dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginRight="12dp"
+        android:background="@drawable/bg_filter_bar_rounded"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textTitleMoodHistory">
+
+        <!-- MAP VIEW ICON -->
+
+        <ImageView
+            android:id="@+id/iconListView"
+            android:layout_width="24dp"
+            android:layout_height="20dp"
+            android:layout_marginRight="12dp"
+            android:src="@drawable/ic_list_view"
+
+        <ImageView
+            android:id="@+id/iconMapView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_map_view" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textTitleMoodHistory"
+        android:layout_width="137dp"
+        android:layout_height="43dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="44dp"
+        android:gravity="center_vertical"
+        android:text="Mood History"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintHorizontal_bias="0.213"
+        app:layout_constraintLeft_toRightOf="@+id/imageMoodLogo"
+        app:layout_constraintRight_toLeftOf="@+id/imageUserAvatar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- WRAPPER LAYOUT to hold the two separate "pills" side by side -->
+    <LinearLayout
+        android:id="@+id/layoutMoodDateTime"
+        android:layout_width="366dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textTitleMoodHistory">
+
+        <!-- MOOD PILL -->
+        <LinearLayout
+            android:id="@+id/layoutMoodPill"
+            android:layout_width="170dp"
+            android:layout_height="39dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/bg_filter_bar"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/textMoodLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mood :"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+            <!-- Mood Emoji -->
+            <TextView
+                android:id="@+id/textMoodEmoji"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:text="😁"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <!-- DATE/TIME PILL -->
+        <LinearLayout
+            android:id="@+id/layoutDateTimePill"
+            android:layout_width="179dp"
+            android:layout_height="39dp"
+            android:background="@drawable/bg_filter_bar"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/textMoodDateTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="02/13/2025   16:00"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- REASON ROW -->
+    <LinearLayout
+        android:id="@+id/layoutReason"
+        android:layout_width="366dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_filter_bar"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutMoodDateTime">
+
+        <TextView
+            android:id="@+id/textReasonLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reason :"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/textReasonValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="passed my exam."
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
+
+    <!-- TRIGGER ROW -->
+    <LinearLayout
+        android:id="@+id/layoutTrigger"
+        android:layout_width="366dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_filter_bar"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutReason">
+
+        <TextView
+            android:id="@+id/textTriggerLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Trigger :"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/textTriggerValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="-"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
+
+    <!-- SOCIAL SITUATION ROW -->
+    <LinearLayout
+        android:id="@+id/layoutSocialSituation"
+        android:layout_width="366dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_filter_bar"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutTrigger">
+
+        <TextView
+            android:id="@+id/textSocialLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Social Situation :"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/textSocialValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="-"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
+
+    <!-- IMAGE (E.g., "I Passed My Exams!") -->
+    <LinearLayout
+        android:id="@+id/layoutMoodImage"
+        android:layout_width="364dp"
+        android:layout_height="163dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_filter_bar"
+        android:gravity="center"
+        android:padding="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutSocialSituation">
+
+        <ImageView
+            android:id="@+id/imageMoodPhoto"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:contentDescription="@string/mood_photo"
+            android:scaleType="centerCrop"
+            android:src="@drawable/i_passed_my_exams" />
+    </LinearLayout>
+
+    <!-- ACTION BUTTONS: DELETE & EDIT -->
+    <LinearLayout
+        android:id="@+id/layoutActions"
+        android:layout_width="366dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutMoodImage">
+
+        <TextView
+            android:id="@+id/buttonDelete"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginRight="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_delete_button"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="Delete"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/buttonEdit"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_edit_button"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="Edit"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

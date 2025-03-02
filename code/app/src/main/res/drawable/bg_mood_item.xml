@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Solid fill color -->
+    <solid android:color="#D3D3D3" />
+
+    <!-- Rounded corners -->
+    <corners android:radius="8dp" />
+
+    <!-- Optional: specify size if you want a fixed width/height
+         Remove or adjust these attributes to match your layout needs. -->
+    <size
+        android:width="200dp"
+        android:height="80dp" />
+
+    <!-- Optional: add an outline stroke if you like -->
+    <!--
+    <stroke
+        android:width="1dp"
+        android:color="#A0A0A0" />
+    -->
+</shape>

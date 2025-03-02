@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutNetworkMoods"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_app_gradient"
+    android:padding="16dp"
+    tools:context=".ui.NetworkMoodsActivity">
+
+    <!-- TOP-LEFT ICON (Mood Logo) -->
+    <ImageView
+        android:id="@+id/imageMoodLogo"
+        android:layout_width="109dp"
+        android:layout_height="82dp"
+        android:layout_marginTop="4dp"
+        android:contentDescription="Mood Logo"
+        android:src="@mipmap/ic_app_logo_foreground"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- TOP-RIGHT AVATAR -->
+    <ImageView
+        android:id="@+id/imageUserAvatar"
+        android:layout_width="97dp"
+        android:layout_height="93dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="8dp"
+        android:contentDescription="User Avatar"
+        android:src="@mipmap/ic_user_logo_foreground"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- SCREEN TITLE: "Network Moods" -->
+    <TextView
+        android:id="@+id/textTitleNetworkMoods"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="52dp"
+        android:gravity="center_vertical"
+        android:text="Network Moods"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintHorizontal_bias="0.38"
+        app:layout_constraintLeft_toRightOf="@+id/imageMoodLogo"
+        app:layout_constraintRight_toLeftOf="@+id/imageUserAvatar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- SEARCH BAR ROW: contains the search bar and QR code cell -->
+    <LinearLayout
+        android:id="@+id/layoutSearchBarRow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textTitleNetworkMoods">
+
+        <!-- SEARCH BAR (filter bar style) with search icon -->
+        <LinearLayout
+            android:id="@+id/layoutFilterBar"
+            android:layout_width="224dp"
+            android:layout_height="35dp"
+            android:background="@drawable/bg_filter_bar"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <!-- "Search by reason" placeholder on the left -->
+            <TextView
+                android:id="@+id/textSearchLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Search by reason..."
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+
+            <!-- Filter text/button in the middle-right -->
+            <ImageView
+                android:id="@+id/iconSearch"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:contentDescription="Search Icon"
+                android:src="@drawable/ic_search"
+                android:tint="@android:color/white" />
+        </LinearLayout>
+
+        <!-- QR CODE CELL: a cell with a QR code image -->
+        <LinearLayout
+            android:id="@+id/layoutToggleCell"
+            android:layout_width="66dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/bg_filter_bar_rounded"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp">
+
+            <ImageView
+                android:id="@+id/iconQrCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="QR Code"
+                android:src="@drawable/ic_friend_list"
+                android:tint="@android:color/white" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tabFriends"
+            android:layout_width="67dp"
+            android:layout_height="35dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/bg_filter_bar_rounded"
+            android:gravity="center"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="Filter"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- MAP CONTAINER REPLACING SCROLLVIEW -->
+
+    <FrameLayout
+        android:id="@+id/mapContainer"
+        android:layout_width="442dp"
+        android:layout_height="730dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="240dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutSearchBarRow"
+        app:layout_constraintVertical_bias="0.0">
+
+        <!-- Example: placeholder map image -->
+
+        <!-- MOOD PINS SCATTERED ON THE MAP -->
+
+
+        <ImageView
+            android:id="@+id/moodPin3"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="165dp"
+            android:contentDescription="Mood Pin 3"
+            android:elevation="9dp"
+            android:src="@drawable/ic_mood_pins"
+            android:tint="#768D76"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0" />
+
+        <ImageView
+            android:id="@+id/ic_mood_pin_2"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center|bottom"
+            android:layout_marginBottom="80dp"
+            android:elevation="2dp"
+            android:contentDescription="Mood Pin 2"
+            android:src="@drawable/ic_mood_pins"
+            android:tint="#EFE411" />
+
+        <!-- OVERLAY ADAPTER: Positioned above the map elements -->
+        <LinearLayout
+            android:id="@+id/layout_mood_request_item_1"
+            android:layout_width="305dp"
+            android:layout_height="86dp"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/bg_filter_bar_rounded"
+            android:elevation="8dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <!-- TOP ROW: Avatar, Name + Comment, Mood Emoji -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+
+                <!-- User Avatar -->
+                <ImageView
+                    android:id="@+id/imageUserAvatarItem1"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginRight="12dp"
+                    android:contentDescription="User Avatar"
+                    android:src="@drawable/ic_avatar_placeholder" />
+
+                <!-- Center Column: Name, Mood Comment -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textUserNameItem1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sonic the Hedgehog"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textMoodCommentItem1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Feeling accomplished after morning jog."
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <!-- Mood Emoji as Unicode (right) -->
+                <TextView
+                    android:id="@+id/textMoodEmojiItem1"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:contentDescription="Mood Emoji"
+                    android:gravity="center"
+                    android:text="😀"
+                    android:textSize="25sp" />
+            </LinearLayout>
+
+            <!-- BOTTOM ROW: Time, then Like & Comment icons -->
+            <LinearLayout
+                android:id="@+id/layoutActionsItem1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <!-- Time on the left -->
+                <TextView
+                    android:id="@+id/textMoodTimeItem1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Yesterday, 5:15 PM"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp" />
+
+                <!-- Spacer -->
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <!-- Icons container on the right -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/iconLikeItem1"
+                        android:layout_width="37dp"
+                        android:layout_height="32dp"
+                        android:layout_marginRight="12dp"
+                        android:contentDescription="Like"
+                        android:src="@drawable/ic_thumbs_up"
+                        android:tint="@android:color/white" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageMapPlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="Map Placeholder"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_map_example"
+            android:elevation="0dp"/>
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
