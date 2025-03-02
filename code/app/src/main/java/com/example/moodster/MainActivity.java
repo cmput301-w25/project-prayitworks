@@ -6,6 +6,10 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 
@@ -24,13 +28,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
     private MoodEventViewModel moodEventViewModel;
     private Spinner spinnerEmotionalState;
-    private EditText editTrigger, editSocialSituation;
+    private EditText editTrigger, editSocialSituation, editExplanation;
     private Button btnAddMood, btnViewMoods;
     private String selectedEmotionalState = ""; // Holds the selected state
+    private TextView explanationCharCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
         editSocialSituation = findViewById(R.id.editSocialSituation);
         btnAddMood = findViewById(R.id.btnAddMood);
         btnViewMoods = findViewById(R.id.btnViewMoods);
+        editExplanation = findViewById(R.id.editExplanation);
+        explanationCharCount = findViewById(R.id.textExplanationCount);
 
         // Set up Spinner (Dropdown)
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -67,6 +75,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Filter input field to 20 characters
+        editExplanation.setFilters(new InputFilter[] { new InputFilter.LengthFilter(20) });
+
+        // TextWatcher: Update character count display
+        editExplanation.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                explanationCharCount.setText(s.length() + "/20"); // update TextView to char count
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
         // Button: Add Mood Event
         btnAddMood.setOnClickListener(v -> {
             if (selectedEmotionalState.isEmpty()) {
@@ -76,8 +101,9 @@ public class MainActivity extends AppCompatActivity {
 
             String trigger = editTrigger.getText().toString().trim();
             String socialSituation = editSocialSituation.getText().toString().trim();
+            String explanation = editExplanation.getText().toString().trim();
 
-            moodEventViewModel.addMoodEvent(selectedEmotionalState, trigger, socialSituation);
+            moodEventViewModel.addMoodEvent(selectedEmotionalState, trigger, socialSituation, explanation);
             Log.d("MoodEvent", "New MoodEvent added: " + selectedEmotionalState);
         });
 
