@@ -5,6 +5,7 @@ import java.util.HashMap;
 public class MoodEventViewModel extends ViewModel {
     private final HashMap<Integer, MoodEvent> moodEvents = new HashMap<>();
     private int nextId = 1; // Unique ID counter
+    private static MoodEventViewModel instance; // Singleton instance
 
 
     public void addMoodEvent(String emotionalState, String trigger, String socialSituation, String explanation) {
@@ -18,5 +19,15 @@ public class MoodEventViewModel extends ViewModel {
     public HashMap<Integer, MoodEvent> getMoodEvents() {
         return moodEvents;
     }
+
+
+    public static MoodEventViewModel getInstance() {
+        if (instance == null) {
+            instance = new MoodEventViewModel();
+        }
+        return instance;
+    }
+
+    private MoodEventViewModel() {} // Private constructor to prevent direct instantiation
 
 }

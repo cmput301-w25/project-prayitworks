@@ -1,5 +1,6 @@
 package com.example.moodster;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Initialize ViewModel
-        moodEventViewModel = new ViewModelProvider(this).get(MoodEventViewModel.class);
+        moodEventViewModel = MoodEventViewModel.getInstance();
 
         // Find views
         spinnerEmotionalState = findViewById(R.id.spinnerEmotionalState);
@@ -109,7 +110,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Button: View Stored Mood Events
         btnViewMoods.setOnClickListener(v -> {
-            Log.d("MoodEvent", "All Mood Events: " + moodEventViewModel.getMoodEvents().values());
+            Intent intent = new Intent(MainActivity.this, ListViewActivity.class);
+            startActivity(intent);
         });
     }
 }
