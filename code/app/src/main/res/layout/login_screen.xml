@@ -1,0 +1,117 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="20dp">
+
+    <!-- Back Button (Top-Left Corner) -->
+    <ImageView
+        android:id="@+id/btn_back"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/back"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="1dp" />
+
+    <!-- Content Container (Rest of UI) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_below="@id/btn_back">
+
+        <!-- Welcome Text -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Welcome back!"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="40dp" />
+
+        <!-- Extra Space Below Welcome Text -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+
+        <!-- Email Input -->
+        <EditText
+            android:id="@+id/et_email"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Enter your email"
+            android:background="@drawable/input_background"
+            android:padding="10dp"
+            android:textColorHint="#B0B0B0"
+            android:textColor="#000000"
+            android:gravity="center_vertical" />
+
+        <!-- Password Input -->
+        <EditText
+            android:id="@+id/et_password"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Enter your password"
+            android:background="@drawable/input_background"
+            android:padding="10dp"
+            android:layout_marginTop="15dp"
+            android:textColorHint="#B0B0B0"
+            android:textColor="#000000"
+            android:gravity="center_vertical"
+            android:inputType="textPassword" />
+
+        <!-- Forgot Password -->
+        <TextView
+            android:id="@+id/tv_forgot_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Forgot Password?"
+            android:textSize="14sp"
+            android:textColor="#6495ED"
+            android:layout_gravity="end"
+            android:layout_marginTop="10dp" />
+
+        <!-- Extra Space Before Login Button -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="80dp" />
+
+        <!-- Login Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Login"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:backgroundTint="#000000"
+            android:cornerRadius="12dp"
+            android:elevation="4dp"
+            android:paddingVertical="10dp"
+            android:fontFamily="sans-serif-medium" />
+
+
+        <!-- Extra Space Below Login Button -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="240dp" />
+
+        <!-- Register Link -->
+        <TextView
+            android:id="@+id/tv_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Don’t have an account? Register Now"
+            android:textSize="15sp"
+            android:textColor="#6495ED"
+            android:layout_gravity="center_horizontal" />
+
+    </LinearLayout>
+
+</RelativeLayout>

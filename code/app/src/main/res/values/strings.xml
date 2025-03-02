@@ -1,4 +1,22 @@
 <resources>
+    <string name="terms_text">
+        1. Acceptance of Terms\n
+        By downloading, accessing, or using the Moodify app ("App"), you agree to be bound by these Terms and Conditions ("Terms"). If you do not agree to these Terms, you may not use the App.\n\n
+        2. Eligibility\n
+        You must be at least 18 years old to use the App. If you are under 18, you must have parental or guardian consent.\n\n
+        3. User Accounts\n
+        • You are responsible for maintaining the confidentiality of your account credentials.\n
+        • Any activity occurring under your account is your responsibility.\n
+        • Moodify reserves the right to suspend or terminate accounts at its discretion.\n\n
+        4. Use of the App\n
+        • The App is for personal, non-commercial use only.\n
+        • You agree not to misuse the App, including but not limited to hacking, distributing malware, or violating applicable laws.\n\n
+        5. Data and Privacy\n
+        • Moodify collects and processes personal data in accordance with its Privacy Policy.\n
+        • Your data may be used to improve App functionality and provide a personalized experience.\n
+    </string>
+    <string name="guest_text"><u>Continue as a guest</u></string>
+    <string name="guest_text_formatted"><![CDATA[<u>Continue as Guest</u>]]></string>
     <string name="app_name">Moodster</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->

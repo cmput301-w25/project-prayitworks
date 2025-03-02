@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:gravity="center">
+
+    <!-- App Logo - Bigger and Centered -->
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:src="@drawable/app_logo"
+        android:layout_centerInParent="true"
+        android:scaleType="fitCenter"
+        android:elevation="10dp" />
+
+    <!-- App Name - Cool Modern Font with Shadow -->
+    <TextView
+        android:id="@+id/app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Moodify"
+        android:textSize="48sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:fontFamily="sans-serif-condensed"
+        android:letterSpacing="0.1"
+        android:shadowColor="#666666"
+        android:shadowRadius="12"
+        android:shadowDx="4"
+        android:shadowDy="4"
+        android:layout_below="@id/logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp" />
+
+</RelativeLayout>

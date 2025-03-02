@@ -7,11 +7,14 @@ public class MoodEventViewModel extends ViewModel {
     private int nextId = 1; // Unique ID counter
 
 
-    public void addMoodEvent(String emotionalState, String trigger, String socialSituation) {
+    public void addMoodEvent(String emotionalState, String trigger, String socialSituation, String explanation) {
         long timestamp = System.currentTimeMillis(); // Take the current Time
-        MoodEvent moodEvent = new MoodEvent(nextId, emotionalState, timestamp, trigger, socialSituation);
+        MoodEvent moodEvent = new MoodEvent(nextId, emotionalState, timestamp, trigger, socialSituation, explanation);
         moodEvents.put(nextId, moodEvent);
         nextId++; // Increment ID for next event
+    }
+    public void addMoodEvent(MoodEvent moodEvent) {
+        moodEvents.put(moodEvent.getId(), moodEvent);
     }
 
 
