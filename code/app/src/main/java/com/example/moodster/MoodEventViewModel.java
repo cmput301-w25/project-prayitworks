@@ -13,6 +13,9 @@ public class MoodEventViewModel extends ViewModel {
         moodEvents.put(nextId, moodEvent);
         nextId++; // Increment ID for next event
     }
+    public void addMoodEvent(MoodEvent moodEvent) {
+        moodEvents.put(moodEvent.getId(), moodEvent);
+    }
 
 
     public HashMap<Integer, MoodEvent> getMoodEvents() {

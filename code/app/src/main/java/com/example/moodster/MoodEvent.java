@@ -1,8 +1,9 @@
 package com.example.moodster;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
-public class MoodEvent {
+public class MoodEvent implements Serializable {
     private final int id; // Unique ID
     private final String emotionalState; // Required
     private final long timestamp; // Stores date & time
@@ -14,7 +15,7 @@ public class MoodEvent {
     public static final List<String> VALID_EMOTIONAL_STATES = Arrays.asList(
             "Anger", "Confusion", "Disgust", "Fear", "Happiness", "Sadness", "Shame", "Surprise"
     );
-
+    // Constructor
     public MoodEvent(int id, String emotionalState, long timestamp, String trigger, String socialSituation, String explanation) {
         if (!VALID_EMOTIONAL_STATES.contains(emotionalState)) {
             throw new IllegalArgumentException("Invalid emotional state: " + emotionalState);

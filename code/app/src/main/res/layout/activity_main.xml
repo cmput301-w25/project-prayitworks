@@ -46,9 +46,10 @@
         android:layout_height="wrap_content"
         android:text="Add Mood Event"/>
 
-    <Button
-        android:id="@+id/btnViewMoods"
+
+
+    <ListView
+        android:id="@+id/moodListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="View Mood Events"/>
+        android:layout_height="wrap_content" />
 </LinearLayout>

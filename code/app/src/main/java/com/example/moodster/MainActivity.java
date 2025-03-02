@@ -1,5 +1,6 @@
 package com.example.moodster;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -27,8 +28,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private MoodEventViewModel moodEventViewModel;
@@ -38,10 +44,20 @@ public class MainActivity extends AppCompatActivity {
     private String selectedEmotionalState = ""; // Holds the selected state
     private TextView explanationCharCount;
 
+
+    private ListView moodListView;
+    private ArrayAdapter<String> moodListAdapter;
+    private List<MoodEvent> moodEventList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Creating the List for the moods
+        moodListView = findViewById(R.id.moodListView);
+        moodListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new ArrayList<>());
+        moodListView.setAdapter(moodListAdapter);
 
         // Initialize ViewModel
         moodEventViewModel = new ViewModelProvider(this).get(MoodEventViewModel.class);
@@ -51,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         editTrigger = findViewById(R.id.editTrigger);
         editSocialSituation = findViewById(R.id.editSocialSituation);
         btnAddMood = findViewById(R.id.btnAddMood);
-        btnViewMoods = findViewById(R.id.btnViewMoods);
+        //btnViewMoods = findViewById(R.id.btnViewMoods);
         editExplanation = findViewById(R.id.editExplanation);
         explanationCharCount = findViewById(R.id.textExplanationCount);
 
@@ -102,14 +118,28 @@ public class MainActivity extends AppCompatActivity {
             String trigger = editTrigger.getText().toString().trim();
             String socialSituation = editSocialSituation.getText().toString().trim();
             String explanation = editExplanation.getText().toString().trim();
+            int id = moodEventList.size();
+            long timestamp = System.currentTimeMillis();
 
-            moodEventViewModel.addMoodEvent(selectedEmotionalState, trigger, socialSituation, explanation);
-            Log.d("MoodEvent", "New MoodEvent added: " + selectedEmotionalState);
+            MoodEvent newMood = new MoodEvent(id, selectedEmotionalState, timestamp, trigger, socialSituation, explanation);
+            moodEventViewModel.addMoodEvent(newMood);
+            moodEventList.add(newMood);
+            moodListAdapter.add(selectedEmotionalState + " - " + new Date(timestamp));
+            Log.d("MoodEvent", "New MoodEvent added: " + newMood);
         });
 
-        // Button: View Stored Mood Events
-        btnViewMoods.setOnClickListener(v -> {
-            Log.d("MoodEvent", "All Mood Events: " + moodEventViewModel.getMoodEvents().values());
-        });
+        // ListView Item Click: View Mood Details
+
+        if (moodListView != null) {
+            moodListView.setOnItemClickListener((parent, view, position, id) -> {
+                MoodEvent selectedMood = moodEventList.get(position);
+                Intent intent = new Intent(MainActivity.this, MoodDetailsActivity.class);
+                intent.putExtra("mood", selectedMood);
+                startActivity(intent);
+                Log.d("MoodEvent", "Working!");
+            });
+        } else {
+            Log.e("MainActivity", "ListView is null! Check XML or findViewById()");
+        }
     }
 }
