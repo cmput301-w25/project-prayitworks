@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:padding="20dp">
+
+    <!-- App Logo -->
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        android:src="@drawable/app_logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"
+        android:elevation="10dp"
+        android:scaleType="fitCenter" />
+
+    <TextView
+        android:id="@+id/welcome_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome to Moodify"
+        android:textSize="24sp"
+        android:textColor="@color/black"
+        android:fontFamily="sans-serif-medium"
+        android:letterSpacing="0.06"
+        android:layout_below="@id/logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:shadowColor="#666666"
+        android:shadowRadius="8"
+        android:shadowDx="3"
+        android:shadowDy="3" />
+
+
+
+    <!-- Greyed-out Text (Frame 7) -->
+    <TextView
+        android:id="@+id/frame_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Frame 7"
+        android:textSize="18sp"
+        android:textColor="@color/light_gray"
+        android:layout_below="@id/welcome_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp" />
+
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/frame_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:backgroundTint="#bdf4fd"
+        android:alpha="0.8"
+        android:text="Login"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/register_button"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/login_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="#bdf4fd"
+        android:alpha="0.8"
+        android:text="Register"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+
+    <!-- Continue as a Guest Link -->
+    <TextView
+        android:id="@+id/guest_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/guest_text"
+        android:textSize="14sp"
+        android:textColor="#0088A8"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:textStyle="italic" />
+
+
+</RelativeLayout>

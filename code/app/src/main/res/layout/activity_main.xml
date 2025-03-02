@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <Spinner
+        android:id="@+id/spinnerEmotionalState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/editTrigger"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Trigger (Optional)"/>
+
+    <EditText
+        android:id="@+id/editSocialSituation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Social Situation (Optional)"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Why do you feel this way?" />
+
+    <EditText
+        android:id="@+id/editExplanation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Explanation (optional):" />
+    <TextView
+        android:id="@+id/textExplanationCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0/20"
+        android:layout_marginTop="4dp" />
+
+    <Button
+        android:id="@+id/btnAddMood"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Mood Event"/>
+
+
+
+    <ListView
+        android:id="@+id/moodListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>
