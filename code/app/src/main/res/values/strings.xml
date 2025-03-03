@@ -61,4 +61,9 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string-array name="social_situation_options">
+        <item>Alone</item>
+        <item>With someone</item>
+        <item>2 or more people</item>
+    </string-array>
 </resources>
