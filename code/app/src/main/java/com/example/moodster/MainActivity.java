@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         explanationCharCount = findViewById(R.id.textExplanationCount);
 
         /// SELECTING A MOOD!!!! START
+        // Explanation: Creating Spinner based on the valid emotional state, Setting the mood according to the selection
         // Set up Spinner (Dropdown)
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_item, MoodEvent.VALID_EMOTIONAL_STATES
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedEmotionalState = MoodEvent.VALID_EMOTIONAL_STATES.get(position);
+                //Log.d("Position", "Number: " + position);
             }
 
             @Override
@@ -115,6 +117,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         /// FILTERING BASED ON SELECTED MOOD!!!! START
+        // Explanation: Creating Spinner based on the valid emotional state, getting the item selected and passing it
+        // to the Filter Mood function
+
         // Set up filter spinner
         List<String> filterOptions = new ArrayList<>(MoodEvent.VALID_EMOTIONAL_STATES);
         filterOptions.add(0, "All Moods"); // Add an option to show all moods
@@ -132,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedFilter = filterOptions.get(position);
                 filterMoodList(selectedFilter);
+                //Log.d("Position", "Number: " + position);
             }
 
             @Override
