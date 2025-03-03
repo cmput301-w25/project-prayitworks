@@ -13,7 +13,7 @@ public class MoodEvent implements Serializable {
 
     // Predefined list of valid emotional states
     public static final List<String> VALID_EMOTIONAL_STATES = Arrays.asList(
-            "Anger", "Confusion", "Disgust", "Fear", "Happiness", "Sadness", "Shame", "Surprise"
+            "Anger 😡", "Confusion 😕", "Disgust 🤢", "Fear 😨", "Happiness 😁", "Sadness 😓", "Shame 😶‍🌫️", "Surprise 😮"
     );
     // Constructor
     public MoodEvent(int id, String emotionalState, long timestamp, String trigger, String socialSituation, String explanation) {

@@ -38,7 +38,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private MoodEventViewModel moodEventViewModel;
-    private Spinner spinnerEmotionalState;
+    private Spinner spinnerEmotionalState, spinnerFilter;
+    ;
     private EditText editTrigger, editSocialSituation, editExplanation;
     private Button btnAddMood, btnViewMoods;
     private String selectedEmotionalState = ""; // Holds the selected state
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Find views
         spinnerEmotionalState = findViewById(R.id.spinnerEmotionalState);
+        spinnerFilter = findViewById(R.id.spinnerFilterEmotionalState);
         editTrigger = findViewById(R.id.editTrigger);
         editSocialSituation = findViewById(R.id.editSocialSituation);
         btnAddMood = findViewById(R.id.btnAddMood);
@@ -71,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         editExplanation = findViewById(R.id.editExplanation);
         explanationCharCount = findViewById(R.id.textExplanationCount);
 
+        /// SELECTING A MOOD!!!! START
         // Set up Spinner (Dropdown)
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_item, MoodEvent.VALID_EMOTIONAL_STATES
@@ -90,14 +93,16 @@ public class MainActivity extends AppCompatActivity {
                 selectedEmotionalState = ""; // Reset if nothing is selected
             }
         });
+        /// SELECTING A MOOD!!!! END
 
         // Filter input field to 20 characters
-        editExplanation.setFilters(new InputFilter[] { new InputFilter.LengthFilter(20) });
+        editExplanation.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
 
         // TextWatcher: Update character count display
         editExplanation.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -105,9 +110,41 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
 
+        /// FILTERING BASED ON SELECTED MOOD!!!! START
+        // Set up filter spinner
+        List<String> filterOptions = new ArrayList<>(MoodEvent.VALID_EMOTIONAL_STATES);
+        filterOptions.add(0, "All Moods"); // Add an option to show all moods
+
+        ArrayAdapter<String> filterAdapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_spinner_item, filterOptions
+        );
+
+        filterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerFilter.setAdapter(filterAdapter);
+
+        // Filter mood list based on selected filter
+        spinnerFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedFilter = filterOptions.get(position);
+                filterMoodList(selectedFilter);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+        /// FILTERING BASED ON SELECTED MOOD!!!! END
+
+        // Filter input field to 20 characters
+        editExplanation.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
+
+
+        /// ADDING EMOTIONS/ MAKING EMOTIONS!! START
         // Button: Add Mood Event
         btnAddMood.setOnClickListener(v -> {
             if (selectedEmotionalState.isEmpty()) {
@@ -122,12 +159,15 @@ public class MainActivity extends AppCompatActivity {
             long timestamp = System.currentTimeMillis();
 
             MoodEvent newMood = new MoodEvent(id, selectedEmotionalState, timestamp, trigger, socialSituation, explanation);
-            moodEventViewModel.addMoodEvent(newMood);
+            moodEventViewModel.addMoodEvent(newMood); // Adding to the Hashmap
             moodEventList.add(newMood);
             moodListAdapter.add(selectedEmotionalState + " - " + new Date(timestamp));
             Log.d("MoodEvent", "New MoodEvent added: " + newMood);
         });
+        /// ADDING EMOTIONS/ MAKING EMOTIONS!! END
 
+
+        /// LIST OF ADDED EMOTIONS!! START
         // ListView Item Click: View Mood Details
 
         if (moodListView != null) {
@@ -140,6 +180,17 @@ public class MainActivity extends AppCompatActivity {
             });
         } else {
             Log.e("MainActivity", "ListView is null! Check XML or findViewById()");
+        }
+        /// LIST OF ADDED EMOTIONS!! END
+
+    }
+    // Logic: Clear the Mood List Adapter (Used to create the list) then add the moods depending on the chosen mood
+    private void filterMoodList(String filter) {
+        moodListAdapter.clear();
+        for (MoodEvent mood : moodEventList) {
+            if (filter.equals("All Moods") || mood.getEmotionalState().equals(filter)) {
+                moodListAdapter.add(mood.getEmotionalState() + " - " + new Date(mood.getTimestamp()));
+            }
         }
     }
 }
