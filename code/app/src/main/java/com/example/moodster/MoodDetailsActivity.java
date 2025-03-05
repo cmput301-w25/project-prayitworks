@@ -23,7 +23,7 @@ public class MoodDetailsActivity extends AppCompatActivity {
                     "\nTrigger: " + moodEvent.getTrigger() +
                     "\nSocial Situation: " + moodEvent.getSocialSituation() +
                     "\nExplanation: " + moodEvent.getExplanation() +
-                    "\nTimestamp: " + new Date(moodEvent.getTimestamp());
+                    "\nTimestamp: " + new Date(String.valueOf(moodEvent.getCreatedAt()));
 
             textViewDetails.setText(details);
         }

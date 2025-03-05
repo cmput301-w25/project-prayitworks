@@ -7,19 +7,20 @@ import java.util.List;
 
 public class MoodEvent implements Serializable {
     private final int id; // Unique ID
-    private final String emotionalState; // Required
-    private final Timestamp createdAt; // Stores date & time
-    private final Timestamp lastEditAt;
-    private final String trigger; // Optional
-    private final String socialSituation; // Optional
+    private String emotionalState; // Required
+    private  Timestamp createdAt; // Stores date & time
+    private  Timestamp lastEditAt;
+    private String trigger; // Optional
+    private String socialSituation; // Optional
     private String explanation; // Express reason why
 
     // Predefined list of valid emotional states
     public static final List<String> VALID_EMOTIONAL_STATES = Arrays.asList(
             "Anger 😡", "Confusion 😕", "Disgust 🤢", "Fear 😨", "Happiness 😁", "Sadness 😓", "Shame 😶‍🌫️", "Surprise 😮"
     );
+
     // Constructor
-    public MoodEvent(int id, String emotionalState, long timestamp, String trigger, String socialSituation, String explanation) {
+    public MoodEvent(int id, Timestamp createdAt, String emotionalState, String trigger, String socialSituation, String explanation) {
         if (!VALID_EMOTIONAL_STATES.contains(emotionalState)) {
             throw new IllegalArgumentException("Invalid emotional state: " + emotionalState);
         }
@@ -45,28 +46,29 @@ public class MoodEvent implements Serializable {
     public String getTrigger() { return trigger; }
     public String getSocialSituation() { return socialSituation; }
     public String getExplanation() { return explanation; }
+
     public void setExplanation() { this.explanation = explanation; }
 
     // Setters for editable fields
     public void setEmotionalState(String emotionalState) {
         if (VALID_EMOTIONAL_STATES.contains(emotionalState)) {
             this.emotionalState = emotionalState;
-            this.lastEditedAt = Timestamp.now(); // Update lastEditedAt on change
+            this.lastEditAt = Timestamp.now(); // Update lastEditedAt on change
         } else {
             throw new IllegalArgumentException("Invalid emotional state: " + emotionalState);
         }
     }
     public void setTrigger(String trigger) {
         this.trigger = trigger;
-        this.lastEditedAt = Timestamp.now(); // Update lastEditedAt on change
+        this.lastEditAt = Timestamp.now(); // Update lastEditedAt on change
     }
     public void setSocialSituation(String socialSituation) {
         this.socialSituation = socialSituation;
-        this.lastEditedAt = Timestamp.now(); // Update lastEditedAt on change
+        this.lastEditAt = Timestamp.now(); // Update lastEditedAt on change
     }
     public void setExplanation(String explanation) {
         this.explanation = explanation;
-        this.lastEditedAt = Timestamp.now(); // Update lastEditedAt on change
+        this.lastEditAt = Timestamp.now(); // Update lastEditedAt on change
     }
 
     @Override

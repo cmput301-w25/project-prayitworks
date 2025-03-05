@@ -66,7 +66,7 @@ public class MoodEventViewModel extends ViewModel {
         }
         String authorUsername = currentUser.getUid(); // Use UID or username based on auth setup
         Timestamp createdAt = Timestamp.now();
-        MoodEvent moodEvent = new MoodEvent(nextId, createdAt, createdAt, emotionalState, trigger, socialSituation, explanation);
+        MoodEvent moodEvent = new MoodEvent(nextId, createdAt, emotionalState, trigger, socialSituation, explanation);
         Map<String, Object> data = new HashMap<>();
         data.put("authorUsername", authorUsername);
         data.put("id", nextId);
@@ -76,6 +76,7 @@ public class MoodEventViewModel extends ViewModel {
         data.put("trigger", trigger);
         data.put("socialSituation", socialSituation);
         data.put("explanation", explanation);
+
 
         if (isOnline()) {
             // Online: Direct database update
@@ -235,6 +236,10 @@ public class MoodEventViewModel extends ViewModel {
         Log.d("OfflineQueue", "Queued " + operation + " for moodId " + moodId + ": " + data);
         // In a real app, use a local database (e.g., Room) to persist queued changes
         // and sync them in a background task when online
+    }
+
+    public void addMoodEvent(MoodEvent newMood) {
+
     }
 
     public interface OnUserFetchedListener {

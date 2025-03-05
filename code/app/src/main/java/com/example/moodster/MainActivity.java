@@ -35,6 +35,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import com.google.firebase.Timestamp;
 
 public class MainActivity extends AppCompatActivity {
     private MoodEventViewModel moodEventViewModel;
@@ -162,12 +163,12 @@ public class MainActivity extends AppCompatActivity {
             String socialSituation = editSocialSituation.getText().toString().trim();
             String explanation = editExplanation.getText().toString().trim();
             int id = moodEventList.size();
-            long timestamp = System.currentTimeMillis();
+            Timestamp timestamp = Timestamp.now();
 
-            MoodEvent newMood = new MoodEvent(id, selectedEmotionalState, timestamp, trigger, socialSituation, explanation);
+            MoodEvent newMood = new MoodEvent(id, timestamp, selectedEmotionalState , trigger, socialSituation, explanation);
             moodEventViewModel.addMoodEvent(newMood); // Adding to the Hashmap
             moodEventList.add(newMood);
-            moodListAdapter.add(selectedEmotionalState + " - " + new Date(timestamp));
+            moodListAdapter.add(selectedEmotionalState + " - " + timestamp);
             Log.d("MoodEvent", "New MoodEvent added: " + newMood);
         });
         /// ADDING EMOTIONS/ MAKING EMOTIONS!! END
@@ -195,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
         moodListAdapter.clear();
         for (MoodEvent mood : moodEventList) {
             if (filter.equals("All Moods") || mood.getEmotionalState().equals(filter)) {
-                moodListAdapter.add(mood.getEmotionalState() + " - " + new Date(mood.getTimestamp()));
+                moodListAdapter.add(mood.getEmotionalState() + " - " + new Date(String.valueOf(mood.getCreatedAt())));
             }
         }
     }
