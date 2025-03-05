@@ -166,8 +166,8 @@ public class MainActivity extends AppCompatActivity {
 
             MoodEvent newMood = new MoodEvent(id, selectedEmotionalState, timestamp, trigger, socialSituation, explanation);
             moodEventViewModel.addMoodEvent(newMood); // Adding to the Hashmap
-            moodEventList.add(newMood); // Adding to the list (For temp storage)
-            moodListAdapter.add(selectedEmotionalState + " - " + new Date(timestamp)); // Adding to the list adapter for showing the list
+            moodEventList.add(newMood);
+            moodListAdapter.add(selectedEmotionalState + " - " + new Date(timestamp));
             Log.d("MoodEvent", "New MoodEvent added: " + newMood);
         });
         /// ADDING EMOTIONS/ MAKING EMOTIONS!! END
@@ -179,7 +179,6 @@ public class MainActivity extends AppCompatActivity {
         if (moodListView != null) {
             moodListView.setOnItemClickListener((parent, view, position, id) -> {
                 MoodEvent selectedMood = moodEventList.get(position);
-                // Saving the selected mood to intent to show in the next page (Details)
                 Intent intent = new Intent(MainActivity.this, MoodDetailsActivity.class);
                 intent.putExtra("mood", selectedMood);
                 startActivity(intent);
