@@ -1,0 +1,393 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@drawable/gradient_bg_main"
+    android:padding="16dp">
+
+    <!-- Header with Icon and Title -->
+    <LinearLayout
+        android:id="@+id/top_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:src="@drawable/mood" />
+
+
+        <View
+            android:layout_width="3dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/avatar"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="end"/>
+    </LinearLayout>
+
+    <!-- Mood History Title -->
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mood History"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/top_section"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Date Range Selection -->
+    <LinearLayout
+        android:id="@+id/date_range_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_below="@id/title"
+        android:layout_marginTop="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="From :"
+            android:textSize="16sp"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/from_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="01/01/2025"
+            android:background="@drawable/date_picker_bg"
+            android:textColor="@color/white"
+            android:padding="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="To :"
+            android:textSize="16sp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/to_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="02/13/2025"
+            android:background="@drawable/date_picker_bg"
+            android:textColor="@color/white"
+            android:padding="8dp"/>
+    </LinearLayout>
+
+    <!-- Mood Entries List -->
+    <ScrollView
+        android:id="@+id/mood_entries_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottom_nav"
+        android:layout_marginTop="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="10dp">
+
+            <!-- Mood Item 1 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_box"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:layout_marginBottom="12dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text="😊"
+                    android:textSize="24sp"
+                    android:layout_marginEnd="8dp"
+                    android:gravity="center" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Reason: Passed my exam.\nTrigger: None\nSocial Situation: No"
+                    android:textSize="14sp"
+                    android:paddingStart="10dp"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="View details"
+                    android:backgroundTint="#546955"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
+
+
+            <!-- Mood Item 2 -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_box"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:layout_marginBottom="12dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:text="😞"
+                    android:textSize="24sp"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:layout_marginEnd="8dp"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Reason: Got low marks.\nTrigger: Marks\nSocial Situation: Yes"
+                    android:textSize="14sp"
+                    android:paddingStart="10dp"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="View details"
+                    android:backgroundTint="#546955"
+                    android:textColor="@android:color/white"
+                    android:layout_marginStart="8dp"/>
+            </LinearLayout>
+
+            <!-- Mood Item 3 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_box"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:layout_marginBottom="12dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:text="😡"
+                    android:textSize="24sp"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:layout_marginEnd="8dp"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Reason: Broke my laptop.\nTrigger: Accident\nSocial Situation: Yes"
+                    android:textSize="14sp"
+                    android:paddingStart="10dp"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="View details"
+                    android:backgroundTint="#546955"
+                    android:textColor="@android:color/white"
+                    android:layout_marginStart="8dp"/>
+            </LinearLayout>
+
+            <!-- Additional Mood Items -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_box"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:layout_marginBottom="12dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text="😴"
+                    android:textSize="24sp"
+                    android:layout_marginEnd="8dp"
+                    android:gravity="center" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Reason: Spoke to people.\nTrigger: Social Anxiety\nSocial Situation: Yes"
+                    android:textSize="14sp"
+                    android:paddingStart="10dp"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="View details"
+                    android:backgroundTint="#546955"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_box"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:layout_marginBottom="12dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text="😃"
+                    android:textSize="24sp"
+                    android:layout_marginEnd="8dp"
+                    android:gravity="center" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Reason: Completed a project.\nTrigger: Work\nSocial Situation: No"
+                    android:textSize="14sp"
+                    android:paddingStart="10dp"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="View details"
+                    android:backgroundTint="#546955"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom Navigation Bar -->
+
+    <LinearLayout
+        android:id="@+id/bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="#546955"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="5"
+        android:layout_alignParentBottom="true">
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/btn_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/home"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_search"
+                app:layout_constraintStart_toStartOf="parent"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/btn_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/search"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_add"
+                app:layout_constraintStart_toEndOf="@+id/btn_home"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+
+            <ImageButton
+                android:id="@+id/btn_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/plus_circle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_calendar"
+                app:layout_constraintStart_toEndOf="@+id/btn_search"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/btn_calendar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/calendar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_profile"
+                app:layout_constraintStart_toEndOf="@+id/btn_add"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+
+            <ImageButton
+                android:id="@+id/btn_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/avatar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/btn_calendar"/>
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintGuide_percent="4.671642" />
+
+
+</RelativeLayout>
