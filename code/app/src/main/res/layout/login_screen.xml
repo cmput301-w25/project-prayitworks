@@ -1,7 +1,7 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white"
     android:padding="20dp">
 
@@ -91,7 +91,7 @@
             android:textStyle="bold"
             android:textColor="@color/white"
             android:backgroundTint="#000000"
-            android:cornerRadius="12dp"
+            app:cornerRadius="12dp"
             android:elevation="4dp"
             android:paddingVertical="10dp"
             android:fontFamily="sans-serif-medium" />

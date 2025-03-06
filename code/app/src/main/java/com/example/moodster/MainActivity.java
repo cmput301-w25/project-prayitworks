@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
             moodEventViewModel.addMoodEvent(newMood); // Adding to the Hashmap
             moodEventList.add(newMood);
             moodListAdapter.add(selectedEmotionalState + " - " + timestamp);
-            Log.d("MoodEvent", "New MoodEvent added: " + newMood);
+            Log.d("MoodEvent", "All Moods: " + moodEventList);
         });
         /// ADDING EMOTIONS/ MAKING EMOTIONS!! END
 

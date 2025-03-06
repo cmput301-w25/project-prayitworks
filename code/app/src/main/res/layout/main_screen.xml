@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_background">  // I need to implement
+    android:background="@drawable/gradient_bg">
 
     <!-- Profile Icon in Top Right -->
     <ImageView
@@ -35,18 +35,18 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@id/title"
         android:layout_marginTop="10dp"
-        android:background="@drawable/rounded_background"
+        android:background="@android:color/white"
         android:scaleType="fitCenter"
-        android:src="@drawable/mood_chart" />
+        android:src="@drawable/back" /> <!-- Changes here should be "@drawable/mood_chart">
 
-    <!-- Friends Mood Section -->
+    <!- Friends Mood Section -->
     <LinearLayout
         android:id="@+id/friends_mood_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/mood_chart"
         android:layout_margin="16dp"
-        android:background="@drawable/rounded_background"
+        android:background="@android:color/white"
         android:padding="12dp"
         android:orientation="horizontal">
 
@@ -115,7 +115,7 @@
             android:layout_marginStart="24dp"
             android:src="@drawable/plus"
             android:contentDescription="Add"
-            android:background="@drawable/circle_button_bg" />
+            android:background="@drawable/back" /> <!-- Changes here should be "@drawable/circle_button_bg"-->
 
         <ImageView
             android:id="@+id/nav_calendar"

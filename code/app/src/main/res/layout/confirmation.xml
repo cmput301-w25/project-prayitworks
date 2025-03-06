@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white"
     android:padding="20dp">
 
@@ -68,7 +69,7 @@
         android:textSize="16sp"
         android:textColor="@android:color/white"
         android:backgroundTint="@android:color/black"
-        android:cornerRadius="12dp"
+        app:cornerRadius="12dp"
         android:elevation="4dp"
         android:paddingVertical="10dp"
         android:fontFamily="sans-serif-medium"
