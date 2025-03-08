@@ -92,7 +92,7 @@
         <ImageView
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@drawable/calendar_icon"
+            android:src="@drawable/calendar"
             android:contentDescription="Calendar Icon"
             android:layout_marginStart="8dp"/>
     </LinearLayout>

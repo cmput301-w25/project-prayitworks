@@ -46,6 +46,10 @@
         android:layout_height="wrap_content"
         android:text="Add Mood Event"/>
 
+    <Spinner
+        android:id="@+id/spinnerFilterEmotionalState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 
     <ListView

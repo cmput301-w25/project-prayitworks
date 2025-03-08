@@ -21,7 +21,7 @@
         android:id="@+id/tvSubHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Before you create an account, please read and accept our Terms & Conditions"
+        android:text="Before you create an account, please read and accept our Terms &amp; Conditions"
         android:textSize="14sp"
         android:textColor="@android:color/white"
         android:layout_marginBottom="15dp"/>
@@ -42,7 +42,7 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Terms & Conditions"
+                android:text="Terms &amp; Conditions"
                 android:textSize="26sp"
                 android:textColor="@android:color/white"
                 android:textStyle="bold"

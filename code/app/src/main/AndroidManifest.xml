@@ -13,15 +13,16 @@
         android:theme="@style/Theme.Moodster"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".AddMoodActivity"
             android:exported="true"
             android:theme="@style/Theme.Moodster">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".MoodActivity" />
 
         <activity android:name=".MoodDetailsActivity" />
     </application>
