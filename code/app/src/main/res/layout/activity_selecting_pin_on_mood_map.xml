@@ -88,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="Search Icon"
                 android:src="@drawable/ic_search"
-                android:tint="@android:color/white" />
+                app:tint="@android:color/white" />
         </LinearLayout>
 
         <!-- QR CODE CELL: a cell with a QR code image -->
@@ -109,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="QR Code"
                 android:src="@drawable/ic_friend_list"
-                android:tint="@android:color/white" />
+                app:tint="@android:color/white" />
         </LinearLayout>
 
         <TextView
@@ -155,7 +155,7 @@
             android:contentDescription="Mood Pin 3"
             android:elevation="9dp"
             android:src="@drawable/ic_mood_pins"
-            android:tint="#768D76"
+            app:tint="#768D76"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -170,7 +170,7 @@
             android:elevation="2dp"
             android:contentDescription="Mood Pin 2"
             android:src="@drawable/ic_mood_pins"
-            android:tint="#EFE411" />
+            app:tint="#EFE411" />
 
         <!-- OVERLAY ADAPTER: Positioned above the map elements -->
         <LinearLayout
@@ -278,7 +278,7 @@
                         android:layout_marginRight="12dp"
                         android:contentDescription="Like"
                         android:src="@drawable/ic_thumbs_up"
-                        android:tint="@android:color/white" />
+                        app:tint="@android:color/white" />
 
                 </LinearLayout>
             </LinearLayout>

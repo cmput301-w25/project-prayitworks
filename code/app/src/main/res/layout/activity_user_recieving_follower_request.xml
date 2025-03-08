@@ -133,7 +133,7 @@
                 android:layout_height="24dp"
                 android:src="@drawable/ic_search"
                 android:contentDescription="Search Icon"
-                android:tint="@android:color/white" />
+                app:tint="@android:color/white" />
         </LinearLayout>
 
         <!-- TOGGLE CELL: a cell with a QR code image -->
