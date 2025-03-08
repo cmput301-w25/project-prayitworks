@@ -62,6 +62,11 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="add_mood">Add Mood</string>
+    <string name="calendar">Calendar</string>
+    <string name="profile">Profile</string>
     <string-array name="social_situation_options">
         <item>Alone</item>
         <item>With someone</item>

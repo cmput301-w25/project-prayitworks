@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp"
-    android:background="@drawable/gradient_bg_main">
-
+    android:background="@drawable/bg_app_gradient">
 
     <!-- Top Section with Mood and Avatar Icons -->
     <LinearLayout
         android:id="@+id/top_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/gradient_bg_main">
-
+        android:orientation="horizontal">
+        <!-- If you had an extra gradient here, remove it for consistency -->
 
         <ImageView
             android:layout_width="80dp"
@@ -24,12 +23,10 @@
             android:gravity="start"
             android:src="@drawable/mood" />
 
-
         <View
             android:layout_width="3dp"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
-
+            android:layout_weight="1" />
 
         <ImageView
             android:layout_width="80dp"
@@ -37,23 +34,20 @@
             android:src="@drawable/avatar"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:gravity="end"/>
+            android:gravity="end" />
     </LinearLayout>
 
-
-    <!-- Add Mood Title -->
+    <!-- Screen Title -->
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Mood"
+        android:text="Log Your Mood"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:layout_gravity="center"
         android:layout_below="@id/top_section"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"/>
-
+        android:layout_marginTop="16dp" />
 
     <!-- Mood Selection Buttons -->
     <LinearLayout
@@ -65,240 +59,281 @@
         android:background="@drawable/background_emojis"
         android:padding="8dp"
         android:layout_below="@id/title"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="16dp"
+        android:weightSum="8">
 
+        <!-- Happy -->
 
+        <!-- Sad -->
         <Button
             android:id="@+id/btn_happy"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_width="22dp"
+            android:layout_height="92dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:text="😁"
+            android:drawableTop="@drawable/ic_mood_happy"
+            android:drawablePadding="2dp"
+            android:text=""
             android:textSize="30sp" />
-
 
         <Button
             android:id="@+id/btn_sad"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_width="22dp"
+            android:layout_height="92dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:text="😓"
+            android:drawableTop="@drawable/ic_mood_sad"
+            android:drawablePadding="2dp"
+            android:text=""
             android:textSize="30sp" />
 
-
+        <!-- Angry -->
         <Button
             android:id="@+id/btn_angry"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_width="22dp"
+            android:layout_height="92dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:text="😡"
+            android:drawableTop="@drawable/ic_mood_angry"
+            android:drawablePadding="2dp"
+            android:text=""
             android:textSize="30sp" />
 
-
+        <!-- Shame -->
         <Button
             android:id="@+id/btn_shame"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_width="22dp"
+            android:layout_height="92dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:text="😶‍🌫️"
+            android:drawableTop="@drawable/ic_mood_shame"
+            android:drawablePadding="2dp"
+            android:text=""
             android:textSize="30sp" />
 
-
+        <!-- Fear -->
         <Button
             android:id="@+id/btn_fear"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_width="22dp"
+            android:layout_height="92dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:text="😨"
-            android:textSize="30sp"/>
+            android:drawableTop="@drawable/ic_mood_fear"
+            android:drawablePadding="2dp"
+            android:text=""
+            android:textSize="30sp" />
+
+        <!-- Surprise -->
+        <Button
+            android:id="@+id/btn_surprise"
+            android:layout_width="22dp"
+            android:layout_height="92dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawableTop="@drawable/ic_mood_surprise"
+            android:drawablePadding="2dp"
+            android:text=""
+            android:textSize="30sp" />
+
+        <!-- Disgust -->
+        <Button
+            android:id="@+id/btn_disgust"
+            android:layout_width="22dp"
+            android:layout_height="92dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawableTop="@drawable/ic_mood_disgust"
+            android:drawablePadding="2dp"
+            android:text=""
+            android:textSize="30sp" />
+
+        <!-- Confusion -->
+        <Button
+            android:id="@+id/btn_confusion"
+            android:layout_width="22dp"
+            android:layout_height="92dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawableTop="@drawable/ic_mood_confusion"
+            android:drawablePadding="2dp"
+            android:text=""
+            android:textSize="30sp" />
     </LinearLayout>
 
 
-    <!-- Reason Input Field with Gradient Background -->
-
-
-    <!-- Trigger Input Field with Gradient Background -->
-
-
-    <!-- Social Situation Spinner -->
-
-
-    <!-- Upload Image Button -->
-
-
-    <!-- Bottom Navigation Bar -->
-
-
+    <!-- Reason Container -->
     <LinearLayout
         android:id="@+id/reason_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/mood_buttons"
-        android:layout_marginTop="43dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/round_gradient_bg"
         android:orientation="vertical"
         android:padding="16dp">
-
 
         <EditText
             android:id="@+id/edit_reason"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
-            android:hint="Reason (20 Characters or 3 words)"
+            android:hint="Reason (Optional, up to 20 characters)"
             android:maxLength="20" />
     </LinearLayout>
 
-
+    <!-- Trigger Container -->
     <LinearLayout
         android:id="@+id/trigger_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/reason_container"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/round_gradient_bg"
         android:orientation="vertical"
         android:padding="16dp">
-
 
         <EditText
             android:id="@+id/edit_trigger"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
-            android:hint="Trigger (20 Characters or 3 words)"
+            android:hint="Trigger (Optional, up to 20 characters)"
             android:maxLength="20" />
     </LinearLayout>
 
-
+    <!-- Social Situation Spinner -->
     <Spinner
         android:id="@+id/spinner_social"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/trigger_container"
-        android:layout_marginTop="72dp"
-        android:hint="Social Situation" />
+        android:layout_marginTop="16dp" />
 
-
+    <!-- Button: Attach an Image -->
     <Button
         android:id="@+id/btn_upload_image"
-        android:layout_width="305dp"
-        android:layout_height="wrap_content"
+        android:layout_width="528dp"
+        android:layout_height="294dp"
         android:layout_below="@id/spinner_social"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="center"
-        android:layout_marginStart="63dp"
-        android:layout_marginTop="104dp"
-        android:layout_marginEnd="58dp"
-        android:text="Upload an Image for memory 📷" />
+        android:layout_marginTop="24dp"
+        android:background="@drawable/background_emojis"
+        android:backgroundTint="@null"
+        android:gravity="center"
+        android:drawableTop="@drawable/ic_camera"
+        android:drawableTint="#B0B0B0"
+        android:drawablePadding="16dp"
+        android:text="Attach a Photo"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="24sp" />
 
 
+    <!-- Bottom Navigation Bar -->
     <LinearLayout
         android:id="@+id/bottom_nav"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_width="750dp"
+        android:layout_height="90dp"
+        android:layout_alignParentBottom="true"
         android:background="#546955"
         android:gravity="center"
         android:orientation="horizontal"
-        android:weightSum="5"
-        android:layout_alignParentBottom="true">
+        android:weightSum="5">
 
+        <!-- HOME -->
         <FrameLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center">
 
             <ImageButton
                 android:id="@+id/btn_home"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_home"
+                android:layout_width="83dp"
+                android:layout_height="74dp"
+                android:layout_margin="4dp"
                 android:background="@drawable/bottom_circle_background"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btn_search"
-                app:layout_constraintStart_toStartOf="parent"/>
+                android:contentDescription="@string/home"
+                android:padding="8dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_home" />
         </FrameLayout>
 
+        <!-- SEARCH -->
         <FrameLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center">
 
             <ImageButton
                 android:id="@+id/btn_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_search"
+                android:layout_width="82dp"
+                android:layout_height="74dp"
+                android:layout_margin="4dp"
                 android:background="@drawable/bottom_circle_background"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btn_add"
-                app:layout_constraintStart_toEndOf="@+id/btn_home"/>
+                android:contentDescription="@string/search"
+                android:padding="8dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_search" />
         </FrameLayout>
 
+        <!-- ADD MOOD -->
         <FrameLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center">
 
-
             <ImageButton
                 android:id="@+id/btn_add"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/plus_circle"
+                android:layout_width="80dp"
+                android:layout_height="74dp"
+                android:layout_margin="4dp"
                 android:background="@drawable/bottom_circle_background"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btn_calendar"
-                app:layout_constraintStart_toEndOf="@+id/btn_search"/>
+                android:contentDescription="@string/add_mood"
+                android:padding="8dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/plus_circle" />
         </FrameLayout>
 
+        <!-- CALENDAR -->
         <FrameLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center">
 
             <ImageButton
                 android:id="@+id/btn_calendar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_calendar"
+                android:layout_width="71dp"
+                android:layout_height="74dp"
+                android:layout_margin="4dp"
                 android:background="@drawable/bottom_circle_background"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btn_profile"
-                app:layout_constraintStart_toEndOf="@+id/btn_add"/>
+                android:contentDescription="@string/calendar"
+                android:padding="8dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_calendar" />
         </FrameLayout>
 
+        <!-- PROFILE -->
         <FrameLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center">
 
-
             <ImageButton
                 android:id="@+id/btn_profile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/avatar"
+                android:layout_width="75dp"
+                android:layout_height="74dp"
+                android:layout_margin="4dp"
                 android:background="@drawable/bottom_circle_background"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/btn_calendar"/>
+                android:contentDescription="@string/profile"
+                android:padding="5dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/avatar" />
         </FrameLayout>
     </LinearLayout>
 
 
-
-
 </RelativeLayout>
-
