@@ -1,6 +1,7 @@
 package com.example.moodster;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,15 +19,21 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.Timestamp;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import android.Manifest;
 
 public class MoodActivity extends AppCompatActivity {
 
@@ -49,6 +56,12 @@ public class MoodActivity extends AppCompatActivity {
     // Variable for uploading a photo
     private static final int MAX_IMAGE_SIZE = 65536; // 64 KB
     private Uri selectedImageUri = null; // Stores the selected image
+
+
+    // Varaiable for location
+    private FusedLocationProviderClient fusedLocationClient;
+    private double latitude = 0.0;
+    private double longitude = 0.0;
 
 
     @Override
@@ -130,7 +143,12 @@ public class MoodActivity extends AppCompatActivity {
             int id = 0;
             Timestamp timestamp = Timestamp.now();
 
-            MoodEvent newMood = new MoodEvent(id, timestamp, selectedEmotionalState , trigger, socialSituation, explanation, selectedImageUri);
+            // Get the Location
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+            getCurrentLocation();
+            Log.d("MoodEvent", "Location: " + latitude + longitude);
+
+            MoodEvent newMood = new MoodEvent(id, timestamp, selectedEmotionalState , trigger, socialSituation, explanation, selectedImageUri, longitude, latitude);
             moodEventViewModel.addMoodEvent(newMood); // Adding to the Hashmap
 
             Log.d("MoodEvent", "All Moods: " + moodEventList);
@@ -185,4 +203,37 @@ public class MoodActivity extends AppCompatActivity {
         }
     }
     //////////
+
+    /// LOCATION //
+    // Fetch the user's current location
+    private void getCurrentLocation() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+
+            fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
+                if (location != null) {
+                    latitude = location.getLatitude();
+                    longitude = location.getLongitude();
+                    Log.d("Location", "Lat: " + latitude + ", Lon: " + longitude);
+                }
+            });
+
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1 && grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            getCurrentLocation();
+        } else {
+            Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }

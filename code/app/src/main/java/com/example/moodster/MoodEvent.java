@@ -16,7 +16,13 @@ public class MoodEvent implements Serializable {
     private String socialSituation; // Optional
     private String explanation; // Express reason why
 
+    // For image
     private Uri image;
+
+    // For Location
+    private double latitude = 0.0;
+    private double longitude = 0.0;
+
 
     // Predefined list of valid emotional states
     public static final List<String> VALID_EMOTIONAL_STATES = Arrays.asList(
@@ -24,7 +30,7 @@ public class MoodEvent implements Serializable {
     );
 
     // Constructor
-    public MoodEvent(int id, Timestamp createdAt, String emotionalState, String trigger, String socialSituation, String explanation, Uri image) {
+    public MoodEvent(int id, Timestamp createdAt, String emotionalState, String trigger, String socialSituation, String explanation, Uri image, double latitude, double longitude) {
         if (!VALID_EMOTIONAL_STATES.contains(emotionalState)) {
             throw new IllegalArgumentException("Invalid emotional state: " + emotionalState);
         }
@@ -38,6 +44,8 @@ public class MoodEvent implements Serializable {
         this.socialSituation = socialSituation;
         this.explanation = explanation;
         this.image = image;
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 
     public int getId() { return id; }
@@ -53,6 +61,9 @@ public class MoodEvent implements Serializable {
     public String getExplanation() { return explanation; }
 
     public Uri getImage(){return image; }
+
+    public double getLatitude() { return latitude; }
+    public double getLongitude() { return longitude; }
     public void setExplanation() { this.explanation = explanation; }
 
     // Setters for editable fields

@@ -58,7 +58,7 @@ public class MoodEventViewModel extends ViewModel {
     }
 
     // Add a new mood event
-    public void addMoodEvent(String emotionalState, String trigger, String socialSituation, String explanation, Uri image, OnAddListener listener) {
+    public void addMoodEvent(String emotionalState, String trigger, String socialSituation, String explanation, Uri image, double latitude, double longitude, OnAddListener listener) {
         FirebaseUser currentUser = auth.getCurrentUser();
         if (currentUser == null) {
             Log.w("MoodEventViewModel", "User not authenticated");
@@ -67,7 +67,7 @@ public class MoodEventViewModel extends ViewModel {
         }
         String authorUsername = currentUser.getUid(); // Use UID or username based on auth setup
         Timestamp createdAt = Timestamp.now();
-        MoodEvent moodEvent = new MoodEvent(nextId, createdAt, emotionalState, trigger, socialSituation, explanation, image);
+        MoodEvent moodEvent = new MoodEvent(nextId, createdAt, emotionalState, trigger, socialSituation, explanation, image, latitude, longitude);
         Map<String, Object> data = new HashMap<>();
         data.put("authorUsername", authorUsername);
         data.put("id", nextId);
