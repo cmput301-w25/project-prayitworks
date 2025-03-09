@@ -3,6 +3,7 @@ package com.example.moodster;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.lifecycle.ViewModel;
@@ -57,7 +58,7 @@ public class MoodEventViewModel extends ViewModel {
     }
 
     // Add a new mood event
-    public void addMoodEvent(String emotionalState, String trigger, String socialSituation, String explanation, OnAddListener listener) {
+    public void addMoodEvent(String emotionalState, String trigger, String socialSituation, String explanation, Uri image, OnAddListener listener) {
         FirebaseUser currentUser = auth.getCurrentUser();
         if (currentUser == null) {
             Log.w("MoodEventViewModel", "User not authenticated");
@@ -66,7 +67,7 @@ public class MoodEventViewModel extends ViewModel {
         }
         String authorUsername = currentUser.getUid(); // Use UID or username based on auth setup
         Timestamp createdAt = Timestamp.now();
-        MoodEvent moodEvent = new MoodEvent(nextId, createdAt, emotionalState, trigger, socialSituation, explanation);
+        MoodEvent moodEvent = new MoodEvent(nextId, createdAt, emotionalState, trigger, socialSituation, explanation, image);
         Map<String, Object> data = new HashMap<>();
         data.put("authorUsername", authorUsername);
         data.put("id", nextId);
@@ -76,6 +77,7 @@ public class MoodEventViewModel extends ViewModel {
         data.put("trigger", trigger);
         data.put("socialSituation", socialSituation);
         data.put("explanation", explanation);
+        //data.put("Image", image); We might have to save this
 
 
         if (isOnline()) {

@@ -1,5 +1,7 @@
 package com.example.moodster;
 
+import android.net.Uri;
+
 import com.google.firebase.Timestamp;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -14,13 +16,15 @@ public class MoodEvent implements Serializable {
     private String socialSituation; // Optional
     private String explanation; // Express reason why
 
+    private Uri image;
+
     // Predefined list of valid emotional states
     public static final List<String> VALID_EMOTIONAL_STATES = Arrays.asList(
             "Anger 😡", "Confusion 😕", "Disgust 🤢", "Fear 😨", "Happiness 😁", "Sadness 😓", "Shame 😶‍🌫️", "Surprise 😮"
     );
 
     // Constructor
-    public MoodEvent(int id, Timestamp createdAt, String emotionalState, String trigger, String socialSituation, String explanation) {
+    public MoodEvent(int id, Timestamp createdAt, String emotionalState, String trigger, String socialSituation, String explanation, Uri image) {
         if (!VALID_EMOTIONAL_STATES.contains(emotionalState)) {
             throw new IllegalArgumentException("Invalid emotional state: " + emotionalState);
         }
@@ -33,6 +37,7 @@ public class MoodEvent implements Serializable {
         this.trigger = trigger;
         this.socialSituation = socialSituation;
         this.explanation = explanation;
+        this.image = image;
     }
 
     public int getId() { return id; }
@@ -47,6 +52,7 @@ public class MoodEvent implements Serializable {
     public String getSocialSituation() { return socialSituation; }
     public String getExplanation() { return explanation; }
 
+    public Uri getImage(){return image; }
     public void setExplanation() { this.explanation = explanation; }
 
     // Setters for editable fields
@@ -69,6 +75,10 @@ public class MoodEvent implements Serializable {
     public void setExplanation(String explanation) {
         this.explanation = explanation;
         this.lastEditAt = Timestamp.now(); // Update lastEditedAt on change
+    }
+
+    public void setImage(Uri Image){
+        this.image = Image;
     }
 
     @Override

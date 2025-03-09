@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
             int id = moodEventList.size();
             Timestamp timestamp = Timestamp.now();
 
-            MoodEvent newMood = new MoodEvent(id, timestamp, selectedEmotionalState , trigger, socialSituation, explanation);
+            MoodEvent newMood = new MoodEvent(id, timestamp, selectedEmotionalState , trigger, socialSituation, explanation, null);
             moodEventViewModel.addMoodEvent(newMood); // Adding to the Hashmap
             moodEventList.add(newMood);
             moodListAdapter.add(selectedEmotionalState + " - " + timestamp);
