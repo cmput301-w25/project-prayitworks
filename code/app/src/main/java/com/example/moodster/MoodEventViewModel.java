@@ -26,6 +26,7 @@ public class MoodEventViewModel extends ViewModel {
     private List<MoodEvent> fetchedMoods = new ArrayList<>();
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private Context context;
+    private static MoodEventViewModel instance; // Singleton instance
 
     // Set context for connectivity check
     public void setContext(Context context) {
@@ -239,6 +240,21 @@ public class MoodEventViewModel extends ViewModel {
         // In a real app, use a local database (e.g., Room) to persist queued changes
         // and sync them in a background task when online
     }
+
+    public void addMoodEvent(Timestamp createdAt, String emotionalState, String trigger, String socialSituation, String explanation, Uri image, double latitude, double longitude) {
+        MoodEvent moodEvent = new MoodEvent(nextId, createdAt, emotionalState, trigger, socialSituation, explanation, image, latitude, longitude);
+        moodEvents.put(nextId, moodEvent);
+        nextId++;
+    }
+
+    public static MoodEventViewModel getInstance() {
+        if (instance == null) {
+            instance = new MoodEventViewModel();
+        }
+        return instance;
+    }
+
+    private MoodEventViewModel() {} // Private constructor to prevent direct instantiation
 
     public void addMoodEvent(MoodEvent newMood) {
 

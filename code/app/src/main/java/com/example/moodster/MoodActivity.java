@@ -23,7 +23,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -70,20 +69,20 @@ public class MoodActivity extends AppCompatActivity {
 
         selectedEmotionalState = getIntent().getStringExtra("mood");
 
-        if ("angry".equals(selectedEmotionalState)) {
+        if ("Anger".equals(selectedEmotionalState)) {
             setContentView(R.layout.angry_mood);
-        } else if ("sad".equals(selectedEmotionalState)) {
+        } else if ("Sadness".equals(selectedEmotionalState)) {
             setContentView(R.layout.sad_mood);
-        } else if ("shame".equals(selectedEmotionalState)) {
+        } else if ("Shame".equals(selectedEmotionalState)) {
             setContentView(R.layout.shame_mood);
-        } else if ("fear".equals(selectedEmotionalState)) {
+        } else if ("Fear".equals(selectedEmotionalState)) {
             setContentView(R.layout.fear_mood);
-        } else if ("happy".equals(selectedEmotionalState)) {
+        } else if ("Happiness".equals(selectedEmotionalState)) {
             setContentView(R.layout.happy_mood);
         }
 
         // Initialize ViewModel
-        moodEventViewModel = new ViewModelProvider(this).get(MoodEventViewModel.class);
+        moodEventViewModel = MoodEventViewModel.getInstance();
 
         // Find views
         editExplanation = findViewById(R.id.edit_reason);
@@ -148,10 +147,18 @@ public class MoodActivity extends AppCompatActivity {
             getCurrentLocation();
             Log.d("MoodEvent", "Location: " + latitude + longitude);
 
-            MoodEvent newMood = new MoodEvent(id, timestamp, selectedEmotionalState , trigger, socialSituation, explanation, selectedImageUri, longitude, latitude);
-            moodEventViewModel.addMoodEvent(newMood); // Adding to the Hashmap
+            //MoodEvent newMood = new MoodEvent(id, timestamp, selectedEmotionalState , trigger, socialSituation, explanation, selectedImageUri, longitude, latitude);
+            //moodEventViewModel.addMoodEvent(newMood); // Adding to the Hashmap
+
+            moodEventViewModel.addMoodEvent(timestamp, selectedEmotionalState , trigger, socialSituation, explanation, selectedImageUri, longitude, latitude);
+            finish();
 
             Log.d("MoodEvent", "All Moods: " + moodEventList);
+        });
+
+        btnViewMoodHistory.setOnClickListener(v -> {
+            Intent intent = new Intent(MoodActivity.this, MoodHistoryActivity.class);
+            startActivity(intent);
         });
 
         btnCancel.setOnClickListener(v -> {

@@ -28,6 +28,9 @@
         <activity android:name=".MoodActivity" />
 
         <activity android:name=".MoodDetailsActivity" />
+
+        <activity android:name=".MoodHistoryActivity" />
+
     </application>
 
 </manifest>
