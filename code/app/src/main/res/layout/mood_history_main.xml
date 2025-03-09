@@ -61,7 +61,7 @@
         android:layout_marginTop="128dp"
         android:layout_marginBottom="8dp" />
 
-    <ScrollView
+    <ListView
         android:id="@+id/mood_entries_scroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -69,124 +69,7 @@
         android:layout_above="@id/bottom_nav"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="5dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="10dp">
-
-            <!-- Mood Item 1 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/rounded_box"
-                android:orientation="horizontal"
-                android:padding="5dp"
-                android:layout_marginBottom="12dp"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:text="😊"
-                    android:textSize="24sp"
-                    android:layout_marginEnd="8dp"
-                    android:gravity="center" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Reason: Passed my exam.\nTrigger: None\nSocial Situation: No"
-                    android:textSize="14sp"
-                    android:paddingStart="10dp"/>
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="View details"
-                    android:backgroundTint="#546955"
-                    android:textColor="@android:color/white"/>
-            </LinearLayout>
-
-
-            <!-- Mood Item 2 -->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/rounded_box"
-                android:orientation="horizontal"
-                android:padding="5dp"
-                android:layout_marginBottom="12dp"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:text="😞"
-                    android:textSize="24sp"
-                    android:gravity="center"
-                    android:textAlignment="center"
-                    android:layout_marginEnd="8dp"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Reason: Got low marks.\nTrigger: Marks\nSocial Situation: Yes"
-                    android:textSize="14sp"
-                    android:paddingStart="10dp"/>
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="View details"
-                    android:backgroundTint="#546955"
-                    android:textColor="@android:color/white"
-                    android:layout_marginStart="8dp"/>
-            </LinearLayout>
-
-            <!-- Mood Item 3 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/rounded_box"
-                android:orientation="horizontal"
-                android:padding="5dp"
-                android:layout_marginBottom="12dp"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:text="😡"
-                    android:textSize="24sp"
-                    android:gravity="center"
-                    android:textAlignment="center"
-                    android:layout_marginEnd="8dp"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Reason: Broke my laptop.\nTrigger: Accident\nSocial Situation: Yes"
-                    android:textSize="14sp"
-                    android:paddingStart="10dp"/>
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="View details"
-                    android:backgroundTint="#546955"
-                    android:textColor="@android:color/white"
-                    android:layout_marginStart="8dp"/>
-            </LinearLayout>
-
-
-        </LinearLayout>
-    </ScrollView>
+    </ListView>
 
     <!-- Bottom Navigation Bar -->
 

@@ -26,7 +26,7 @@ public class MoodEvent implements Serializable {
 
     // Predefined list of valid emotional states
     public static final List<String> VALID_EMOTIONAL_STATES = Arrays.asList(
-            "Anger 😡", "Confusion 😕", "Disgust 🤢", "Fear 😨", "Happiness 😁", "Sadness 😓", "Shame 😶‍🌫️", "Surprise 😮"
+            "Anger", "Confusion", "Disgust", "Fear", "Happiness", "Sadness", "Shame", "Surprise"
     );
 
     // Constructor
@@ -46,6 +46,29 @@ public class MoodEvent implements Serializable {
         this.image = image;
         this.longitude = longitude;
         this.latitude = latitude;
+    }
+
+    public String getEmoji() {
+        switch (emotionalState) {
+            case "Anger":
+                return "😡";
+            case "Confusion":
+                return "😵‍💫";
+            case "Disgust":
+                return "🤢";
+            case "Fear":
+                return "😨";
+            case "Happiness":
+                return "😁";
+            case "Sadness":
+                return "😓";
+            case "Shame":
+                return "😶‍🌫️"; // Flushed Face (used here to represent shame)
+            case "Surprise":
+                return "😮"; // Astonished Face
+            default:
+                return "😶"; // Neutral Face for undefined moods
+        }
     }
 
     public int getId() { return id; }

@@ -22,16 +22,20 @@ public class AddMoodActivity extends AppCompatActivity {
         ImageButton btnViewMoodHistory = findViewById(R.id.btn_calendar);
 
 
-        btnAngry.setOnClickListener(view -> openMoodActivity("angry"));
+        btnAngry.setOnClickListener(view -> openMoodActivity("Anger"));
 
-        btnSad.setOnClickListener(view -> openMoodActivity("sad"));
+        btnSad.setOnClickListener(view -> openMoodActivity("Sadness"));
 
-        btnFear.setOnClickListener(view -> openMoodActivity("fear"));
+        btnFear.setOnClickListener(view -> openMoodActivity("Fear"));
 
-        btnShame.setOnClickListener(view -> openMoodActivity("shame"));
+        btnShame.setOnClickListener(view -> openMoodActivity("Shame"));
 
-        btnHappy.setOnClickListener(view -> openMoodActivity("happy"));
+        btnHappy.setOnClickListener(view -> openMoodActivity("Happiness"));
 
+        btnViewMoodHistory.setOnClickListener(v -> {
+            Intent intent = new Intent(AddMoodActivity.this, MoodHistoryActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void openMoodActivity(String mood) {

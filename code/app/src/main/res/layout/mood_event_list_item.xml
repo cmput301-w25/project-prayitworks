@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_box"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    android:layout_marginBottom="12dp"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/textViewMood"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text="😊"
+        android:textSize="24sp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/textViewMoodPreview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Reason: Passed my exam.\nTrigger: None\nSocial Situation: No"
+        android:textSize="14sp"
+        android:paddingStart="10dp"/>
+
+    <Button
+        android:id="@+id/buttonViewDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View details"
+        android:backgroundTint="#546955"
+        android:textColor="@android:color/white"/>
+    </LinearLayout>
