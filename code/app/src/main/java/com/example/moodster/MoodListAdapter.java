@@ -36,6 +36,11 @@ public class MoodListAdapter extends BaseAdapter {
         return position;
     }
 
+    public void updateList(List<MoodEvent> newList) {
+        this.moodEvents = newList;
+        notifyDataSetChanged();  // Tells the ListView to redraw itself with the new data
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {

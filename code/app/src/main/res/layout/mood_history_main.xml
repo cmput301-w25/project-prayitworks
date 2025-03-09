@@ -16,7 +16,7 @@
 
         <ImageView
             android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_height="64dp"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="start"
@@ -31,11 +31,11 @@
 
         <ImageView
             android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/avatar"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:gravity="end"/>
+            android:gravity="end"
+            android:src="@drawable/avatar" />
     </LinearLayout>
 
     <!-- Mood History Title -->
@@ -52,24 +52,55 @@
 
     <!-- Calendar View -->
 
+
+    <!--
+         NEW: TextView that appears when no results match the search/filter
+         Placed below the CalendarView
+    -->
     <CalendarView
         android:id="@+id/calendarView"
-        android:layout_width="384dp"
-        android:layout_height="232dp"
+        android:layout_width="376dp"
+        android:layout_height="169dp"
         android:layout_below="@+id/title"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="128dp"
+        android:layout_marginTop="126dp"
         android:layout_marginBottom="8dp" />
+
+    <!--
+         NEW: Search EditText for filtering by "reason why" text
+         Placed below the title
+    -->
+
+    <EditText
+        android:id="@+id/editSearchReason"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_marginTop="217dp"
+        android:hint="Search by reason why..." />
+
+    <TextView
+        android:id="@+id/textEmptyState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/calendarView"
+        android:layout_centerHorizontal="true"
+        android:text="No results found"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_red_dark"
+        android:visibility="gone"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"/>
+
 
     <ListView
         android:id="@+id/mood_entries_scroll"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_below="@id/calendarView"
+        android:layout_width="395dp"
+        android:layout_height="234dp"
         android:layout_above="@id/bottom_nav"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="5dp">
-    </ListView>
+        android:layout_below="@id/calendarView"
+        android:layout_marginTop="85dp"
+        android:layout_marginBottom="5dp"></ListView>
 
     <!-- Bottom Navigation Bar -->
 
