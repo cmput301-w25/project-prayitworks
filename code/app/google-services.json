@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "729310779777",
+    "project_id": "moodster-2855c",
+    "storage_bucket": "moodster-2855c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:729310779777:android:2c43117a57c18f03c0f080",
+        "android_client_info": {
+          "package_name": "com.example.moodster"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFoPzVDfjen0R45k55qvyp_VJV8BiZRrU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
