@@ -61,15 +61,37 @@
         android:layout_marginTop="128dp"
         android:layout_marginBottom="8dp" />
 
+    <!-- Search EditText below the CalendarView -->
+    <EditText
+        android:id="@+id/editSearchReason"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/calendarView"
+        android:layout_marginTop="12dp"
+        android:hint="Search by reason why..." />
+
+    <!-- "No results" text, placed below the search bar;
+         shown/hidden from code as needed -->
+    <TextView
+        android:id="@+id/textEmptyState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editSearchReason"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:text="No results found"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
     <ListView
         android:id="@+id/mood_entries_scroll"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_below="@id/calendarView"
+        android:layout_width="wrap_content"
+        android:layout_height="183dp"
         android:layout_above="@id/bottom_nav"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="5dp">
-    </ListView>
+        android:layout_below="@id/calendarView"
+        android:layout_marginTop="71dp"
+        android:layout_marginBottom="5dp"></ListView>
 
     <!-- Bottom Navigation Bar -->
 

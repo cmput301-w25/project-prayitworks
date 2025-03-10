@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageButton;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 public class AddMoodActivity extends AppCompatActivity {
@@ -21,15 +20,10 @@ public class AddMoodActivity extends AppCompatActivity {
 
         ImageButton btnViewMoodHistory = findViewById(R.id.btn_calendar);
 
-
         btnAngry.setOnClickListener(view -> openMoodActivity("Anger"));
-
         btnSad.setOnClickListener(view -> openMoodActivity("Sadness"));
-
         btnFear.setOnClickListener(view -> openMoodActivity("Fear"));
-
         btnShame.setOnClickListener(view -> openMoodActivity("Shame"));
-
         btnHappy.setOnClickListener(view -> openMoodActivity("Happiness"));
 
         btnViewMoodHistory.setOnClickListener(v -> {

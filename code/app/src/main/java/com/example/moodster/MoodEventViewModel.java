@@ -20,231 +20,24 @@ import java.util.List;
 import java.util.Map;
 
 public class MoodEventViewModel extends ViewModel {
+
+    private static MoodEventViewModel instance;
+
+    private final FirebaseAuth auth;
+    private final FirebaseFirestore db;
+
+    // Local HashMap for offline usage
     private final HashMap<Integer, MoodEvent> moodEvents = new HashMap<>();
-    private int nextId = 1; // Unique ID counter
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private List<MoodEvent> fetchedMoods = new ArrayList<>();
-    private final FirebaseAuth auth = FirebaseAuth.getInstance();
+
+    // (Optional) For checking connectivity
     private Context context;
-    private static MoodEventViewModel instance; // Singleton instance
 
-    // Set context for connectivity check
-    public void setContext(Context context) {
-        this.context = context.getApplicationContext();
-    }
+    // For generating local IDs if needed
+    private int nextLocalId = 1;
 
-    // Check if device is online
-    private boolean isOnline() {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
-    }
-
-    // Fetch user details by username
-    public void fetchUserDetails(String username, OnUserFetchedListener listener) {
-        db.collection("users").document(username)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        Map<String, Object> userData = documentSnapshot.getData();
-                        listener.onUserFetched(userData);
-                    } else {
-                        listener.onUserFetched(null);
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.w("MoodEventViewModel", "Error fetching user details", e);
-                    listener.onUserFetched(null);
-                });
-    }
-
-    // Add a new mood event
-    public void addMoodEvent(String emotionalState, String trigger, String socialSituation, String explanation, Uri image, double latitude, double longitude, OnAddListener listener) {
-        FirebaseUser currentUser = auth.getCurrentUser();
-        if (currentUser == null) {
-            Log.w("MoodEventViewModel", "User not authenticated");
-            listener.onAddFailure("User not authenticated");
-            return;
-        }
-        String authorUsername = currentUser.getUid(); // Use UID or username based on auth setup
-        Timestamp createdAt = Timestamp.now();
-        MoodEvent moodEvent = new MoodEvent(nextId, createdAt, emotionalState, trigger, socialSituation, explanation, image, latitude, longitude);
-        Map<String, Object> data = new HashMap<>();
-        data.put("authorUsername", authorUsername);
-        data.put("id", nextId);
-        data.put("createdAt", createdAt);
-        data.put("lastEditedAt", createdAt);
-        data.put("emotionalState", emotionalState);
-        data.put("trigger", trigger);
-        data.put("socialSituation", socialSituation);
-        data.put("explanation", explanation);
-        //data.put("Image", image); We might have to save this
-
-
-        if (isOnline()) {
-            // Online: Direct database update
-            db.collection("moods")
-                    .document(String.valueOf(nextId))
-                    .set(data)
-                    .addOnSuccessListener(aVoid -> {
-                        nextId++;
-                        listener.onAddSuccess();
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.w("Firestore", "Error adding mood online", e);
-                        moodEvents.put(nextId, moodEvent); // Cache for retry
-                        listener.onAddFailure(e.getMessage());
-                        queueForSync(data, "add", nextId); // Queue for sync
-                    });
-        } else {
-            // Offline: Store in HashMap and queue for sync
-            moodEvents.put(nextId, moodEvent);
-            nextId++; // Increment for next offline ID
-            listener.onAddSuccess(); // Success locally, sync later
-            queueForSync(data, "add", nextId - 1); // Queue for sync when online
-        }
-    }
-
-    // Update an existing mood event
-    public void updateMoodEvent(int moodId, String emotionalState, String trigger, String socialSituation, String explanation, OnUpdateListener listener) {
-        FirebaseUser currentUser = auth.getCurrentUser();
-        if (currentUser == null) {
-            listener.onUpdateFailure("User not authenticated");
-            return;
-        }
-        String currentUsername = currentUser.getUid(); // Use UID or username based on auth
-
-        db.collection("moods")
-                .document(String.valueOf(moodId))
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        String authorUsername = documentSnapshot.getString("authorUsername");
-                        if (currentUsername.equals(authorUsername)) {
-                            Timestamp lastEditedAt = Timestamp.now();
-                            Map<String, Object> updates = new HashMap<>();
-                            updates.put("emotionalState", emotionalState);
-                            updates.put("trigger", trigger);
-                            updates.put("socialSituation", socialSituation);
-                            updates.put("explanation", explanation);
-                            updates.put("lastEditedAt", lastEditedAt);
-
-                            if (isOnline()) {
-                                // Online: Direct database update
-                                db.collection("moods")
-                                        .document(String.valueOf(moodId))
-                                        .update(updates)
-                                        .addOnSuccessListener(aVoid -> {
-                                            listener.onUpdateSuccess();
-                                        })
-                                        .addOnFailureListener(e -> {
-                                            Log.w("MoodEventViewModel", "Error updating mood online", e);
-                                            MoodEvent moodEvent = moodEvents.get(moodId);
-                                            if (moodEvent != null) {
-                                                moodEvent.setEmotionalState(emotionalState);
-                                                moodEvent.setTrigger(trigger);
-                                                moodEvent.setSocialSituation(socialSituation);
-                                                moodEvent.setExplanation(explanation);
-                                            }
-                                            listener.onUpdateFailure(e.getMessage());
-                                            queueForSync(updates, "update", moodId); // Queue for sync
-                                        });
-                            } else {
-                                // Offline: Update HashMap and queue for sync
-                                MoodEvent moodEvent = moodEvents.get(moodId);
-                                if (moodEvent != null) {
-                                    moodEvent.setEmotionalState(emotionalState);
-                                    moodEvent.setTrigger(trigger);
-                                    moodEvent.setSocialSituation(socialSituation);
-                                    moodEvent.setExplanation(explanation);
-                                }
-                                listener.onUpdateSuccess(); // Success locally, sync later
-                                queueForSync(updates, "update", moodId); // Queue for sync when online
-                            }
-                        } else {
-                            listener.onUpdateFailure("Only the author can edit this mood");
-                        }
-                    } else {
-                        listener.onUpdateFailure("Mood not found");
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.w("MoodEventViewModel", "Error checking mood", e);
-                    listener.onUpdateFailure(e.getMessage());
-                });
-    }
-
-    // Fetch and filter moods for followed users (Online only)
-    public void fetchAndFilterMoods(String currentUsername, String keyword, OnMoodsFilteredListener listener) {
-        if (currentUsername == null || currentUsername.trim().isEmpty()) {
-            listener.onMoodsFiltered(new ArrayList<>());
-            return;
-        }
-
-        if (!isOnline()) {
-            listener.onMoodsFiltered(new ArrayList<>()); // Return empty if offline
-            return;
-        }
-
-        db.collection("users").document(currentUsername)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    List<String> following = (List<String>) documentSnapshot.get("following");
-                    if (following == null || following.isEmpty()) {
-                        listener.onMoodsFiltered(new ArrayList<>());
-                        return;
-                    }
-
-                    db.collection("moods")
-                            .whereIn("authorUsername", following)
-                            .get()
-                            .addOnSuccessListener(querySnapshot -> {
-                                fetchedMoods.clear();
-                                for (QueryDocumentSnapshot document : querySnapshot) {
-                                    MoodEvent moodEvent = document.toObject(MoodEvent.class);
-                                    fetchedMoods.add(moodEvent);
-                                }
-                                List<MoodEvent> filteredMoods = filterByExplanation(keyword);
-                                listener.onMoodsFiltered(filteredMoods);
-                            })
-                            .addOnFailureListener(e -> {
-                                Log.w("MoodEventViewModel", "Error fetching moods online", e);
-                                listener.onMoodsFiltered(new ArrayList<>());
-                            });
-                })
-                .addOnFailureListener(e -> {
-                    Log.w("MoodEventViewModel", "Error fetching following list", e);
-                    listener.onMoodsFiltered(new ArrayList<>());
-                });
-    }
-
-    private List<MoodEvent> filterByExplanation(String keyword) {
-        List<MoodEvent> filteredMoods = new ArrayList<>();
-        if (keyword == null || keyword.trim().isEmpty()) {
-            filteredMoods.addAll(fetchedMoods);
-        } else {
-            String lowerCaseKeyword = keyword.toLowerCase();
-            for (MoodEvent mood : fetchedMoods) {
-                if (mood.getExplanation() != null && mood.getExplanation().toLowerCase().contains(lowerCaseKeyword)) {
-                    filteredMoods.add(mood);
-                }
-            }
-        }
-        return filteredMoods.isEmpty() ? new ArrayList<>() : filteredMoods;
-    }
-
-    // Queue changes for sync when online
-    private void queueForSync(Map<String, Object> data, String operation, int moodId) {
-        // Placeholder: Log the queued operation
-        Log.d("OfflineQueue", "Queued " + operation + " for moodId " + moodId + ": " + data);
-        // In a real app, use a local database (e.g., Room) to persist queued changes
-        // and sync them in a background task when online
-    }
-
-    public void addMoodEvent(Timestamp createdAt, String emotionalState, String trigger, String socialSituation, String explanation, Uri image, double latitude, double longitude) {
-        MoodEvent moodEvent = new MoodEvent(nextId, createdAt, emotionalState, trigger, socialSituation, explanation, image, latitude, longitude);
-        moodEvents.put(nextId, moodEvent);
-        nextId++;
+    private MoodEventViewModel() {
+        auth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
     }
 
     public static MoodEventViewModel getInstance() {
@@ -254,32 +47,176 @@ public class MoodEventViewModel extends ViewModel {
         return instance;
     }
 
-    private MoodEventViewModel() {} // Private constructor to prevent direct instantiation
+    // Set context if you want to do connectivity checks
+    public void setContext(Context context) {
+        this.context = context.getApplicationContext();
+    }
 
+    private boolean isOnline() {
+        if (context == null) return true;
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm == null) return false;
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return (netInfo != null && netInfo.isConnected());
+    }
+
+    /**
+     * For retrieving existing moods:
+     *  1) If user logged in & online => load from Firestore.
+     *  2) If offline => fallback to local HashMap.
+     */
+    public void fetchCurrentUserMoods(OnMoodsFetchedListener listener) {
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser == null) {
+            Log.w("MoodEventViewModel", "No user logged in => returning local data");
+            listener.onMoodsFetched(new ArrayList<>(moodEvents.values()));
+            return;
+        }
+        String userUid = currentUser.getUid();
+
+        if (!isOnline()) {
+            Log.d("MoodEventViewModel", "Offline => returning local moods");
+            listener.onMoodsFetched(new ArrayList<>(moodEvents.values()));
+            return;
+        }
+
+        // Online => fetch from Firestore
+        db.collection("MoodEvents")
+                .whereEqualTo("authorUsername", userUid)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    List<MoodEvent> result = new ArrayList<>();
+                    for (QueryDocumentSnapshot doc : querySnapshot) {
+                        int docId = doc.getLong("id").intValue();
+                        Timestamp createdAt = doc.getTimestamp("createdAt");
+                        String emoState = doc.getString("emotionalState");
+                        String trigger = doc.getString("trigger");
+                        String social = doc.getString("socialSituation");
+                        String explanation = doc.getString("explanation");
+                        double lat = doc.contains("latitude") ? doc.getDouble("latitude") : 0.0;
+                        double lon = doc.contains("longitude") ? doc.getDouble("longitude") : 0.0;
+
+                        MoodEvent moodEvent = new MoodEvent(
+                                docId,
+                                createdAt,
+                                emoState,
+                                trigger,
+                                social,
+                                explanation,
+                                null,
+                                lat,
+                                lon
+                        );
+                        result.add(moodEvent);
+                    }
+                    // Update local map
+                    moodEvents.clear();
+                    for (MoodEvent m : result) {
+                        moodEvents.put(m.getId(), m);
+                    }
+                    Log.d("MoodEventViewModel", "Fetched " + result.size() + " moods from Firestore");
+
+                    listener.onMoodsFetched(result);
+                })
+                .addOnFailureListener(e -> {
+                    Log.w("MoodEventViewModel", "Failed Firestore fetch => fallback to local", e);
+                    listener.onMoodsFetched(new ArrayList<>(moodEvents.values()));
+                });
+    }
+
+    /**
+     * For adding a new MoodEvent:
+     *  1) Insert into local HashMap.
+     *  2) If online & user is logged in => also store to Firestore.
+     */
     public void addMoodEvent(MoodEvent newMood) {
+        int id = newMood.getId();
+        if (id <= 0) {
+            // If user didn't supply a real ID, generate one
+            id = nextLocalId++;
+        }
+        // Store in local
+        moodEvents.put(id, newMood);
 
+        final int finalId = id;
+
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser == null) {
+            Log.w("MoodEventViewModel", "No user => cannot push to Firestore, only local");
+            return;
+        }
+        if (isOnline()) {
+            String userUid = currentUser.getUid();
+
+            Map<String, Object> data = new HashMap<>();
+            data.put("authorUsername", userUid);
+            data.put("id", id);
+            data.put("createdAt", newMood.getCreatedAt());
+            data.put("emotionalState", newMood.getEmotionalState());
+            data.put("trigger", newMood.getTrigger());
+            data.put("socialSituation", newMood.getSocialSituation());
+            data.put("explanation", newMood.getExplanation());
+            data.put("latitude", newMood.getLatitude());
+            data.put("longitude", newMood.getLongitude());
+            // If you want lastEditedAt, images, etc., add them
+
+            db.collection("MoodEvents")
+                    .document(String.valueOf(id))
+                    .set(data)
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d("MoodEventViewModel", "Saved mood to Firestore with ID=" + finalId);
+                        if (onAddListener != null) onAddListener.onAddSuccess();
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.w("MoodEventViewModel", "Failed to save mood to Firestore", e);
+                        if (onAddListener != null) onAddListener.onAddFailure(e.getMessage());
+                    });
+        } else {
+            Log.d("MoodEventViewModel", "Offline => only local store. Will need sync later");
+            if (onAddListener != null) onAddListener.onAddSuccess();
+        }
     }
 
-    public interface OnUserFetchedListener {
-        void onUserFetched(Map<String, Object> userData);
+    // If you want an overload for the version used by MoodActivity
+    public void addMoodEvent(String emoState,
+                             String trigger,
+                             String social,
+                             String explanation,
+                             Uri image,
+                             double lat,
+                             double lon,
+                             OnAddListener listener) {
+        // Build a new MoodEvent with ID=0 => triggers local ID
+        MoodEvent newMood = new MoodEvent(
+                0,
+                Timestamp.now(),
+                emoState,
+                trigger,
+                social,
+                explanation,
+                image,
+                lat,
+                lon
+        );
+        this.onAddListener = listener;
+        addMoodEvent(newMood);
+        this.onAddListener = null; // reset
     }
 
-    public interface OnMoodsFilteredListener {
-        void onMoodsFiltered(List<MoodEvent> filteredMoods);
-    }
-
-    public interface OnUpdateListener {
-        void onUpdateSuccess();
-        void onUpdateFailure(String errorMessage);
-    }
+    // Use an internal field to pass success/failure back to the UI
+    private OnAddListener onAddListener;
 
     public interface OnAddListener {
         void onAddSuccess();
         void onAddFailure(String errorMessage);
     }
 
-    // Getter for offline cache (optional, for offline use if needed)
+    // For offline usage, or to retrieve local data
     public HashMap<Integer, MoodEvent> getMoodEvents() {
         return moodEvents;
+    }
+
+    public interface OnMoodsFetchedListener {
+        void onMoodsFetched(List<MoodEvent> moodEvents);
     }
 }
