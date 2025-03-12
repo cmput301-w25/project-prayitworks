@@ -204,8 +204,10 @@
                 android:id="@+id/btn_home"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/home"
+                android:src="@drawable/ic_home"
+                android:background="@drawable/bottom_circle_background"
                 app:layout_constraintBottom_toBottomOf="parent"
+                android:scaleType="fitCenter"
                 app:layout_constraintEnd_toStartOf="@+id/btn_search"
                 app:layout_constraintStart_toStartOf="parent"/>
         </FrameLayout>
@@ -220,8 +222,10 @@
                 android:id="@+id/btn_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/search"
+                android:src="@drawable/ic_search"
+                android:background="@drawable/bottom_circle_background"
                 app:layout_constraintBottom_toBottomOf="parent"
+                android:scaleType="fitCenter"
                 app:layout_constraintEnd_toStartOf="@+id/btn_add"
                 app:layout_constraintStart_toEndOf="@+id/btn_home"/>
         </FrameLayout>
@@ -238,6 +242,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/plus_circle"
+                android:background="@drawable/bottom_circle_background"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_calendar"
                 app:layout_constraintStart_toEndOf="@+id/btn_search"/>
@@ -253,8 +258,10 @@
                 android:id="@+id/btn_calendar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/calendar"
+                android:src="@drawable/ic_calendar"
+                android:background="@drawable/bottom_circle_background"
                 app:layout_constraintBottom_toBottomOf="parent"
+                android:scaleType="fitCenter"
                 app:layout_constraintEnd_toStartOf="@+id/btn_profile"
                 app:layout_constraintStart_toEndOf="@+id/btn_add"/>
         </FrameLayout>
@@ -271,11 +278,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/avatar"
+                android:background="@drawable/bottom_circle_background"
+                android:scaleType="fitCenter"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/btn_calendar"/>
         </FrameLayout>
-
     </LinearLayout>
 
 
@@ -284,6 +292,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintGuide_percent="4.671642" />
+
 
 
 </RelativeLayout>
