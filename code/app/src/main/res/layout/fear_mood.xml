@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp"
     android:background="@drawable/fear_mood_bg">
-
 
     <!-- Top Section with Mood and Avatar Icons -->
     <LinearLayout
@@ -14,140 +14,119 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-
         <ImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_gravity="center"
             android:layout_weight="1"
+            android:layout_gravity="center"
             android:gravity="start"
             android:src="@drawable/mood" />
-
 
         <View
             android:layout_width="3dp"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
-
+            android:layout_weight="1" />
 
         <ImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@drawable/avatar"
-            android:layout_gravity="center"
             android:layout_weight="1"
-            android:gravity="end"/>
+            android:layout_gravity="center"
+            android:gravity="end"
+            android:src="@drawable/avatar" />
     </LinearLayout>
 
-
-    <!-- Add Mood Title -->
-    <TextView
+    <!-- Mood Title (Fear Icon) -->
+    <ImageView
         android:id="@+id/fear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="😨"
-        android:textSize="40sp"
-        android:layout_gravity="center"
+        android:src="@drawable/ic_mood_fear"
         android:layout_below="@id/top_section"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="5dp" />
 
-
-    <!-- Mood Selection Buttons -->
-
-
-
-    <!-- Reason Input Field with Gradient Background -->
-
-
-    <!-- Trigger Input Field with Gradient Background -->
-
-
-    <!-- Social Situation Spinner -->
-
-
-    <!-- Upload Image Button -->
-
-
-    <!-- Bottom Navigation Bar -->
-
+    <!-- Date and Time Text -->
     <TextView
         android:id="@+id/date_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/fear"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="-2dp"
+        android:gravity="center"
         android:text="Select Date and Time"
         android:textSize="16sp"
-        android:textColor="@android:color/black"
-        android:gravity="center"/>
+        android:textColor="@android:color/black" />
 
-
+    <!-- Reason Input Field with Gradient Background -->
     <LinearLayout
         android:id="@+id/reason_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/fear"
+        android:layout_below="@id/fear"
         android:layout_marginTop="43dp"
         android:background="@drawable/fear_mood_text_bg"
         android:orientation="vertical"
         android:padding="16dp">
-
 
         <EditText
             android:id="@+id/edit_reason"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
-            android:layout_marginTop="0dp"
-            android:hint="Reason (20 Characters or 3 words)"
+            android:hint="Reason (Optional, up to 20 characters)"
             android:maxLength="20" />
     </LinearLayout>
 
-
+    <!-- Trigger Input Field with Gradient Background -->
     <LinearLayout
         android:id="@+id/trigger_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/reason_container"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/fear_mood_text_bg"
         android:orientation="vertical"
         android:padding="16dp">
-
 
         <EditText
             android:id="@+id/edit_trigger"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
-            android:hint="Trigger (20 Characters or 3 words)"
+            android:hint="Trigger (Optional, up to 20 characters)"
             android:maxLength="20" />
     </LinearLayout>
 
-
+    <!-- Social Situation Spinner -->
     <Spinner
         android:id="@+id/spinner_social"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/trigger_container"
         android:layout_marginTop="30dp"
-        android:hint="Social Situation" />
+        android:padding="12dp"
+        android:popupBackground="@drawable/fear_mood_bg"
+        android:spinnerMode="dropdown"
+        android:gravity="center_vertical" />
 
-
+    <!-- Button: Attach an Image -->
     <Button
         android:id="@+id/btn_upload_image"
-        android:layout_width="305dp"
-        android:layout_height="wrap_content"
+        android:layout_width="383dp"
+        android:layout_height="127dp"
         android:layout_below="@id/spinner_social"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="center"
-        android:layout_marginStart="58dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="58dp"
-        android:text="Upload an Image for memory 📷" />
-
+        android:layout_marginTop="24dp"
+        android:background="@drawable/background_emojis"
+        android:backgroundTint="@null"
+        android:drawableTop="@drawable/ic_camera"
+        android:drawablePadding="16dp"
+        android:drawableTint="#B0B0B0"
+        android:gravity="center"
+        android:text="Attach a Photo"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
 
     <!-- Save and Cancel Buttons -->
     <LinearLayout
@@ -165,11 +144,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Cancel"
-            android:textColor="@android:color/black"
-            android:background="#E42929"
+            android:textColor="@color/red_cancel"
+            android:background="@drawable/cancel_button"
+            android:backgroundTint="@color/white"
             android:padding="10dp"
             android:textSize="18sp"
-            android:layout_marginEnd="8dp"/>
+            android:layout_marginEnd="8dp" />
 
         <Button
             android:id="@+id/btn_save"
@@ -177,108 +157,110 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Save"
-            android:textColor="@android:color/black"
-            android:background="#48DA61"
+            android:textColor="@color/white"
+            android:background="@drawable/background_emojis"
             android:padding="10dp"
+            android:backgroundTint="@null"
             android:textSize="18sp"
-            android:layout_marginStart="8dp"/>
+            android:layout_marginStart="8dp" />
     </LinearLayout>
 
-
+    <!-- Bottom Navigation Bar -->
     <LinearLayout
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
         android:background="#546955"
         android:gravity="center"
         android:orientation="horizontal"
-        android:weightSum="5"
-        android:layout_alignParentBottom="true">
+        android:weightSum="5">
 
+        <!-- HOME -->
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center">
-
             <ImageButton
                 android:id="@+id/btn_home"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/home"
+                android:src="@drawable/ic_home"
+                android:background="@drawable/bottom_circle_background"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_search"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent" />
         </FrameLayout>
 
+        <!-- SEARCH -->
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center">
-
             <ImageButton
                 android:id="@+id/btn_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/search"
+                android:src="@drawable/ic_search"
+                android:background="@drawable/bottom_circle_background"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_add"
-                app:layout_constraintStart_toEndOf="@+id/btn_home"/>
+                app:layout_constraintStart_toEndOf="@+id/btn_home" />
         </FrameLayout>
 
+        <!-- ADD MOOD -->
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center">
-
-
             <ImageButton
                 android:id="@+id/btn_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/plus_circle"
+                android:background="@drawable/bottom_circle_background"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_calendar"
-                app:layout_constraintStart_toEndOf="@+id/btn_search"/>
+                app:layout_constraintStart_toEndOf="@+id/btn_search" />
         </FrameLayout>
 
+        <!-- CALENDAR -->
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center">
-
             <ImageButton
                 android:id="@+id/btn_calendar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/calendar"
+                android:src="@drawable/ic_calendar"
+                android:background="@drawable/bottom_circle_background"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_profile"
-                app:layout_constraintStart_toEndOf="@+id/btn_add"/>
+                app:layout_constraintStart_toEndOf="@+id/btn_add" />
         </FrameLayout>
 
+        <!-- PROFILE -->
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center">
-
-
             <ImageButton
                 android:id="@+id/btn_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/avatar"
+                android:background="@drawable/bottom_circle_background"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/btn_calendar"/>
+                app:layout_constraintStart_toEndOf="@+id/btn_calendar" />
         </FrameLayout>
-
     </LinearLayout>
-
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -286,6 +268,4 @@
         android:layout_height="wrap_content"
         app:layout_constraintGuide_percent="4.671642" />
 
-
 </RelativeLayout>
-

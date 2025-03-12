@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-
         <ImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
@@ -22,12 +21,10 @@
             android:gravity="start"
             android:src="@drawable/mood" />
 
-
         <View
             android:layout_width="3dp"
             android:layout_height="0dp"
             android:layout_weight="1"/>
-
 
         <ImageView
             android:layout_width="80dp"
@@ -51,7 +48,6 @@
         android:layout_marginTop="8dp"/>
 
     <!-- Calendar View -->
-
     <CalendarView
         android:id="@+id/calendarView"
         android:layout_width="384dp"
@@ -94,7 +90,6 @@
         android:layout_marginBottom="5dp"></ListView>
 
     <!-- Bottom Navigation Bar -->
-
     <LinearLayout
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
@@ -105,6 +100,7 @@
         android:weightSum="5"
         android:layout_alignParentBottom="true">
 
+        <!-- HOME -->
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -115,12 +111,11 @@
                 android:id="@+id/btn_home"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/home"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btn_search"
-                app:layout_constraintStart_toStartOf="parent"/>
+                android:src="@drawable/ic_home"
+                android:background="@drawable/bottom_circle_background"/>
         </FrameLayout>
 
+        <!-- SEARCH -->
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -131,29 +126,26 @@
                 android:id="@+id/btn_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/search"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btn_add"
-                app:layout_constraintStart_toEndOf="@+id/btn_home"/>
+                android:src="@drawable/ic_search"
+                android:background="@drawable/bottom_circle_background"/>
         </FrameLayout>
 
+        <!-- ADD MOOD -->
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center">
 
-
             <ImageButton
                 android:id="@+id/btn_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/plus_circle"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btn_calendar"
-                app:layout_constraintStart_toEndOf="@+id/btn_search"/>
+                android:background="@drawable/bottom_circle_background"/>
         </FrameLayout>
 
+        <!-- CALENDAR -->
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -164,29 +156,24 @@
                 android:id="@+id/btn_calendar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/calendar"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btn_profile"
-                app:layout_constraintStart_toEndOf="@+id/btn_add"/>
+                android:src="@drawable/ic_calendar"
+                android:background="@drawable/bottom_circle_background"/>
         </FrameLayout>
 
+        <!-- PROFILE -->
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center">
 
-
             <ImageButton
                 android:id="@+id/btn_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/avatar"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/btn_calendar"/>
+                android:background="@drawable/bottom_circle_background"
+                android:src="@drawable/avatar" />
         </FrameLayout>
-
     </LinearLayout>
 
     <androidx.constraintlayout.widget.Guideline
@@ -194,6 +181,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintGuide_percent="4.671642" />
-
 
 </RelativeLayout>

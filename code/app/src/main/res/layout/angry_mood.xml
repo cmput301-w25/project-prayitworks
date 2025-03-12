@@ -41,16 +41,16 @@
 
 
     <!-- Add Mood Title -->
-    <TextView
+    <ImageView
         android:id="@+id/angry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="😡"
-        android:textSize="40sp"
+        android:src="@drawable/ic_mood_angry"
         android:layout_gravity="center"
         android:layout_below="@id/top_section"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="5dp"/>
+
 
 
     <!-- Mood Selection Buttons -->
@@ -71,17 +71,17 @@
 
     <!-- Bottom Navigation Bar -->
 
+
     <TextView
         android:id="@+id/date_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/angry"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="-2dp"
+        android:gravity="center"
         android:text="Select Date and Time"
-        android:textSize="16sp"
         android:textColor="@android:color/black"
-        android:gravity="center"/>
-
+        android:textSize="16sp" />
 
     <LinearLayout
         android:id="@+id/reason_container"
@@ -110,7 +110,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/reason_container"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/angry_mood_bg_text"
         android:orientation="vertical"
         android:padding="16dp">
@@ -125,28 +125,36 @@
             android:maxLength="20" />
     </LinearLayout>
 
-
     <Spinner
         android:id="@+id/spinner_social"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/trigger_container"
         android:layout_marginTop="30dp"
-        android:hint="Social Situation" />
+        android:padding="12dp"
+        android:popupBackground="@drawable/bg_app_gradient"
+        android:spinnerMode="dropdown"
+        android:gravity="center_vertical"/>
 
 
+
+    <!-- Button: Attach an Image -->
     <Button
         android:id="@+id/btn_upload_image"
-        android:layout_width="305dp"
-        android:layout_height="wrap_content"
+        android:layout_width="383dp"
+        android:layout_height="127dp"
         android:layout_below="@id/spinner_social"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="center"
-        android:layout_marginStart="58dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="58dp"
-        android:text="Upload an Image for memory 📷" />
+        android:layout_marginTop="24dp"
+        android:background="@drawable/background_emojis"
+        android:backgroundTint="@null"
+        android:drawableTop="@drawable/ic_camera"
+        android:drawablePadding="16dp"
+        android:drawableTint="#B0B0B0"
+        android:gravity="center"
+        android:text="Attach a Photo"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
 
 
     <!-- Save and Cancel Buttons -->
@@ -165,8 +173,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Cancel"
-            android:textColor="@android:color/black"
+            android:textColor="@color/red_cancel"
             android:background="@drawable/cancel_button"
+            android:backgroundTint="@color/white"
             android:padding="10dp"
             android:textSize="18sp"
             android:layout_marginEnd="8dp"/>
@@ -177,9 +186,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Save"
-            android:textColor="@android:color/black"
-            android:background="@drawable/save_button"
+            android:textColor="@color/white"
+            android:background="@drawable/background_emojis"
             android:padding="10dp"
+            android:backgroundTint="@null"
             android:textSize="18sp"
             android:layout_marginStart="8dp"/>
     </LinearLayout>
