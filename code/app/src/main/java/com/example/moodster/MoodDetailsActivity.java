@@ -2,18 +2,31 @@ package com.example.moodster;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 public class MoodDetailsActivity extends AppCompatActivity {
     private TextView textMoodEmoji, textMoodDateTime, textReasonValue, textTriggerValue, textSocialValue;
     private ImageView imageMoodPhoto;
 
+
+    private int MoodEventPos;
+    private MoodEventViewModel moodEventViewModel;
+    private Button btnDeleteMood;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_press_view_details_mood_history);
+        moodEventViewModel = MoodEventViewModel.getInstance();
 
         Intent intent = getIntent();
 
@@ -29,5 +42,29 @@ public class MoodDetailsActivity extends AppCompatActivity {
         textTriggerValue.setText(intent.getStringExtra("textTriggerValue"));
         textSocialValue.setText(intent.getStringExtra("textSocialValue"));
         imageMoodPhoto.setImageURI(intent.getParcelableExtra("imageMoodPhoto"));
+        MoodEventPos = intent.getIntExtra("position",0);
+
+
+        // Deleting a mood
+        btnDeleteMood = findViewById(R.id.buttonDelete);
+        btnDeleteMood.setOnClickListener(v -> {
+            //Log.d("POS", String.valueOf(MoodEventPos));
+            //Log.d("IWANT", moodEventViewModel.getMoodEvents().toString());
+            List<Integer> keys = new ArrayList<>(moodEventViewModel.getMoodEvents().keySet());
+            int keyDlt = 0;
+            
+            for(int i = 0; i <= MoodEventPos; i++){
+                if(MoodEventPos == i){
+                    keyDlt = keys.get(i);
+                }
+            }
+            moodEventViewModel.getMoodEvents().remove(keyDlt);
+            //Log.d("IWANT", moodEventViewModel.getMoodEvents().toString());
+            //setContentView(R.layout.mood_history_main);
+            // Going back to mood History
+            Intent intentDone = new Intent(MoodDetailsActivity.this, MoodHistoryActivity.class);
+            startActivity(intentDone);
+            //moodEventViewModel.getMoodEvents();
+        });
     }
 }

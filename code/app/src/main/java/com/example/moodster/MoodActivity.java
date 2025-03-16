@@ -122,7 +122,9 @@ public class MoodActivity extends AppCompatActivity {
                             Toast.makeText(MoodActivity.this, "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
                         }
                     }
+
             );
+            Log.d("MoodEvent Added!", moodEventViewModel.getMoodEvents().toString());
         });
 
         // Calendar button => see history
