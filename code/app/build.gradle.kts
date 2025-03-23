@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation (libs.mpandroidchart)
     implementation(libs.play.services.location)
+    implementation ("com.google.android.gms:play-services-maps:18.2.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
