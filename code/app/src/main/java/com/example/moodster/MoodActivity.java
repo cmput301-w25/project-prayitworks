@@ -101,33 +101,38 @@ public class MoodActivity extends AppCompatActivity {
             String explanation = editExplanation.getText().toString().trim();
 
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-            getCurrentLocation(); // sets latitude/longitude
 
-            moodEventViewModel.addMoodEvent(
-                    selectedEmotionalState,
-                    trigger,
-                    socialSituation,
-                    explanation,
-                    selectedImageUri,
-                    latitude,
-                    longitude,
-                    new MoodEventViewModel.OnAddListener() {
-                        @Override
-                        public void onAddSuccess() {
-                            Toast.makeText(MoodActivity.this, "Mood saved to Firestore!", Toast.LENGTH_SHORT).show();
-                            finish();
+            getCurrentLocation((lat, lon) -> {
+                latitude = lat;
+                longitude = lon;
+                Log.d("Location", "Lat=" + latitude + ", Lon=" + longitude);
+
+                moodEventViewModel.addMoodEvent(
+                        selectedEmotionalState,
+                        trigger,
+                        socialSituation,
+                        explanation,
+                        selectedImageUri,
+                        latitude,
+                        longitude,
+                        new MoodEventViewModel.OnAddListener() {
+                            @Override
+                            public void onAddSuccess() {
+                                Toast.makeText(MoodActivity.this, "Mood saved to Firestore!", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                            @Override
+                            public void onAddFailure(String errorMessage) {
+                                Toast.makeText(MoodActivity.this, "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        @Override
-                        public void onAddFailure(String errorMessage) {
-                            Toast.makeText(MoodActivity.this, "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
-                        }
-                    }
+                );
 
-
-            );
-            Intent intentDone = new Intent(MoodActivity.this, AddMoodActivity.class);
-            startActivity(intentDone);
-            Log.d("MoodEvent Added!", moodEventViewModel.getMoodEvents().toString());
+                Intent intentDone = new Intent(MoodActivity.this, AddMoodActivity.class);
+                startActivity(intentDone);
+                Log.d("MoodEvent Added!", moodEventViewModel.getMoodEvents().toString());
+                Log.d("Location", "Lat=" + latitude + ", Lon=" + longitude);
+            });
         });
 
         // Calendar button => see history
@@ -187,14 +192,16 @@ public class MoodActivity extends AppCompatActivity {
     // -----------------------------------
     // Location
     // -----------------------------------
-    private void getCurrentLocation() {
+    private void getCurrentLocation(LocationCallback callback) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
                 if (location != null) {
-                    latitude = location.getLatitude();
-                    longitude = location.getLongitude();
-                    Log.d("Location", "Lat=" + latitude + ", Lon=" + longitude);
+                    double latitude = location.getLatitude();
+                    double longitude = location.getLongitude();
+                    callback.onLocationReceived(latitude, longitude);
+                } else {
+                    callback.onLocationReceived(Double.NaN, Double.NaN); // Handle null case
                 }
             });
         } else {
@@ -203,14 +210,24 @@ public class MoodActivity extends AppCompatActivity {
         }
     }
 
+    public interface LocationCallback {
+        void onLocationReceived(double latitude, double longitude);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] perms,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, perms, grantResults);
+
         if (requestCode == 1 && grantResults.length > 0 &&
                 grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            getCurrentLocation();
+
+            // Call getCurrentLocation with a callback to handle the result
+            getCurrentLocation((latitude, longitude) -> {
+                Log.d("Location", "Permission granted. Lat=" + latitude + ", Lon=" + longitude);
+            });
+
         } else {
             Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
         }

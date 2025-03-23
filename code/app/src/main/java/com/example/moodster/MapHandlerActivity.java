@@ -18,49 +18,61 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.View;
-
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import com.example.moodster.databinding.ActivityMainBinding;
-
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyCallback{
+public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
-    private HashMap<String, LatLng> moodLocations = new HashMap<>();
-    private LatLng userLocation = new LatLng(53.5461, -113.4938);
+    private LatLng userLocation; // No longer hardcoded
+    private MoodEventViewModel moodEventViewModel;
     private Circle radiusCircle;
-
+    private HashMap<String, String> emotionToEmoji = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter_radius_mood_map);
 
-        // Initialize SeekBar and TextView
+        // Initialize emotion to emoji mappings
+        emotionToEmoji.put("Anger", "😡");
+        emotionToEmoji.put("Confusion", "😵‍💫");
+        emotionToEmoji.put("Disgust", "🤢");
+        emotionToEmoji.put("Fear", "😨");
+        emotionToEmoji.put("Happiness", "😁");
+        emotionToEmoji.put("Sadness", "😓");
+        emotionToEmoji.put("Shame", "😶‍🌫️");
+        emotionToEmoji.put("Surprise", "😮");
+
+        // Initialize UI components
         SeekBar seekBar = findViewById(R.id.seekBarRadius);
         TextView radiusText = findViewById(R.id.textRadiusValue);
 
-        radiusText.setText(2 + " km");
+        moodEventViewModel = MoodEventViewModel.getInstance();
+        Log.d("MOODS:", moodEventViewModel.getMoodEvents().toString());
+
+        // Set user location based on first mood event or default
+        Map<Integer, MoodEvent> moodEvents = moodEventViewModel.getMoodEvents();
+        if (moodEvents != null && !moodEvents.isEmpty()) {
+            MoodEvent firstEvent = moodEvents.values().iterator().next();
+            userLocation = new LatLng(firstEvent.getLatitude(), firstEvent.getLongitude());
+        } else {
+            // Default to Edmonton coordinates if no events
+            userLocation = new LatLng(53.5461, -113.4938);
+        }
+
+        radiusText.setText("2 km");
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                radiusText.setText(progress + " km"); // Update radius text
-                updateMapMarkers(progress); // Update markers and circle
+                radiusText.setText(progress + " km");
+                updateMapMarkers(progress);
             }
 
             @Override
@@ -74,22 +86,13 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        // Add example mood locations
-        moodLocations.put("😠", new LatLng(53.5461, -113.4938)); // West Edmonton Mall
-        moodLocations.put("😢", new LatLng(53.5354, -113.5070)); // University of Alberta
-        moodLocations.put("😊", new LatLng(53.5322, -113.4907)); // Alberta Legislature Building
-        moodLocations.put("🤩", new LatLng(53.5232, -113.5263)); // Rogers Place
-        moodLocations.put("😌", new LatLng(53.5081, -113.5271)); // Hawrelak Park
-
     }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Initial map setup
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12f)); // Increased zoom level
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12f));
 
         // Add initial circle
         radiusCircle = mMap.addCircle(new CircleOptions()
@@ -98,53 +101,64 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
                 .strokeColor(Color.RED)
                 .fillColor(Color.argb(70, 255, 0, 0)));
 
-        // Trigger initial marker update
-        updateMapMarkers(2); // Initialize with 5km radius
+        updateMapMarkers(2);
     }
 
     private void updateMapMarkers(int radius) {
         if (mMap == null) return;
 
-        mMap.clear(); // Clear existing markers and overlays
+        mMap.clear();
 
-        // Re-add the circle with updated radius
+        // Always update the radius circle
         radiusCircle = mMap.addCircle(new CircleOptions()
                 .center(userLocation)
-                .radius(radius * 1000) // Convert radius to meters
+                .radius(radius * 1000)
                 .strokeColor(Color.RED)
                 .fillColor(Color.argb(70, 255, 0, 0)));
 
-        // Add markers with emojis
-        for (Map.Entry<String, LatLng> entry : moodLocations.entrySet()) {
-            String mood = entry.getKey();
-            LatLng location = entry.getValue();
+        // Get mood events and check if empty
+        Map<Integer, MoodEvent> moodEvents = moodEventViewModel.getMoodEvents();
+        if (moodEvents == null || moodEvents.isEmpty()) {
+            Log.d("MAP", "No mood events to display");
+            return; // Exit early but keep the map visible with radius circle
+        }
 
-            double distance = calculateDistance(userLocation, location);
+        // Process mood events if available
+        for (MoodEvent event : moodEvents.values()) {
+            String emotionalState = event.getEmotionalState();
+            String emoji = emotionToEmoji.getOrDefault(emotionalState, "😶");
 
-            if (distance <= radius * 1000) {
-                mMap.addMarker(new MarkerOptions()
-                        .position(location)
-                        .icon(getEmojiBitmapDescriptor(mood)) // Add emoji icon
-                        .title(mood));
+            try {
+                LatLng location = new LatLng(event.getLatitude(), event.getLongitude());
+                double distance = calculateDistance(userLocation, location);
+
+                if (distance <= radius * 1000) {
+                    mMap.addMarker(new MarkerOptions()
+                            .position(location)
+                            .icon(getEmojiBitmapDescriptor(emoji))
+                            .title(emotionalState)
+                            .snippet("Recorded at: " + event.getCreatedAt()));
+                }
+            } catch (Exception e) {
+                Log.e("MAP_ERROR", "Error processing MoodEvent: " + e.getMessage());
             }
         }
     }
-    public BitmapDescriptor getEmojiBitmapDescriptor(String emoji) {
-        // Create a paint object to draw the emoji
+
+    private BitmapDescriptor getEmojiBitmapDescriptor(String emoji) {
         Paint paint = new Paint();
-        paint.setTextSize(100); // Adjust the size of the emoji
+        paint.setTextSize(100);
         paint.setTypeface(Typeface.DEFAULT_BOLD);
         paint.setTextAlign(Paint.Align.CENTER);
 
-        // Create a bitmap and canvas to draw the emoji
-        Bitmap bitmap = Bitmap.createBitmap(150, 150, Bitmap.Config.ARGB_8888); // Adjust size as needed
+        Bitmap bitmap = Bitmap.createBitmap(150, 150, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-        canvas.drawText(emoji, 75, 100, paint); // Adjust position as needed
+        canvas.drawText(emoji, 75, 100, paint);
 
-        // Convert the bitmap to a BitmapDescriptor
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
-    public double calculateDistance(LatLng point1, LatLng point2) {
+
+    private double calculateDistance(LatLng point1, LatLng point2) {
         Location location1 = new Location("point1");
         location1.setLatitude(point1.latitude);
         location1.setLongitude(point1.longitude);
@@ -153,6 +167,6 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
         location2.setLatitude(point2.latitude);
         location2.setLongitude(point2.longitude);
 
-        return location1.distanceTo(location2); // Distance in meters
+        return location1.distanceTo(location2);
     }
 }

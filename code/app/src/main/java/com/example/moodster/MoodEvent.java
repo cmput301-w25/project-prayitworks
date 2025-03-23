@@ -20,8 +20,8 @@ public class MoodEvent implements Serializable {
     private Uri image;
 
     // For Location
-    private double latitude = 0.0;
-    private double longitude = 0.0;
+    private double latitude;
+    private double longitude;
 
 
     // Predefined list of valid emotional states
@@ -30,7 +30,7 @@ public class MoodEvent implements Serializable {
     );
 
     // Constructor
-    public MoodEvent(int id, Timestamp createdAt, String emotionalState, String trigger, String socialSituation, String explanation, Uri image, double latitude, double longitude) {
+    public MoodEvent(int id, Timestamp createdAt, String emotionalState, String trigger, String socialSituation, String explanation, Uri image, double lat, double lon) {
         if (!VALID_EMOTIONAL_STATES.contains(emotionalState)) {
             throw new IllegalArgumentException("Invalid emotional state: " + emotionalState);
         }
@@ -44,8 +44,8 @@ public class MoodEvent implements Serializable {
         this.socialSituation = socialSituation;
         this.explanation = explanation;
         this.image = image;
-        this.longitude = longitude;
-        this.latitude = latitude;
+        this.longitude = lon;
+        this.latitude = lat;
     }
 
     public String getEmoji() {
@@ -125,7 +125,9 @@ public class MoodEvent implements Serializable {
                 ", trigger='" + trigger + '\'' +
                 ", socialSituation='" + socialSituation + '\'' +
                 ", explanation='" + explanation + '\'' +
-                '}';
+                ", lon= " + longitude + '\'' +
+                ", lat= " + latitude + '\'' +
+                "}";
 
     }
 }
