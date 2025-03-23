@@ -123,7 +123,10 @@ public class MoodActivity extends AppCompatActivity {
                         }
                     }
 
+
             );
+            Intent intentDone = new Intent(MoodActivity.this, AddMoodActivity.class);
+            startActivity(intentDone);
             Log.d("MoodEvent Added!", moodEventViewModel.getMoodEvents().toString());
         });
 
