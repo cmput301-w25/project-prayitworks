@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -26,11 +25,11 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.firebase.Timestamp;
 
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class MoodActivity extends AppCompatActivity {
 
@@ -60,12 +59,15 @@ public class MoodActivity extends AppCompatActivity {
         selectedEmotionalState = getIntent().getStringExtra("mood");
 
         // Choose layout based on the mood
-        switch (selectedEmotionalState) {
+        switch (Objects.requireNonNull(selectedEmotionalState)) {
             case "Anger": setContentView(R.layout.angry_mood); break;
+            case "Confusion": setContentView(R.layout.confusion_mood); break;
+            case "Disgust": setContentView(R.layout.disgust_mood); break;
             case "Sadness": setContentView(R.layout.sad_mood); break;
             case "Shame": setContentView(R.layout.shame_mood); break;
             case "Fear": setContentView(R.layout.fear_mood); break;
             case "Happiness": setContentView(R.layout.happy_mood); break;
+            case "Surprise": setContentView(R.layout.surprise_mood); break;
             default: setContentView(R.layout.happy_mood); // fallback
         }
 
