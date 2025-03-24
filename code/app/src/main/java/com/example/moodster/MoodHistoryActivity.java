@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MoodHistoryActivity extends AppCompatActivity {
@@ -39,6 +40,9 @@ public class MoodHistoryActivity extends AppCompatActivity {
         moodEventViewModel.fetchCurrentUserMoods(moodList -> {
             masterMoodList.clear();
             masterMoodList.addAll(moodList);
+
+            // Sort the mood events in reverse chronological order (most recent first)
+            Collections.sort(masterMoodList, (m1, m2) -> m2.getCreatedAt().toDate().compareTo(m1.getCreatedAt().toDate()));
 
             if (adapter == null) {
                 adapter = new MoodListAdapter(this, masterMoodList);
