@@ -2,15 +2,12 @@ package com.example.moodster;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class MoodDetailsActivity extends AppCompatActivity {
@@ -20,12 +17,13 @@ public class MoodDetailsActivity extends AppCompatActivity {
 
     private int MoodEventPos;
     private MoodEventViewModel moodEventViewModel;
-    private Button btnDeleteMood;
+    private Button btnDeleteMood, btnEditMood;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_press_view_details_mood_history);
+
         moodEventViewModel = MoodEventViewModel.getInstance();
 
         Intent intent = getIntent();
@@ -44,13 +42,15 @@ public class MoodDetailsActivity extends AppCompatActivity {
         imageMoodPhoto.setImageURI(intent.getParcelableExtra("imageMoodPhoto"));
         MoodEventPos = intent.getIntExtra("position",0);
 
+        List<Integer> keys = new ArrayList<>(moodEventViewModel.getMoodEvents().keySet());
+        int key = keys.get(MoodEventPos);
+        MoodEvent event = moodEventViewModel.getMoodEvents().get(key);
 
         // Deleting a mood
         btnDeleteMood = findViewById(R.id.buttonDelete);
         btnDeleteMood.setOnClickListener(v -> {
             //Log.d("POS", String.valueOf(MoodEventPos));
             //Log.d("IWANT", moodEventViewModel.getMoodEvents().toString());
-            List<Integer> keys = new ArrayList<>(moodEventViewModel.getMoodEvents().keySet());
             int keyDlt = 0;
             
             for(int i = 0; i <= MoodEventPos; i++){
@@ -65,6 +65,14 @@ public class MoodDetailsActivity extends AppCompatActivity {
             Intent intentDone = new Intent(MoodDetailsActivity.this, MoodHistoryActivity.class);
             startActivity(intentDone);
             //moodEventViewModel.getMoodEvents();
+        });
+
+        // Editing a mood
+        btnEditMood = findViewById(R.id.buttonEdit);
+        btnEditMood.setOnClickListener(v -> {
+            Intent intentEdit = new Intent(MoodDetailsActivity.this, EditMoodActivity.class);
+            intentEdit.putExtra("position", MoodEventPos);
+            startActivity(intentEdit);
         });
     }
 }
