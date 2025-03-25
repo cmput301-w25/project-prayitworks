@@ -233,9 +233,9 @@
             <ImageButton
                 android:id="@+id/btn_home"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_home"
-                android:background="@drawable/bottom_circle_background"/>
+                android:layout_height="51dp"
+                android:background="@drawable/bottom_circle_background"
+                android:src="@drawable/ic_home" />
         </FrameLayout>
 
         <!-- SEARCH -->

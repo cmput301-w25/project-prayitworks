@@ -23,6 +23,7 @@ public class AddMoodActivity extends AppCompatActivity {
 
         ImageButton btnViewMoodHistory = findViewById(R.id.btn_calendar);
         ImageButton btnSearch = findViewById(R.id.btn_search);
+        ImageButton btnHome = findViewById(R.id.btn_home);
 
         btnAngry.setOnClickListener(view -> openMoodActivity("Anger"));
         btnConfusion.setOnClickListener(view -> openMoodActivity("Confusion"));
@@ -40,6 +41,11 @@ public class AddMoodActivity extends AppCompatActivity {
 
         btnSearch.setOnClickListener(v -> {
             Intent intent = new Intent(AddMoodActivity.this, MapHandlerActivity.class);
+            startActivity(intent);
+        });
+
+        btnHome.setOnClickListener(v -> {
+            Intent intent = new Intent(AddMoodActivity.this, HomeActivity.class);
             startActivity(intent);
         });
     }

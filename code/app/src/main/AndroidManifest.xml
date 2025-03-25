@@ -38,6 +38,8 @@
 
         <activity android:name=".EditMoodActivity" />
 
+        <activity android:name=".HomeActivity" />
+
     </application>
 
 </manifest>
