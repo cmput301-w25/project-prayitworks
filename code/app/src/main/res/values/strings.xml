@@ -82,4 +82,11 @@
         <item>Shame</item>
         <item>Surprise</item>
     </string-array>
+
+    <string-array name="filter_options">
+        <item>Reason</item>
+        <item>Emotional State</item>
+        <item>Social Situation</item>
+    </string-array>
+
 </resources>
