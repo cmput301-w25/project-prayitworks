@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,7 +21,8 @@ public class MoodHistoryActivity extends AppCompatActivity {
     private MoodListAdapter adapter;
     private List<MoodEvent> masterMoodList = new ArrayList<>();
 
-    private EditText searchReasonEditText;
+    private Spinner spinnerFilterType;
+    private EditText searchEditText;
     private TextView emptyStateTextView;
     private MoodEventViewModel moodEventViewModel;
 
@@ -30,9 +32,10 @@ public class MoodHistoryActivity extends AppCompatActivity {
         setContentView(R.layout.mood_history_main);
 
         listView = findViewById(R.id.mood_entries_scroll);
-        searchReasonEditText = findViewById(R.id.editSearchReason);
         emptyStateTextView = findViewById(R.id.textEmptyState);
         emptyStateTextView.setVisibility(TextView.GONE);
+        spinnerFilterType = findViewById(R.id.spinnerFilterType);
+        searchEditText = findViewById(R.id.editSearch);
 
         moodEventViewModel = MoodEventViewModel.getInstance();
 
@@ -52,17 +55,31 @@ public class MoodHistoryActivity extends AppCompatActivity {
             }
         });
 
-        // 2) Filter by explanation
-        searchReasonEditText.addTextChangedListener(new TextWatcher() {
+        // Spinner change => update hint & apply filter
+        spinnerFilterType.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int st, int c, int a) { }
-            @Override
-            public void onTextChanged(CharSequence s, int st, int b, int c) {
-                filterMoodList(s.toString());
+            public void onItemSelected(android.widget.AdapterView<?> parent, android.view.View view, int position, long id) {
+                String selected = parent.getItemAtPosition(position).toString();
+                updateSearchHint(selected);
+                filterMoodList(searchEditText.getText().toString(), selected);
             }
+
             @Override
-            public void afterTextChanged(Editable s) { }
+            public void onNothingSelected(android.widget.AdapterView<?> parent) {}
         });
+
+        // Typing triggers filtering
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String query = s.toString();
+                String selectedFilter = spinnerFilterType.getSelectedItem().toString();
+                filterMoodList(query, selectedFilter);
+            }
+            @Override public void afterTextChanged(Editable s) {}
+        });
+
 
         // "+" button => AddMoodActivity
         ImageButton btnAddMood = findViewById(R.id.btn_add);
@@ -72,8 +89,29 @@ public class MoodHistoryActivity extends AppCompatActivity {
         });
     }
 
-    private void filterMoodList(String keyword) {
-        List<MoodEvent> filtered = MoodEventFilter.filterByExplanation(masterMoodList, keyword);
+    // Main filtering logic
+    private void filterMoodList(String keyword, String filterType) {
+        List<MoodEvent> filtered = new ArrayList<>();
+
+        for (MoodEvent event : masterMoodList) {
+            String fieldToMatch = "";
+
+            switch (filterType) {
+                case "Reason":
+                    fieldToMatch = event.getExplanation();
+                    break;
+                case "Emotional State":
+                    fieldToMatch = event.getEmotionalState();
+                    break;
+                case "Social Situation":
+                    fieldToMatch = event.getSocialSituation();
+                    break;
+            }
+
+            if (fieldToMatch != null && fieldToMatch.toLowerCase().contains(keyword.toLowerCase())) {
+                filtered.add(event);
+            }
+        }
 
         if (filtered.isEmpty()) {
             emptyStateTextView.setVisibility(TextView.VISIBLE);
@@ -81,6 +119,22 @@ public class MoodHistoryActivity extends AppCompatActivity {
         } else {
             emptyStateTextView.setVisibility(TextView.GONE);
         }
+
         adapter.updateList(filtered);
+    }
+
+    // Dynamically update EditText hint
+    private void updateSearchHint(String filterType) {
+        switch (filterType) {
+            case "Reason":
+                searchEditText.setHint("Search by reason...");
+                break;
+            case "Emotional State":
+                searchEditText.setHint("Search by emotional state...");
+                break;
+            case "Social Situation":
+                searchEditText.setHint("Search by social situation...");
+                break;
+        }
     }
 }

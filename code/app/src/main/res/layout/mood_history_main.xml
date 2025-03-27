@@ -58,13 +58,38 @@
         android:layout_marginBottom="8dp" />
 
     <!-- Search EditText below the CalendarView -->
-    <EditText
-        android:id="@+id/editSearchReason"
+    <LinearLayout
+        android:id="@+id/filter_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/calendarView"
         android:layout_marginTop="12dp"
-        android:hint="Search by reason why..." />
+        android:orientation="horizontal"
+        android:weightSum="100">
+
+        <!-- Search Box takes 65% -->
+        <EditText
+            android:id="@+id/editSearch"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="65"
+            android:hint="Search..." />
+
+        <!-- Small Spacer -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5" />
+
+        <!-- Spinner takes 30% -->
+        <Spinner
+            android:id="@+id/spinnerFilterType"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_weight="30"
+            android:entries="@array/filter_options" />
+    </LinearLayout>
+
 
     <!-- "No results" text, placed below the search bar;
          shown/hidden from code as needed -->
@@ -72,7 +97,7 @@
         android:id="@+id/textEmptyState"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editSearchReason"
+        android:layout_below="@id/editSearch"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
         android:text="No results found"

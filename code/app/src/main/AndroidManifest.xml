@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
@@ -15,11 +17,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Moodster"
         tools:targetApi="31">
+
+        <!-- Google Maps API Key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBTUwhf02LwTpPG5dSE1WIwnmhRiehhlsM" />
+
+        <!-- ✅ Launcher Activity: Login -->
         <activity
-            android:name=".AddMoodActivity"
+            android:name=".LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.Moodster">
             <intent-filter>
@@ -28,18 +34,19 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MoodActivity" />
+        <!-- ✅ Register Activity -->
+        <activity android:name=".RegisterActivity" />
 
-        <activity android:name=".MoodDetailsActivity" />
-
-        <activity android:name=".MoodHistoryActivity" />
-
-        <activity android:name=".MapHandlerActivity" />
-
-        <activity android:name=".EditMoodActivity" />
-
+        <!-- ✅ Home -->
         <activity android:name=".HomeActivity" />
 
-    </application>
+        <!-- ✅ Mood Related -->
+        <activity android:name=".AddMoodActivity" />
+        <activity android:name=".MoodActivity" />
+        <activity android:name=".MoodDetailsActivity" />
+        <activity android:name=".MoodHistoryActivity" />
+        <activity android:name=".EditMoodActivity" />
+        <activity android:name=".MapHandlerActivity" />
 
+    </application>
 </manifest>
