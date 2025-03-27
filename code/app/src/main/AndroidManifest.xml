@@ -36,6 +36,10 @@
 
         <activity android:name=".MapHandlerActivity" />
 
+        <activity android:name=".EditMoodActivity" />
+
+        <activity android:name=".HomeActivity" />
+
     </application>
 
 </manifest>

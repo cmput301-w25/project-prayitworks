@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -18,7 +19,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.Timestamp;
 
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ListView moodListView;
     private ArrayAdapter<String> moodListAdapter;
-    private List<MoodEvent> moodEventList = new ArrayList<>();
+    private final List<MoodEvent> moodEventList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,13 +44,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_main);
 
-        // Setup UI
-        moodListView = findViewById(R.id.moodListView);
-        moodListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new ArrayList<>());
-        moodListView.setAdapter(moodListAdapter);
-
-        moodEventViewModel = new ViewModelProvider(this).get(MoodEventViewModel.class);
-
+        // Setup UI for add mood form (inside form_container)
         spinnerEmotionalState = findViewById(R.id.spinnerEmotionalState);
         spinnerFilter = findViewById(R.id.spinnerFilterEmotionalState);
         editTrigger = findViewById(R.id.editTrigger);
@@ -58,8 +52,9 @@ public class MainActivity extends AppCompatActivity {
         btnAddMood = findViewById(R.id.btnAddMood);
         editExplanation = findViewById(R.id.editExplanation);
         explanationCharCount = findViewById(R.id.textExplanationCount);
+        moodListView = findViewById(R.id.moodListView);
 
-        // Setup emotional-state spinner
+        // Setup spinners and adapter for emotional states
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_spinner_item,
@@ -67,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerEmotionalState.setAdapter(adapter);
-
         spinnerEmotionalState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -80,10 +74,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Limit explanation to 20 chars
+        // Limit explanation to 20 chars and show character count
         editExplanation.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
-
-        // Show character count
         editExplanation.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -113,20 +105,22 @@ public class MainActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) { }
         });
 
-        // Add mood button
+        // Setup mood list and adapter
+        moodListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new ArrayList<>());
+        moodListView.setAdapter(moodListAdapter);
+
+        moodEventViewModel = new ViewModelProvider(this).get(MoodEventViewModel.class);
+
+        // Add mood button listener
         btnAddMood.setOnClickListener(v -> {
             if (selectedEmotionalState.isEmpty()) {
                 Log.d("MoodEvent", "Error: No emotional state selected.");
                 return;
             }
-
             String trigger = editTrigger.getText().toString().trim();
             String socialSituation = editSocialSituation.getText().toString().trim();
             String explanation = editExplanation.getText().toString().trim();
-
-            // We create an ID from moodEventList.size(), or you can pass 0 to let the ViewModel generate one
             int id = moodEventList.size();
-
             Timestamp timestamp = Timestamp.now();
             MoodEvent newMood = new MoodEvent(
                     id,
@@ -141,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
             );
             moodEventViewModel.addMoodEvent(newMood);
             moodEventList.add(newMood);
-
             moodListAdapter.add(selectedEmotionalState + " - " + timestamp);
             Log.d("MoodEvent", "All Moods: " + moodEventList);
         });
@@ -158,14 +151,23 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Log.e("MainActivity", "ListView is null!");
         }
+
+        // Home button click listener: go to HomeActivity (or HomeFragment if using NavController)
+        ImageButton btnHome = findViewById(R.id.btn_home);
+        btnHome.setOnClickListener(v -> {
+            // In this example, we launch HomeActivity.
+            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+            startActivity(intent);
+        });
     }
 
-    // Filter by emotional state in memory
+    // Filter by emotional state in memory; declared outside onCreate
     private void filterMoodList(String filter) {
         moodListAdapter.clear();
         for (MoodEvent mood : moodEventList) {
             if (filter.equals("All Moods") || mood.getEmotionalState().equals(filter)) {
-                moodListAdapter.add(mood.getEmotionalState() + " - " + new Date(mood.getCreatedAt().toDate().getTime()));
+                moodListAdapter.add(mood.getEmotionalState() + " - " +
+                        new Date(mood.getCreatedAt().toDate().getTime()));
             }
         }
     }
