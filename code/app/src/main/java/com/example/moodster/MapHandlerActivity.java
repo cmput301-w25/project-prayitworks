@@ -24,8 +24,15 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -35,22 +42,37 @@ import java.util.Map;
 
 public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
-    private LatLng userLocation; // No longer hardcoded
+    private LatLng userLocation;
     private MoodEventViewModel moodEventViewModel;
     private Circle radiusCircle;
     private HashMap<String, String> emotionToEmoji = new HashMap<>();
 
-    // Get reference to your Firestore collection
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    CollectionReference usersRef = db.collection("Users");
+    // UI Components
+    private SeekBar seekBar;
+    private Spinner spinnerFilterType;
+    private EditText editSearch;
+    private TextView radiusText;
 
+    // Filtering state
+    private String currentFilterType = "Emotional State";
+    private String currentSearchKeyword = "";
+
+    // Firestore
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference usersRef = db.collection("Users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter_radius_mood_map);
 
-        // Initialize emotion to emoji mappings
+        initializeEmojiMappings();
+        initializeUIComponents();
+        setupMap();
+        setupFirestoreQuery();
+    }
+
+    private void initializeEmojiMappings() {
         emotionToEmoji.put("Anger", "😡");
         emotionToEmoji.put("Confusion", "😵‍💫");
         emotionToEmoji.put("Disgust", "🤢");
@@ -59,26 +81,49 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
         emotionToEmoji.put("Sadness", "😓");
         emotionToEmoji.put("Shame", "😶‍🌫️");
         emotionToEmoji.put("Surprise", "😮");
+    }
 
-        // Initialize UI components
-        SeekBar seekBar = findViewById(R.id.seekBarRadius);
-        TextView radiusText = findViewById(R.id.textRadiusValue);
+    private void initializeUIComponents() {
+        seekBar = findViewById(R.id.seekBarRadius);
+        radiusText = findViewById(R.id.textRadiusValue);
+        spinnerFilterType = findViewById(R.id.spinnerFilterType);
+        editSearch = findViewById(R.id.editSearch);
 
+        // Setup Spinner
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.filter_options, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerFilterType.setAdapter(adapter);
+
+        // Spinner selection listener
+        spinnerFilterType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                currentFilterType = parent.getItemAtPosition(position).toString();
+                updateMapMarkers(seekBar.getProgress());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        // Search text listener
+        editSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                currentSearchKeyword = s.toString().toLowerCase();
+                updateMapMarkers(seekBar.getProgress());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        // Setup SeekBar
         moodEventViewModel = MoodEventViewModel.getInstance();
-        Log.d("MOODS:", moodEventViewModel.getMoodEvents().toString());
-
-        // Set user location based on first mood event or default
-        Map<Integer, MoodEvent> moodEvents = moodEventViewModel.getMoodEvents();
-        if (moodEvents != null && !moodEvents.isEmpty()) {
-            MoodEvent firstEvent = moodEvents.values().iterator().next();
-            userLocation = new LatLng(firstEvent.getLatitude(), firstEvent.getLongitude());
-        } else {
-            // Default to Edmonton coordinates if no events
-            userLocation = new LatLng(53.5461, -113.4938);
-        }
-
-        radiusText.setText("2 km");
-
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -86,81 +131,75 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
                 updateMapMarkers(progress);
             }
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
-        // Initialize map
+        // Set initial user location
+        Map<Integer, MoodEvent> moodEvents = moodEventViewModel.getMoodEvents();
+        if (moodEvents != null && !moodEvents.isEmpty()) {
+            MoodEvent firstEvent = moodEvents.values().iterator().next();
+            userLocation = new LatLng(firstEvent.getLatitude(), firstEvent.getLongitude());
+        } else {
+            userLocation = new LatLng(53.5461, -113.4938); // Default to Edmonton
+        }
+    }
+
+    private void setupMap() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
 
+    private void setupFirestoreQuery() {
         usersRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 List<String> usernames = new ArrayList<>();
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     String username = document.getString("username");
-                    if (username != null) {
-                        usernames.add(username);
-                    }
+                    if (username != null) usernames.add(username);
                 }
-                // Now you have all usernames in the 'usernames' list
                 Log.d("Usernames", usernames.toString());
-                // Update your UI or do whatever you need with the list
             } else {
                 Log.w("FirestoreError", "Error getting documents.", task.getException());
             }
         });
     }
 
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12f));
-
-        // Add initial circle
         radiusCircle = mMap.addCircle(new CircleOptions()
                 .center(userLocation)
-                .radius(2 * 1000)
+                .radius(seekBar.getProgress() * 1000)
                 .strokeColor(Color.RED)
                 .fillColor(Color.argb(70, 255, 0, 0)));
-
-        updateMapMarkers(2);
+        updateMapMarkers(seekBar.getProgress());
     }
 
     private void updateMapMarkers(int radius) {
         if (mMap == null) return;
 
         mMap.clear();
-
-        // Always update the radius circle
         radiusCircle = mMap.addCircle(new CircleOptions()
                 .center(userLocation)
                 .radius(radius * 1000)
                 .strokeColor(Color.RED)
                 .fillColor(Color.argb(70, 255, 0, 0)));
 
-        // Get mood events and check if empty
         Map<Integer, MoodEvent> moodEvents = moodEventViewModel.getMoodEvents();
-        if (moodEvents == null || moodEvents.isEmpty()) {
-            Log.d("MAP", "No mood events to display");
-            return; // Exit early but keep the map visible with radius circle
-        }
+        if (moodEvents == null || moodEvents.isEmpty()) return;
 
-        // Process mood events if available
         for (MoodEvent event : moodEvents.values()) {
-            String emotionalState = event.getEmotionalState();
-            String emoji = emotionToEmoji.getOrDefault(emotionalState, "😶");
-
             try {
                 LatLng location = new LatLng(event.getLatitude(), event.getLongitude());
                 double distance = calculateDistance(userLocation, location);
 
-                if (distance <= radius * 1000) {
+                if (distance <= radius * 1000 && matchesFilterCriteria(event)) {
+                    String emotionalState = event.getEmotionalState();
+                    String emoji = emotionToEmoji.getOrDefault(emotionalState, "😶");
+
                     mMap.addMarker(new MarkerOptions()
                             .position(location)
                             .icon(getEmojiBitmapDescriptor(emoji))
@@ -171,6 +210,27 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
                 Log.e("MAP_ERROR", "Error processing MoodEvent: " + e.getMessage());
             }
         }
+    }
+
+    private boolean matchesFilterCriteria(MoodEvent event) {
+        if (currentSearchKeyword.isEmpty()) return true;
+
+        String fieldValue = "";
+        switch (currentFilterType) {
+            case "Emotional State":
+                fieldValue = event.getEmotionalState() != null ?
+                        event.getEmotionalState().toLowerCase() : "";
+                break;
+            case "Reason":
+                fieldValue = event.getExplanation() != null ?
+                        event.getExplanation().toLowerCase() : "";
+                break;
+            case "Social Situation":
+                fieldValue = event.getSocialSituation() != null ?
+                        event.getSocialSituation().toLowerCase() : "";
+                break;
+        }
+        return fieldValue.contains(currentSearchKeyword);
     }
 
     private BitmapDescriptor getEmojiBitmapDescriptor(String emoji) {
