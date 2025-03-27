@@ -18,13 +18,19 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -33,6 +39,11 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
     private MoodEventViewModel moodEventViewModel;
     private Circle radiusCircle;
     private HashMap<String, String> emotionToEmoji = new HashMap<>();
+
+    // Get reference to your Firestore collection
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    CollectionReference usersRef = db.collection("Users");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +97,23 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        usersRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                List<String> usernames = new ArrayList<>();
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    String username = document.getString("username");
+                    if (username != null) {
+                        usernames.add(username);
+                    }
+                }
+                // Now you have all usernames in the 'usernames' list
+                Log.d("Usernames", usernames.toString());
+                // Update your UI or do whatever you need with the list
+            } else {
+                Log.w("FirestoreError", "Error getting documents.", task.getException());
+            }
+        });
     }
 
 

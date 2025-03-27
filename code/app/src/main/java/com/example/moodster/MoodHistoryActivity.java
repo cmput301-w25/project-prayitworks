@@ -91,6 +91,7 @@ public class MoodHistoryActivity extends AppCompatActivity {
 
     // Main filtering logic
     private void filterMoodList(String keyword, String filterType) {
+        if (adapter == null) return;
         List<MoodEvent> filtered = new ArrayList<>();
 
         for (MoodEvent event : masterMoodList) {
