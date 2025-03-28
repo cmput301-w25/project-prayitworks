@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -40,38 +42,33 @@ public class MoodDetailsActivity extends AppCompatActivity {
         textTriggerValue.setText(intent.getStringExtra("textTriggerValue"));
         textSocialValue.setText(intent.getStringExtra("textSocialValue"));
         imageMoodPhoto.setImageURI(intent.getParcelableExtra("imageMoodPhoto"));
-        MoodEventPos = intent.getIntExtra("position",0);
 
-        List<Integer> keys = new ArrayList<>(moodEventViewModel.getMoodEvents().keySet());
-        int key = keys.get(MoodEventPos);
-        MoodEvent event = moodEventViewModel.getMoodEvents().get(key);
+        int moodId = intent.getIntExtra("moodId", -1);
+        MoodEvent event = moodEventViewModel.getMoodEvents().get(moodId);
+
 
         // Deleting a mood
         btnDeleteMood = findViewById(R.id.buttonDelete);
         btnDeleteMood.setOnClickListener(v -> {
-            //Log.d("POS", String.valueOf(MoodEventPos));
-            //Log.d("IWANT", moodEventViewModel.getMoodEvents().toString());
-            int keyDlt = 0;
-            
-            for(int i = 0; i <= MoodEventPos; i++){
-                if(MoodEventPos == i){
-                    keyDlt = keys.get(i);
+            moodEventViewModel.deleteMoodEvent(moodId, new MoodEventViewModel.OnDeleteListener() {
+                @Override
+                public void onDeleteSuccess() {
+                    startActivity(new Intent(MoodDetailsActivity.this, MoodHistoryActivity.class));
+                    finish();
                 }
-            }
-            moodEventViewModel.getMoodEvents().remove(keyDlt);
-            //Log.d("IWANT", moodEventViewModel.getMoodEvents().toString());
-            //setContentView(R.layout.mood_history_main);
-            // Going back to mood History
-            Intent intentDone = new Intent(MoodDetailsActivity.this, MoodHistoryActivity.class);
-            startActivity(intentDone);
-            //moodEventViewModel.getMoodEvents();
+
+                @Override
+                public void onDeleteFailure(String errorMessage) {
+                    Toast.makeText(MoodDetailsActivity.this, "Delete failed: " + errorMessage, Toast.LENGTH_SHORT).show();
+                }
+            });
         });
 
         // Editing a mood
         btnEditMood = findViewById(R.id.buttonEdit);
         btnEditMood.setOnClickListener(v -> {
             Intent intentEdit = new Intent(MoodDetailsActivity.this, EditMoodActivity.class);
-            intentEdit.putExtra("position", MoodEventPos);
+            intentEdit.putExtra("moodId", moodId);
             startActivity(intentEdit);
         });
     }

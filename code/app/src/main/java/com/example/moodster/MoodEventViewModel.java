@@ -261,4 +261,70 @@ public class MoodEventViewModel extends ViewModel {
     public interface OnMoodsFetchedListener {
         void onMoodsFetched(List<MoodEvent> moodEvents);
     }
+
+    public void deleteMoodEvent(int moodId, OnDeleteListener listener) {
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser == null) {
+            moodEvents.remove(moodId);
+            listener.onDeleteSuccess();
+            return;
+        }
+
+        db.collection("MoodEvents").document(String.valueOf(moodId))
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    db.collection("Users")
+                            .whereEqualTo("email", currentUser.getEmail())
+                            .get()
+                            .addOnSuccessListener(snapshot -> {
+                                if (!snapshot.isEmpty()) {
+                                    String username = snapshot.getDocuments().get(0).getString("username");
+                                    db.collection("Users").document(username)
+                                            .update("MoodEventIds", com.google.firebase.firestore.FieldValue.arrayRemove(moodId))
+                                            .addOnSuccessListener(unused -> {
+                                                moodEvents.remove(moodId);
+                                                listener.onDeleteSuccess();
+                                            })
+                                            .addOnFailureListener(e -> listener.onDeleteFailure(e.getMessage()));
+                                }
+                            });
+                })
+                .addOnFailureListener(e -> listener.onDeleteFailure(e.getMessage()));
+    }
+
+    public void updateMoodEvent(MoodEvent updatedEvent, OnUpdateListener listener) {
+        int id = updatedEvent.getId();
+        moodEvents.put(id, updatedEvent);
+
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser == null || !isOnline()) {
+            listener.onUpdateSuccess();
+            return;
+        }
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("id", id);
+        data.put("createdAt", updatedEvent.getCreatedAt());
+        data.put("emotionalState", updatedEvent.getEmotionalState());
+        data.put("trigger", updatedEvent.getTrigger());
+        data.put("socialSituation", updatedEvent.getSocialSituation());
+        data.put("explanation", updatedEvent.getExplanation());
+        data.put("latitude", updatedEvent.getLatitude());
+        data.put("longitude", updatedEvent.getLongitude());
+
+        db.collection("MoodEvents").document(String.valueOf(id))
+                .update(data)
+                .addOnSuccessListener(aVoid -> listener.onUpdateSuccess())
+                .addOnFailureListener(e -> listener.onUpdateFailure(e.getMessage()));
+    }
+
+    public interface OnDeleteListener {
+        void onDeleteSuccess();
+        void onDeleteFailure(String errorMessage);
+    }
+
+    public interface OnUpdateListener {
+        void onUpdateSuccess();
+        void onUpdateFailure(String errorMessage);
+    }
 }
