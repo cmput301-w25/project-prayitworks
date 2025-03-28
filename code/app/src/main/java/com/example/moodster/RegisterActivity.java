@@ -107,6 +107,7 @@ public class RegisterActivity extends AppCompatActivity {
                         profile.put("following", new ArrayList<>()); // empty array
                         profile.put("followersCount", 0);
                         profile.put("followingCount", 0);
+                        profile.put("MoodEventIds", new ArrayList<>());
 
                         // Use username as document ID
                         db.collection("Users").document(username)
