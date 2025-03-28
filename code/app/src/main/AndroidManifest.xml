@@ -38,6 +38,12 @@
         <!-- ✅ Register Activity -->
         <activity android:name=".RegisterActivity" />
 
+        <!-- ✅ Forgot Password Activity -->
+        <activity android:name=".ForgotPasswordActivity" />
+
+        <!-- ✅ Change Password Activity -->
+        <activity android:name=".ChangePasswordActivity" />
+
         <!-- ✅ Home -->
         <activity android:name=".HomeActivity" />
 
