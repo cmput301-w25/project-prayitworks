@@ -94,22 +94,35 @@ public class MoodHistoryActivity extends AppCompatActivity {
         if (adapter == null) return;
         List<MoodEvent> filtered = new ArrayList<>();
 
-        for (MoodEvent event : masterMoodList) {
-            String fieldToMatch = "";
+        long now = System.currentTimeMillis();
+        long sevenDaysAgo = now - 7L * 24 * 60 * 60 * 1000;
 
-            switch (filterType) {
-                case "Reason":
-                    fieldToMatch = event.getExplanation();
-                    break;
-                case "Emotional State":
-                    fieldToMatch = event.getEmotionalState();
-                    break;
-                case "Social Situation":
-                    fieldToMatch = event.getSocialSituation();
-                    break;
+        for (MoodEvent event : masterMoodList) {
+            boolean matches = false;
+
+            if (filterType.equals("Most Recent Week")) {
+                long eventTime = event.getCreatedAt().toDate().getTime();
+                matches = (eventTime >= sevenDaysAgo);
+            } else {
+                String fieldToMatch = "";
+                switch (filterType) {
+                    case "Reason":
+                        fieldToMatch = event.getExplanation();
+                        break;
+                    case "Emotional State":
+                        fieldToMatch = event.getEmotionalState();
+                        break;
+                    case "Social Situation":
+                        fieldToMatch = event.getSocialSituation();
+                        break;
+                }
+
+                if (fieldToMatch != null && fieldToMatch.toLowerCase().contains(keyword.toLowerCase())) {
+                    matches = true;
+                }
             }
 
-            if (fieldToMatch != null && fieldToMatch.toLowerCase().contains(keyword.toLowerCase())) {
+            if (matches) {
                 filtered.add(event);
             }
         }
@@ -135,6 +148,9 @@ public class MoodHistoryActivity extends AppCompatActivity {
                 break;
             case "Social Situation":
                 searchEditText.setHint("Search by social situation...");
+                break;
+            case "Most Recent Week":
+                searchEditText.setHint("Search by most recent week...");
                 break;
         }
     }

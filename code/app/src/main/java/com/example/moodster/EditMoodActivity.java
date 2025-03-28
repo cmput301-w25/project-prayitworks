@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -64,9 +65,7 @@ public class EditMoodActivity extends AppCompatActivity {
 
         // get corresponding MoodEvent and key
         Intent intent = getIntent();
-        MoodEventPos = intent.getIntExtra("position", 0);
-        List<Integer> keys = new ArrayList<>(moodEventViewModel.getMoodEvents().keySet());
-        key = keys.get(MoodEventPos);
+        key = intent.getIntExtra("moodId", -1);
         eventToEdit = moodEventViewModel.getMoodEvents().get(key);
 
         // populating UI fields from the coressponding event
@@ -88,19 +87,28 @@ public class EditMoodActivity extends AppCompatActivity {
 
     private void onSaveClicked() {
         if (eventToEdit != null) {
-            // updating the MoodEvent with user input
             eventToEdit.setExplanation(reasonValue.getText().toString());
             eventToEdit.setTrigger(triggerValue.getText().toString());
             eventToEdit.setEmotionalState(spinnerMood.getSelectedItem().toString());
             eventToEdit.setSocialSituation(spinnerSocialSituation.getSelectedItem().toString());
 
-            moodEventViewModel.getMoodEvents().put(key, eventToEdit);
-        }
+            moodEventViewModel.updateMoodEvent(eventToEdit, new MoodEventViewModel.OnUpdateListener() {
+                @Override
+                public void onUpdateSuccess() {
+                    Intent backToHistory = new Intent(EditMoodActivity.this, MoodHistoryActivity.class);
+                    backToHistory.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(backToHistory);
+                    finish();
+                }
 
-        Intent backToHistory = new Intent(EditMoodActivity.this, MoodHistoryActivity.class);
-        startActivity(backToHistory);
-        finish();
+                @Override
+                public void onUpdateFailure(String errorMessage) {
+                    Toast.makeText(EditMoodActivity.this, "Update failed: " + errorMessage, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
+
 
     /**
      * Setting spinner selection to match a given value from the spinner’s current adapter items.
