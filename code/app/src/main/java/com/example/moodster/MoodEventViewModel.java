@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -72,55 +73,81 @@ public class MoodEventViewModel extends ViewModel {
             listener.onMoodsFetched(new ArrayList<>(moodEvents.values()));
             return;
         }
-        String userUid = currentUser.getUid();
 
+        String email = currentUser.getEmail();
         if (!isOnline()) {
             Log.d("MoodEventViewModel", "Offline => returning local moods");
             listener.onMoodsFetched(new ArrayList<>(moodEvents.values()));
             return;
         }
 
-        // Online => fetch from Firestore
-        db.collection("MoodEvents")
-                .whereEqualTo("authorUsername", userUid)
+        // STEP 1: Get username from Firestore
+        db.collection("Users")
+                .whereEqualTo("email", email)
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
-                    List<MoodEvent> result = new ArrayList<>();
-                    for (QueryDocumentSnapshot doc : querySnapshot) {
-                        int docId = doc.getLong("id").intValue();
-                        Timestamp createdAt = doc.getTimestamp("createdAt");
-                        String emoState = doc.getString("emotionalState");
-                        String trigger = doc.getString("trigger");
-                        String social = doc.getString("socialSituation");
-                        String explanation = doc.getString("explanation");
-                        double lat = doc.contains("latitude") ? doc.getDouble("latitude") : 0.0;
-                        double lon = doc.contains("longitude") ? doc.getDouble("longitude") : 0.0;
+                    if (!querySnapshot.isEmpty()) {
+                        DocumentSnapshot userDoc = querySnapshot.getDocuments().get(0);
+                        String username = userDoc.getString("username");
 
-                        MoodEvent moodEvent = new MoodEvent(
-                                docId,
-                                createdAt,
-                                emoState,
-                                trigger,
-                                social,
-                                explanation,
-                                null,
-                                lat,
-                                lon
-                        );
-                        result.add(moodEvent);
-                    }
-                    // Update local map
-                    moodEvents.clear();
-                    for (MoodEvent m : result) {
-                        moodEvents.put(m.getId(), m);
-                    }
-                    Log.d("MoodEventViewModel", "Fetched " + result.size() + " moods from Firestore");
+                        List<Long> moodIds = (List<Long>) userDoc.get("MoodEventIds");
+                        if (moodIds == null || moodIds.isEmpty()) {
+                            moodEvents.clear();
+                            listener.onMoodsFetched(new ArrayList<>());
+                            return;
+                        }
 
-                    listener.onMoodsFetched(result);
+                        // STEP 2: Fetch all MoodEvents by ID
+                        List<MoodEvent> fetched = new ArrayList<>();
+                        final int totalToFetch = moodIds.size();
+
+                        for (Long id : moodIds) {
+                            db.collection("MoodEvents").document(String.valueOf(id))
+                                    .get()
+                                    .addOnSuccessListener(doc -> {
+                                        if (doc.exists()) {
+                                            try {
+                                                int docId = doc.getLong("id").intValue();
+                                                Timestamp createdAt = doc.getTimestamp("createdAt");
+                                                String emoState = doc.getString("emotionalState");
+                                                String trigger = doc.getString("trigger");
+                                                String social = doc.getString("socialSituation");
+                                                String explanation = doc.getString("explanation");
+                                                double lat = doc.contains("latitude") ? doc.getDouble("latitude") : 0.0;
+                                                double lon = doc.contains("longitude") ? doc.getDouble("longitude") : 0.0;
+
+                                                MoodEvent moodEvent = new MoodEvent(
+                                                        docId,
+                                                        createdAt,
+                                                        emoState,
+                                                        trigger,
+                                                        social,
+                                                        explanation,
+                                                        null,
+                                                        lat,
+                                                        lon
+                                                );
+                                                fetched.add(moodEvent);
+                                            } catch (Exception e) {
+                                                Log.w("FetchMoodError", "Error parsing mood document", e);
+                                            }
+                                        }
+
+                                        if (fetched.size() + 1 >= totalToFetch) {
+                                            // Finalize and return
+                                            moodEvents.clear();
+                                            for (MoodEvent m : fetched) {
+                                                moodEvents.put(m.getId(), m);
+                                            }
+                                            listener.onMoodsFetched(fetched);
+                                        }
+                                    });
+                        }
+                    }
                 })
                 .addOnFailureListener(e -> {
-                    Log.w("MoodEventViewModel", "Failed Firestore fetch => fallback to local", e);
-                    listener.onMoodsFetched(new ArrayList<>(moodEvents.values()));
+                    Log.w("FirestoreError", "Failed to load user mood list", e);
+                    listener.onMoodsFetched(new ArrayList<>());
                 });
     }
 
@@ -149,7 +176,6 @@ public class MoodEventViewModel extends ViewModel {
             String userUid = currentUser.getUid();
 
             Map<String, Object> data = new HashMap<>();
-            data.put("authorUsername", userUid);
             data.put("id", id);
             data.put("createdAt", newMood.getCreatedAt());
             data.put("emotionalState", newMood.getEmotionalState());
@@ -165,6 +191,22 @@ public class MoodEventViewModel extends ViewModel {
                     .set(data)
                     .addOnSuccessListener(aVoid -> {
                         Log.d("MoodEventViewModel", "Saved mood to Firestore with ID=" + finalId);
+
+                        // Add the mood ID to the user's MoodEventIds list
+                        db.collection("Users")
+                                .whereEqualTo("email", currentUser.getEmail())
+                                .get()
+                                .addOnSuccessListener(snapshot -> {
+                                    if (!snapshot.isEmpty()) {
+                                        String username = snapshot.getDocuments().get(0).getString("username");
+
+                                        db.collection("Users")
+                                                .document(username)
+                                                .update("MoodEventIds", com.google.firebase.firestore.FieldValue.arrayUnion(finalId))
+                                                .addOnSuccessListener(unused -> Log.d("Firestore", "Mood ID added to user"))
+                                                .addOnFailureListener(e -> Log.e("Firestore", "Failed to update user mood list", e));
+                                    }
+                                });
                         if (onAddListener != null) onAddListener.onAddSuccess();
                     })
                     .addOnFailureListener(e -> {
