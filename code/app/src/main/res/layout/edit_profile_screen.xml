@@ -38,20 +38,22 @@
         android:layout_height="120dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
-        android:src="@drawable/profile_icon" />
+        android:src= "@drawable/avatar" />
 
     <!-- Add Photo Button -->
+
+    <!-- Buttons -->
     <ImageView
         android:id="@+id/add_photo"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_below="@id/profile_image"
         android:layout_alignEnd="@id/profile_image"
-        android:layout_marginTop="-20dp"
-        android:src="@drawable/plus"
-        android:contentDescription="Add Photo" />
+        android:layout_marginTop="-15dp"
+        android:layout_marginEnd="-27dp"
+        android:contentDescription="Add Photo"
+        android:src="@drawable/plus" />
 
-    <!-- Buttons -->
     <Button
         android:id="@+id/change_name"
         android:layout_width="250dp"
@@ -76,41 +78,105 @@
 
     <!-- Bottom Navigation Bar -->
     <LinearLayout
+        android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="80dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/dark_green"
+        android:background="#546955"
+        android:gravity="center"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:weightSum="5">
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/home"
-            android:contentDescription="Home" />
+        <!-- HOME -->
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+            <ImageButton
+                android:id="@+id/btn_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_home"
+                android:background="@drawable/bottom_circle_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_search"
+                app:layout_constraintStart_toStartOf="parent" />
+        </FrameLayout>
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/search"
-            android:contentDescription="Search" />
+        <!-- SEARCH -->
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+            <ImageButton
+                android:id="@+id/btn_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_search"
+                android:background="@drawable/bottom_circle_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_add"
+                app:layout_constraintStart_toEndOf="@+id/btn_home" />
+        </FrameLayout>
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/plus"
-            android:contentDescription="Add" />
+        <!-- ADD MOOD -->
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+            <ImageButton
+                android:id="@+id/btn_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/plus_circle"
+                android:background="@drawable/bottom_circle_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_calendar"
+                app:layout_constraintStart_toEndOf="@+id/btn_search" />
+        </FrameLayout>
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/calendar"
-            android:contentDescription="Calendar" />
+        <!-- CALENDAR -->
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+            <ImageButton
+                android:id="@+id/btn_calendar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_calendar"
+                android:background="@drawable/bottom_circle_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_profile"
+                app:layout_constraintStart_toEndOf="@+id/btn_add" />
+        </FrameLayout>
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/profile_icon"
-            android:contentDescription="Profile" />
+        <!-- PROFILE -->
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+            <ImageButton
+                android:id="@+id/btn_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/avatar"
+                android:background="@drawable/bottom_circle_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/btn_calendar" />
+        </FrameLayout>
     </LinearLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintGuide_percent="4.671642" />
+
 </RelativeLayout>
