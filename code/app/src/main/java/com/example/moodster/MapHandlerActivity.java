@@ -19,6 +19,7 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -91,7 +92,7 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
 
         // Setup Spinner
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.filter_options, android.R.layout.simple_spinner_item);
+                R.array.filter_options_map, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerFilterType.setAdapter(adapter);
 
@@ -182,12 +183,20 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
         if (mMap == null) return;
 
         mMap.clear();
+
+        // Always maintain the radius circle (MOVED OUT OF CONDITIONAL)
         radiusCircle = mMap.addCircle(new CircleOptions()
                 .center(userLocation)
                 .radius(radius * 1000)
                 .strokeColor(Color.RED)
                 .fillColor(Color.argb(70, 255, 0, 0)));
 
+        if (currentFilterType.equals("Users")) {
+            fetchUsersAndAddMarkers();
+            return;
+        }
+
+        // Rest of existing mood event handling...
         Map<Integer, MoodEvent> moodEvents = moodEventViewModel.getMoodEvents();
         if (moodEvents == null || moodEvents.isEmpty()) return;
 
@@ -210,6 +219,50 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
                 Log.e("MAP_ERROR", "Error processing MoodEvent: " + e.getMessage());
             }
         }
+    }
+
+    private void fetchUsersAndAddMarkers() {
+        usersRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot userDoc : task.getResult()) {
+                    String username = userDoc.getString("username");
+                    List<Long> moodEventIds = (List<Long>) userDoc.get("MoodEventIds");
+                    if (moodEventIds == null || moodEventIds.isEmpty()) {
+                        continue;
+                    }
+                    Long firstEventId = moodEventIds.get(0);
+                    db.collection("MoodEvents").document(String.valueOf(firstEventId))
+                            .get().addOnCompleteListener(eventTask -> {
+                                if (eventTask.isSuccessful()) {
+                                    DocumentSnapshot eventDoc = eventTask.getResult();
+                                    if (eventDoc.exists()) {
+                                        Double lat = eventDoc.getDouble("latitude");
+                                        Double lng = eventDoc.getDouble("longitude");
+                                        String emotionalState = eventDoc.getString("emotionalState");
+
+                                        if (lat != null && lng != null && emotionalState != null) {
+                                            LatLng loc = new LatLng(lat, lng);
+                                            String emoji = emotionToEmoji.getOrDefault(emotionalState, "😶");
+                                            String snippet = "Emotional State: " + emoji + " " + emotionalState;
+
+                                            runOnUiThread(() -> {
+                                                mMap.addMarker(new MarkerOptions()
+                                                        .position(loc)
+                                                        .icon(getEmojiBitmapDescriptor("👤")) // User emoji
+                                                        .title(username)
+                                                        .snippet(snippet));
+                                            });
+                                        }
+                                    }
+                                } else {
+                                    Log.e("FirestoreError", "Error getting mood event", eventTask.getException());
+                                }
+                            });
+                }
+            } else {
+                Log.e("FirestoreError", "Error getting users", task.getException());
+            }
+        });
     }
 
     private boolean matchesFilterCriteria(MoodEvent event) {

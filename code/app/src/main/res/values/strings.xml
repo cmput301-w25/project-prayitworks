@@ -90,4 +90,11 @@
         <item>Social Situation</item>
     </string-array>
 
+    <string-array name="filter_options_map">
+        <item>Reason</item>
+        <item>Emotional State</item>
+        <item>Social Situation</item>
+        <item>Users</item>
+    </string-array>
+
 </resources>

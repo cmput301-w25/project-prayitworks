@@ -55,5 +55,9 @@
         <activity android:name=".EditMoodActivity" />
         <activity android:name=".MapHandlerActivity" />
 
+        <!-- ✅ User Related -->
+        <activity android:name=".SearchUsersActivity" />
+
+
     </application>
 </manifest>

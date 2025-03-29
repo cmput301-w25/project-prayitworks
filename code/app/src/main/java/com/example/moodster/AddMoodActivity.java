@@ -40,7 +40,7 @@ public class AddMoodActivity extends AppCompatActivity {
         });
 
         btnSearch.setOnClickListener(v -> {
-            Intent intent = new Intent(AddMoodActivity.this, MapHandlerActivity.class);
+            Intent intent = new Intent(AddMoodActivity.this, SearchUsersActivity.class);
             startActivity(intent);
         });
 
