@@ -6,10 +6,18 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,6 +38,34 @@ public class MoodHistoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mood_history_main);
+
+        // --- Set up the custom header ---
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        TextView tvScreenTitle = findViewById(R.id.tv_screen_title);
+        tvScreenTitle.setText("Mood History");
+        ImageView menuIcon = findViewById(R.id.ic_profile_icon);
+        menuIcon.setOnClickListener(v -> {
+            PopupMenu popup = new PopupMenu(MoodHistoryActivity.this, v);
+            popup.getMenuInflater().inflate(R.menu.header_menu, popup.getMenu());
+            popup.setOnMenuItemClickListener(item -> {
+                int id = item.getItemId();
+                if (id == R.id.menu_profile) {
+                    startActivity(new Intent(MoodHistoryActivity.this, EditProfileActivity.class));
+                    return true;
+                //} else if (id == R.id.menu_settings) {
+                    //startActivity(new Intent(MoodHistoryActivity.this, SettingsActivity.class));
+                    //return true;
+                } else if (id == R.id.menu_logout) {
+                    FirebaseAuth.getInstance().signOut();
+                    startActivity(new Intent(MoodHistoryActivity.this, LoginActivity.class));
+                    finish();
+                    return true;
+                }
+                return false;
+            });
+            popup.show();
+        });
 
         listView = findViewById(R.id.mood_entries_scroll);
         emptyStateTextView = findViewById(R.id.textEmptyState);
@@ -85,6 +121,38 @@ public class MoodHistoryActivity extends AppCompatActivity {
         ImageButton btnAddMood = findViewById(R.id.btn_add);
         btnAddMood.setOnClickListener(v -> {
             Intent intent = new Intent(MoodHistoryActivity.this, AddMoodActivity.class);
+            startActivity(intent);
+        });
+
+        // --- Bottom Navigation Buttons ---
+        ImageButton btnHome = findViewById(R.id.btn_home);
+        ImageButton btnSearch = findViewById(R.id.btn_search);
+        ImageButton btnCalendar = findViewById(R.id.btn_calendar);
+        ImageButton btnAdd = findViewById(R.id.btn_add);
+        ImageButton btnProfile = findViewById(R.id.btn_profile);
+
+        btnHome.setOnClickListener(v -> {
+            Intent intent = new Intent(MoodHistoryActivity.this, HomeActivity.class);
+            startActivity(intent);
+        });
+
+        btnSearch.setOnClickListener(v -> {
+            Intent intent = new Intent(MoodHistoryActivity.this, MapHandlerActivity.class);
+            startActivity(intent);
+        });
+
+        btnAdd.setOnClickListener(v -> {
+            Intent intent = new Intent(MoodHistoryActivity.this, AddMoodActivity.class);
+            startActivity(intent);
+        });
+
+        btnCalendar.setOnClickListener(v -> {
+            Intent intent = new Intent(MoodHistoryActivity.this, MoodHistoryActivity.class);
+            startActivity(intent);
+        });
+
+        btnProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(MoodHistoryActivity.this, EditProfileActivity.class);
             startActivity(intent);
         });
     }

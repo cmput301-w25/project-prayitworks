@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@drawable/bg_app_gradient">
 
     <!-- Top Bar with Back Button and Title -->
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/top_bar"
+        android:layout_width="0dp"
         android:layout_height="60dp"
-        android:background="@color/light_green"
         android:orientation="horizontal"
-        android:gravity="center_vertical"> <!-- Aligns children vertically -->
+        android:gravity="center_vertical"
+        android:background="@color/light_green"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
             android:id="@+id/back_button"
@@ -21,96 +26,292 @@
             android:contentDescription="Back" />
 
         <TextView
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:text="Edit Profile"
+            android:text="Profile"
             android:textSize="25sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black" />
     </LinearLayout>
 
-
-    <!-- Profile Image -->
+    <!-- Profile Image Section -->
     <ImageView
         android:id="@+id/profile_image"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"
-        android:src="@drawable/profile_icon" />
+        android:src="@drawable/profile_icon"
+        android:contentDescription="Profile Image"
+        app:layout_constraintTop_toBottomOf="@id/top_bar"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Add Photo Button -->
+    <!-- Add Photo Icon (Overlay) -->
     <ImageView
         android:id="@+id/add_photo"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_below="@id/profile_image"
-        android:layout_alignEnd="@id/profile_image"
-        android:layout_marginTop="-20dp"
         android:src="@drawable/plus"
-        android:contentDescription="Add Photo" />
+        android:contentDescription="Add Photo"
+        app:layout_constraintTop_toBottomOf="@id/profile_image"
+        app:layout_constraintEnd_toEndOf="@id/profile_image"
+        android:layout_marginTop="-20dp" />
 
-    <!-- Buttons -->
-    <Button
-        android:id="@+id/change_name"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:layout_below="@id/add_photo"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:text="Change your name"
-        android:textColor="@color/black"
-        android:backgroundTint="@color/light_green"/>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/user_info_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="8dp"
+        app:cardBackgroundColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/add_photo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <Button
-        android:id="@+id/change_username"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:layout_below="@id/change_name"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="Change user name"
-        android:textColor="@color/black"
-        android:backgroundTint="@color/light_green"></Button>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Display Name with Icon -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_avatar_placeholder"
+                    android:contentDescription="User Icon" />
+
+                <TextView
+                    android:id="@+id/tv_display_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="John Doe"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/light_green"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginVertical="8dp" />
+
+            <!-- Username with Icon -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_user_logo"
+                    android:contentDescription="Username Icon" />
+
+                <TextView
+                    android:id="@+id/tv_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="johndoe"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginVertical="8dp" />
+
+            <!-- Email with Icon -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_email"
+                    android:contentDescription="Email Icon" />
+
+                <TextView
+                    android:id="@+id/tv_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="john@example.com"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+    <!-- Mood Statistics Section -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_mood_stats"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:layout_constraintTop_toBottomOf="@id/user_info_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_total_moods"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total Moods Logged: 42"
+                android:textSize="16sp"
+                android:textColor="@android:color/black" />
+            <!-- Additional mood stats can be added here -->
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Action Buttons for Editing Profile -->
+    <LinearLayout
+        android:id="@+id/action_buttons"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/card_mood_stats"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/change_name"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:text="Change Your Name"
+            android:textColor="@android:color/white"
+            android:background="@drawable/bg_filter_bar_rounded"
+            android:backgroundTint="@color/primary_text_color" />
+
+        <Button
+            android:id="@+id/change_username"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:text="Change Username"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/light_green"
+            android:background="@drawable/bg_filter_bar_rounded"
+            android:layout_marginTop="10dp" />
+    </LinearLayout>
 
     <!-- Bottom Navigation Bar -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_alignParentBottom="true"
+        android:id="@+id/bottom_nav"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
         android:background="@color/dark_green"
+        android:gravity="center"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:weightSum="5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/home"
-            android:contentDescription="Home" />
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/search"
-            android:contentDescription="Search" />
+            <ImageButton
+                android:id="@+id/btn_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_home"
+                android:background="@drawable/bottom_circle_background"
+                android:contentDescription="Home" />
+        </FrameLayout>
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/plus"
-            android:contentDescription="Add" />
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/calendar"
-            android:contentDescription="Calendar" />
+            <ImageButton
+                android:id="@+id/btn_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_search"
+                android:background="@drawable/bottom_circle_background"
+                android:contentDescription="Search" />
+        </FrameLayout>
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/profile_icon"
-            android:contentDescription="Profile" />
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/btn_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/plus_circle"
+                android:background="@drawable/bottom_circle_background"
+                android:contentDescription="Add Mood" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/btn_calendar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_calendar"
+                android:background="@drawable/bottom_circle_background"
+                android:contentDescription="Calendar" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/btn_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/avatar"
+                android:background="@drawable/bottom_circle_background"
+                android:contentDescription="Profile" />
+        </FrameLayout>
     </LinearLayout>
-</RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
