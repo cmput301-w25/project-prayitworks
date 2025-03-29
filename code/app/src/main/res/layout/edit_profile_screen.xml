@@ -10,7 +10,7 @@
         android:layout_height="60dp"
         android:background="@color/light_green"
         android:orientation="horizontal"
-        android:gravity="center_vertical"> <!-- Aligns children vertically -->
+        android:gravity="center_vertical">
 
         <ImageView
             android:id="@+id/back_button"
@@ -27,9 +27,8 @@
             android:text="Edit Profile"
             android:textSize="25sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black" />
     </LinearLayout>
-
 
     <!-- Profile Image -->
     <ImageView
@@ -38,11 +37,9 @@
         android:layout_height="120dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
-        android:src= "@drawable/avatar" />
+        android:src="@drawable/avatar" />
 
     <!-- Add Photo Button -->
-
-    <!-- Buttons -->
     <ImageView
         android:id="@+id/add_photo"
         android:layout_width="40dp"
@@ -54,6 +51,7 @@
         android:contentDescription="Add Photo"
         android:src="@drawable/plus" />
 
+    <!-- Change Name Button -->
     <Button
         android:id="@+id/change_name"
         android:layout_width="250dp"
@@ -63,8 +61,9 @@
         android:layout_marginTop="20dp"
         android:text="Change your name"
         android:textColor="@color/black"
-        android:backgroundTint="@color/light_green"/>
+        android:backgroundTint="@color/light_green" />
 
+    <!-- Change Username Button -->
     <Button
         android:id="@+id/change_username"
         android:layout_width="250dp"
@@ -74,7 +73,7 @@
         android:layout_marginTop="10dp"
         android:text="Change user name"
         android:textColor="@color/black"
-        android:backgroundTint="@color/light_green"></Button>
+        android:backgroundTint="@color/light_green" />
 
     <!-- Bottom Navigation Bar -->
     <LinearLayout
@@ -93,15 +92,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center">
+
             <ImageButton
                 android:id="@+id/btn_home"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_home"
-                android:background="@drawable/bottom_circle_background"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btn_search"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:background="@drawable/bottom_circle_background" />
         </FrameLayout>
 
         <!-- SEARCH -->
@@ -110,15 +107,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center">
+
             <ImageButton
                 android:id="@+id/btn_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_search"
-                android:background="@drawable/bottom_circle_background"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btn_add"
-                app:layout_constraintStart_toEndOf="@+id/btn_home" />
+                android:background="@drawable/bottom_circle_background" />
         </FrameLayout>
 
         <!-- ADD MOOD -->
@@ -127,15 +122,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center">
+
             <ImageButton
                 android:id="@+id/btn_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/plus_circle"
-                android:background="@drawable/bottom_circle_background"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btn_calendar"
-                app:layout_constraintStart_toEndOf="@+id/btn_search" />
+                android:background="@drawable/bottom_circle_background" />
         </FrameLayout>
 
         <!-- CALENDAR -->
@@ -144,15 +137,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center">
+
             <ImageButton
                 android:id="@+id/btn_calendar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_calendar"
-                android:background="@drawable/bottom_circle_background"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btn_profile"
-                app:layout_constraintStart_toEndOf="@+id/btn_add" />
+                android:background="@drawable/bottom_circle_background" />
         </FrameLayout>
 
         <!-- PROFILE -->
@@ -161,22 +152,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center">
+
             <ImageButton
                 android:id="@+id/btn_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/avatar"
-                android:background="@drawable/bottom_circle_background"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/btn_calendar" />
+                android:background="@drawable/bottom_circle_background" />
         </FrameLayout>
     </LinearLayout>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintGuide_percent="4.671642" />
 
 </RelativeLayout>
