@@ -7,57 +7,24 @@
     android:padding="16dp">
 
     <!-- Header with Icon and Title -->
-    <LinearLayout
-        android:id="@+id/top_section"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+    <include
+        android:id="@+id/header"
+        layout="@layout/custom_header" />
 
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:gravity="start"
-            android:src="@drawable/mood" />
-
-        <View
-            android:layout_width="3dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/avatar"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:gravity="end"/>
-    </LinearLayout>
-
-    <!-- Mood History Title -->
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Mood History"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/top_section"
-        android:layout_marginTop="8dp"/>
 
     <!-- Calendar View -->
+
+    <!-- Search EditText below the CalendarView -->
+
     <CalendarView
         android:id="@+id/calendarView"
         android:layout_width="384dp"
         android:layout_height="232dp"
-        android:layout_below="@+id/title"
+        android:layout_below="@+id/header"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="128dp"
+        android:layout_marginTop="94dp"
         android:layout_marginBottom="8dp" />
 
-    <!-- Search EditText below the CalendarView -->
     <LinearLayout
         android:id="@+id/filter_row"
         android:layout_width="match_parent"
