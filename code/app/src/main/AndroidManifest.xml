@@ -58,6 +58,8 @@
 
         <!-- ✅ User Related -->
         <activity android:name=".SearchUsersActivity" />
+        <activity android:name=".FriendRequestActivity" />
+        <activity android:name=".FriendListActivity" />
 
 
     </application>
