@@ -2,7 +2,6 @@ package com.example.moodster;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -26,7 +25,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private MoodEventViewModel moodEventViewModel;
     private TextView textWelcome, textMoodCount;
-    private Button btnQuickAddMood;
+    private Button btnQuickAddMood, btnManageFriends;
     private ListView listRecentMoods;
     private MoodListAdapter adapter;
     private List<MoodEvent> masterMoodList = new ArrayList<>();
@@ -72,6 +71,7 @@ public class HomeActivity extends AppCompatActivity {
         textMoodCount = findViewById(R.id.textMoodCount);
         btnQuickAddMood = findViewById(R.id.btnQuickAddMood);
         listRecentMoods = findViewById(R.id.mood_entries_scroll);
+        btnManageFriends = findViewById(R.id.btnManageFriends);
 
         // Show user's display name in welcome message
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -121,6 +121,12 @@ public class HomeActivity extends AppCompatActivity {
         listRecentMoods.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(HomeActivity.this, MoodDetailsActivity.class);
             intent.putExtra("position", position);
+            startActivity(intent);
+        });
+
+        // Quick Manage Friends Button: Launch SearchUser
+        btnManageFriends.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, SearchUsersActivity.class);
             startActivity(intent);
         });
 

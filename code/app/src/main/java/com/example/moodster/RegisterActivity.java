@@ -108,6 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
                         profile.put("followingCount", 0);
                         profile.put("MoodEventIds", new ArrayList<>());
                         profile.put("backupPassword", hashedBackup);
+                        profile.put("followRequests", new ArrayList<>());
 
                         db.collection("Users").document(username)
                                 .set(profile)
