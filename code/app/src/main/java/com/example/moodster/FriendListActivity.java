@@ -2,6 +2,7 @@ package com.example.moodster;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -73,42 +74,20 @@ public class FriendListActivity extends AppCompatActivity {
             finish();
             return;
         }
-        // --- End Header Setup ----
 
-        // --- Bottom Navigation Setup (using AddMoodActivity logic) ---
+        // --- Bottom Navigation Setup ---
         ImageButton btnHome = findViewById(R.id.btn_home);
         ImageButton btnSearch = findViewById(R.id.btn_search);
         ImageButton btnAdd = findViewById(R.id.btn_add);
         ImageButton btnCalendar = findViewById(R.id.btn_calendar);
         ImageButton btnProfile = findViewById(R.id.btn_profile);
 
-        btnHome.setOnClickListener(v -> {
-            Intent intent = new Intent(FriendListActivity.this, HomeActivity.class);
-            intent.putExtra("username", currentUsername);
-            startActivity(intent);
-        });
-        btnSearch.setOnClickListener(v -> {
-            Intent intent = new Intent(FriendListActivity.this, SearchUsersActivity.class);
-            intent.putExtra("username", currentUsername);
-            startActivity(intent);
-        });
-        btnAdd.setOnClickListener(v -> {
-            Intent intent = new Intent(FriendListActivity.this, AddMoodActivity.class);
-            intent.putExtra("username", currentUsername);
-            startActivity(intent);
-        });
-        btnCalendar.setOnClickListener(v -> {
-            Intent intent = new Intent(FriendListActivity.this, MoodHistoryActivity.class);
-            intent.putExtra("username", currentUsername);
-            startActivity(intent);
-        });
-        btnProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(FriendListActivity.this, EditProfileActivity.class);
-            intent.putExtra("username", currentUsername);
-            startActivity(intent);
-        });
-        // --- End Bottom Navigation Setup ---
-
+        btnHome.setOnClickListener(v -> startActivity(new Intent(FriendListActivity.this, HomeActivity.class).putExtra("username", currentUsername)));
+        btnSearch.setOnClickListener(v -> startActivity(new Intent(FriendListActivity.this, SearchUsersActivity.class).putExtra("username", currentUsername)));
+        btnAdd.setOnClickListener(v -> startActivity(new Intent(FriendListActivity.this, AddMoodActivity.class).putExtra("username", currentUsername)));
+        btnCalendar.setOnClickListener(v -> startActivity(new Intent(FriendListActivity.this, MoodHistoryActivity.class).putExtra("username", currentUsername)));
+        btnProfile.setOnClickListener(v -> startActivity(new Intent(FriendListActivity.this, EditProfileActivity.class).putExtra("username", currentUsername)));
+        // --- End Bottom Navigation ---
 
         db = FirebaseFirestore.getInstance();
         recyclerUsers = findViewById(R.id.recyclerUsers);
@@ -120,19 +99,39 @@ public class FriendListActivity extends AppCompatActivity {
         tabFriends.setText("Following");
         tabRequests.setText("Followers");
 
-        // setting up tabs for followers and following
         setActiveTab(true);
 
         tabFriends.setOnClickListener(v -> {
             setActiveTab(true);
             updateAdapter(true);
         });
+
         tabRequests.setOnClickListener(v -> {
             setActiveTab(false);
             updateAdapter(false);
         });
 
-        // getting and displaying following and followers lists
+        // ✅ Search bar logic
+        EditText editSearchFriends = findViewById(R.id.editSearchFriends);
+        ImageView iconSearch = findViewById(R.id.iconSearch);
+
+        iconSearch.setOnClickListener(v -> {
+            String query = editSearchFriends.getText().toString().trim().toLowerCase();
+            List<SearchUser> sourceList = showingFollowing ? followingList : followersList;
+            List<SearchUser> filtered = new ArrayList<>();
+
+            for (SearchUser user : sourceList) {
+                if (user.getUsername().toLowerCase().contains(query) ||
+                        user.getDisplayName().toLowerCase().contains(query)) {
+                    filtered.add(user);
+                }
+            }
+
+            adapter = new FriendListAdapter(filtered);
+            recyclerUsers.setAdapter(adapter);
+        });
+
+        // Load friends
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             String email = currentUser.getEmail();
@@ -144,33 +143,30 @@ public class FriendListActivity extends AppCompatActivity {
                             DocumentSnapshot doc = querySnapshot.getDocuments().get(0);
                             currentUsername = doc.getString("username");
 
-                            // following and followers lists.
                             List<String> followingUsernames = (List<String>) doc.get("following");
                             List<String> followersUsernames = (List<String>) doc.get("followers");
 
-                            // load followers and foollowing lists
                             if (followingUsernames != null && !followingUsernames.isEmpty()) {
                                 loadFriendDetails(followingUsernames, true);
                             } else {
                                 followingList.clear();
                             }
+
                             if (followersUsernames != null && !followersUsernames.isEmpty()) {
                                 loadFriendDetails(followersUsernames, false);
                             } else {
                                 followersList.clear();
                             }
-                            // update the following list.
+
                             updateAdapter(true);
                         } else {
                             Toast.makeText(this, "Users not found", Toast.LENGTH_SHORT).show();
                         }
                     })
-                    .addOnFailureListener(e ->
-                            Toast.makeText(this, "Error retrieving user data", Toast.LENGTH_SHORT).show());
+                    .addOnFailureListener(e -> Toast.makeText(this, "Error retrieving user data", Toast.LENGTH_SHORT).show());
         }
     }
 
-    // Loading friend details for a given list of usernames.
     private void loadFriendDetails(List<String> usernames, boolean isFollowing) {
         db.collection("Users")
                 .whereIn("username", usernames)
@@ -189,36 +185,26 @@ public class FriendListActivity extends AppCompatActivity {
                             followersList.add(friend);
                         }
                     }
-                    // If the current tab matches, update the adapter.
                     if (isFollowing && showingFollowing) {
                         updateAdapter(true);
                     } else if (!isFollowing && !showingFollowing) {
                         updateAdapter(false);
                     }
                 })
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Error loading friend details", Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> Toast.makeText(this, "Error loading friend details", Toast.LENGTH_SHORT).show());
     }
 
-    // Update RecyclerView adapter based on selected tab.
     private void updateAdapter(boolean showFollowing) {
         showingFollowing = showFollowing;
-        if (showingFollowing) {
-            adapter = new FriendListAdapter(followingList);
-        } else {
-            adapter = new FriendListAdapter(followersList);
-        }
+        adapter = new FriendListAdapter(showingFollowing ? followingList : followersList);
         recyclerUsers.setAdapter(adapter);
     }
 
-    // Update tab to following or followers
     private void setActiveTab(boolean followingActive) {
         if (followingActive) {
-            // Following
             tabFriends.setBackgroundResource(R.drawable.bg_filter_bar_rounded);
             tabRequests.setBackgroundResource(R.drawable.bg_filter_bar);
         } else {
-            // Followers
             tabFriends.setBackgroundResource(R.drawable.bg_filter_bar);
             tabRequests.setBackgroundResource(R.drawable.bg_filter_bar_rounded);
         }
