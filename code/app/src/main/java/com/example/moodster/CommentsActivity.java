@@ -10,8 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.Timestamp;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class CommentsActivity extends AppCompatActivity {
@@ -20,9 +18,11 @@ public class CommentsActivity extends AppCompatActivity {
     private EditText inputComment;
     private Button btnPostComment;
     private CommentAdapter adapter;
-    private final List<CommentItem> commentList = new ArrayList<>();
 
-    private String currentUsername; // your username (for now just mock it)
+    private List<CommentItem> commentList;
+
+    private String currentUsername;
+    private String moodEventId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,27 +33,28 @@ public class CommentsActivity extends AppCompatActivity {
         inputComment = findViewById(R.id.inputComment);
         btnPostComment = findViewById(R.id.btnPostComment);
 
-        // 🔧 Hardcode username for now or grab from intent
-        currentUsername = "YourUsername"; // or getIntent().getStringExtra("username");
+        currentUsername = getIntent().getStringExtra("username");
+        moodEventId = getIntent().getStringExtra("moodEventId");
 
-        adapter = new CommentAdapter(this, commentList, currentUsername, null);
+        // ✅ Get previously saved comments for this mood (in-memory)
+        commentList = CommentRepository.getInstance().getCommentsForMood(moodEventId);
+
+        adapter = new CommentAdapter(this, commentList, currentUsername, moodEventId);
         commentListView.setAdapter(adapter);
 
         btnPostComment.setOnClickListener(v -> {
             String commentText = inputComment.getText().toString().trim();
             if (TextUtils.isEmpty(commentText)) return;
 
-            // Create new comment item
             CommentItem newComment = new CommentItem(currentUsername, commentText, Timestamp.now());
 
-            // Add to top of the list
+            // ✅ Save to global in-memory store
+            CommentRepository.getInstance().addComment(moodEventId, newComment);
+
+            // ✅ Update list and UI
             commentList.add(0, newComment);
             adapter.notifyDataSetChanged();
-
-            // Clear input
             inputComment.setText("");
-
-            // Scroll to top
             commentListView.setSelection(0);
         });
     }
