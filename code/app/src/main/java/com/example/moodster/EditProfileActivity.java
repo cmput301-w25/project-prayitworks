@@ -3,10 +3,10 @@ package com.example.moodster;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputFilter;
 import android.text.InputType;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -21,22 +21,22 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class EditProfileActivity extends AppCompatActivity {
 
+    // Header & Profile UI
     private ImageView backButton;
     private TextView tvDisplayName, tvUsername, tvEmail;
     private Button btnChangeName, btnChangeUsername;
+
+    // Bottom Navigation (ImageButtons in the layout)
     private ImageButton btnHome, btnSearch, btnAdd, btnCalendar, btnProfile;
 
-    // Firebase instances
+    // Firebase
     private FirebaseFirestore db;
     private FirebaseAuth auth;
 
-    // Bottom navigation buttons
-    private ImageView btnHome, btnSearch, btnAdd, btnCalendar, btnProfile;
-
-    // MoodEventViewModel for fetching mood count
+    // Mood ViewModel
     private MoodEventViewModel moodEventViewModel;
 
-    private FirebaseFirestore db;
+    // Current username
     private String currentUsername;
 
     @Override
@@ -44,9 +44,11 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_profile_screen);
 
+        // Initialize Firebase instances
         db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
 
-        // ✅ Get current username from intent
+        // Retrieve username from Intent
         currentUsername = getIntent().getStringExtra("username");
         if (currentUsername == null || currentUsername.isEmpty()) {
             Toast.makeText(this, "Username not found", Toast.LENGTH_SHORT).show();
@@ -55,15 +57,16 @@ public class EditProfileActivity extends AppCompatActivity {
             return;
         }
 
-        // ✅ Set username in ViewModel
+        // Set username in the MoodEventViewModel
         MoodEventViewModel.getInstance().setUsername(currentUsername);
 
-        // Bind views
+
         // --- Set up the custom header ---
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         TextView tvScreenTitle = findViewById(R.id.tv_screen_title);
         tvScreenTitle.setText("My Profile");
+
         ImageView menuIcon = findViewById(R.id.ic_profile_icon);
         if (menuIcon != null) {
             menuIcon.setOnClickListener(v -> {
@@ -89,7 +92,7 @@ public class EditProfileActivity extends AppCompatActivity {
         }
         // --- End Header Setup ---
 
-        // Bind other views from XML
+        // Bind views from layout
         backButton = findViewById(R.id.back_button);
         tvDisplayName = findViewById(R.id.tv_display_name);
         tvUsername = findViewById(R.id.tv_username);
@@ -97,14 +100,10 @@ public class EditProfileActivity extends AppCompatActivity {
         btnChangeName = findViewById(R.id.change_name);
         btnChangeUsername = findViewById(R.id.change_username);
 
-        // Firebase initialization
-        auth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
-
         // Load current user info from Firestore
         loadUserInfo();
 
-        // Dynamically update mood count (assumes a TextView with id tv_mood_count exists in the layout)
+        // Dynamically update mood count
         moodEventViewModel = MoodEventViewModel.getInstance();
         moodEventViewModel.fetchCurrentUserMoods(moodList -> {
             TextView tvMoodCount = findViewById(R.id.tv_total_moods);
@@ -113,11 +112,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
-        // Set up action button listeners for updating profile fields
-        btnChangeName.setOnClickListener(v -> showChangeNameDialog());
-        btnChangeUsername.setOnClickListener(v -> showChangeUsernameDialog());
-
-        // --- Bottom Navigation Setup (using AddMoodActivity logic) ---
+        // --- Bottom Navigation Setup ---
         btnHome = findViewById(R.id.btn_home);
         btnSearch = findViewById(R.id.btn_search);
         btnAdd = findViewById(R.id.btn_add);
@@ -125,18 +120,36 @@ public class EditProfileActivity extends AppCompatActivity {
         btnProfile = findViewById(R.id.btn_profile);
 
         btnHome.setOnClickListener(v -> {
-            startActivity(new Intent(EditProfileActivity.this, HomeActivity.class));
+            Intent intent = new Intent(EditProfileActivity.this, HomeActivity.class);
+            intent.putExtra("username", currentUsername);
+            startActivity(intent);
             finish();
         });
-        btnSearch.setOnClickListener(v -> startActivity(new Intent(EditProfileActivity.this, MapHandlerActivity.class)));
-        btnAdd.setOnClickListener(v -> startActivity(new Intent(EditProfileActivity.this, AddMoodActivity.class)));
-        btnCalendar.setOnClickListener(v -> startActivity(new Intent(EditProfileActivity.this, MoodHistoryActivity.class)));
+        btnSearch.setOnClickListener(v -> {
+            Intent intent = new Intent(EditProfileActivity.this, MapHandlerActivity.class);
+            intent.putExtra("username", currentUsername);
+            startActivity(intent);
+        });
+        btnAdd.setOnClickListener(v -> {
+            Intent intent = new Intent(EditProfileActivity.this, AddMoodActivity.class);
+            intent.putExtra("username", currentUsername);
+            startActivity(intent);
+        });
+        btnCalendar.setOnClickListener(v -> {
+            Intent intent = new Intent(EditProfileActivity.this, MoodHistoryActivity.class);
+            intent.putExtra("username", currentUsername);
+            startActivity(intent);
+        });
         btnProfile.setOnClickListener(v ->
                 Toast.makeText(EditProfileActivity.this, "Already on Profile", Toast.LENGTH_SHORT).show()
         );
-        // --- End Bottom Navigation Setup ---
+// --- End Bottom Navigation Setup ---
+
     }
 
+    /**
+     * Loads user info from Firestore based on the logged-in user's email.
+     */
     private void loadUserInfo() {
         if (auth.getCurrentUser() != null) {
             String email = auth.getCurrentUser().getEmail();
@@ -150,16 +163,17 @@ public class EditProfileActivity extends AppCompatActivity {
                             String username = doc.getString("username");
                             String userEmail = doc.getString("email");
 
-                        tvDisplayName.setText(displayName != null ? displayName : "N/A");
-                        tvUsername.setText(currentUsername);
-                        tvEmail.setText(email != null ? email : "N/A");
-                    } else {
-                        Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Error loading profile: " + e.getMessage(), Toast.LENGTH_SHORT).show()
-                );
+                            tvDisplayName.setText(displayName != null ? displayName : "N/A");
+                            tvUsername.setText(currentUsername); // or username if you prefer
+                            tvEmail.setText(userEmail != null ? userEmail : "N/A");
+                        } else {
+                            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(e ->
+                            Toast.makeText(this, "Error loading profile: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                    );
+        }
     }
 
     private void showChangeNameDialog() {
@@ -194,7 +208,7 @@ public class EditProfileActivity extends AppCompatActivity {
             String newUsername = input.getText().toString().trim();
             if (!newUsername.isEmpty()) {
                 updateProfileField("username", newUsername, "Username updated successfully");
-                // 🔥 TODO: Rename user document ID if needed
+                // 🔥 TODO: If you rename the user document ID in Firestore, handle that here
             } else {
                 Toast.makeText(this, "Username cannot be empty", Toast.LENGTH_SHORT).show();
             }
@@ -203,6 +217,9 @@ public class EditProfileActivity extends AppCompatActivity {
         builder.show();
     }
 
+    /**
+     * Generic helper to update a single profile field in Firestore and refresh.
+     */
     private void updateProfileField(String field, String newValue, String successMessage) {
         if (auth.getCurrentUser() != null) {
             String email = auth.getCurrentUser().getEmail();

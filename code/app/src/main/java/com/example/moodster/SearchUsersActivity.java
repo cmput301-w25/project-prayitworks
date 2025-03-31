@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.auth.FirebaseAuth;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,8 @@ public class SearchUsersActivity extends AppCompatActivity {
     private RecyclerView recyclerUsers;
     private UserAdapter adapter;
     private FirebaseFirestore db;
+
+
 
     private String currentUsername;
 
@@ -63,6 +67,14 @@ public class SearchUsersActivity extends AppCompatActivity {
             });
             popup.show();
         });;
+
+        currentUsername = getIntent().getStringExtra("username");
+        if (currentUsername == null || currentUsername.isEmpty()) {
+            Toast.makeText(this, "Username not found", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
 
         // --- Setup Bottom Navigation ---
         ImageButton btnHome = findViewById(R.id.btn_home);

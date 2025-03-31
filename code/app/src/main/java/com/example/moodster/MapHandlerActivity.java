@@ -93,16 +93,6 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void setupBottomNavigation() {
-        findViewById(R.id.btn_home).setOnClickListener(v ->
-                startActivity(new Intent(this, HomeActivity.class).putExtra("username", currentUsername)));
-        findViewById(R.id.btn_search).setOnClickListener(v ->
-                Toast.makeText(this, "Already on Map", Toast.LENGTH_SHORT).show());
-        findViewById(R.id.btn_add).setOnClickListener(v ->
-                startActivity(new Intent(this, AddMoodActivity.class).putExtra("username", currentUsername)));
-        findViewById(R.id.btn_calendar).setOnClickListener(v ->
-                startActivity(new Intent(this, MoodHistoryActivity.class).putExtra("username", currentUsername)));
-        findViewById(R.id.btn_profile).setOnClickListener(v ->
-                startActivity(new Intent(this, EditProfileActivity.class).putExtra("username", currentUsername)));
         // --- Set up the custom header ---
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -111,28 +101,37 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
         tvScreenTitle.setText("Mood Map");
 
         // click listener to the menu icon to open the popup menu
-        ImageView menuIcon = findViewById(R.id.ic_profile_icon);
-        menuIcon.setOnClickListener(v -> {
-            PopupMenu popup = new PopupMenu(MapHandlerActivity.this, v);
-            popup.getMenuInflater().inflate(R.menu.header_menu, popup.getMenu());
-            popup.setOnMenuItemClickListener(item -> {
-                int id = item.getItemId();
-                if (id == R.id.menu_profile) {
-                    startActivity(new Intent(MapHandlerActivity.this, EditProfileActivity.class));
-                    return true;
-                    //} else if (id == R.id.menu_settings) {
-                    //startActivity(new Intent(AddMoodActivity.this, SettingsActivity.class));
-                    //return true;
-                } else if (id == R.id.menu_logout) {
-                    FirebaseAuth.getInstance().signOut();
-                    startActivity(new Intent(MapHandlerActivity.this, LoginActivity.class));
-                    finish();
-                    return true;
-                }
-                return false;
-            });
-            popup.show();
-        });
+        // Retrieve the header container first
+        View header = findViewById(R.id.header);
+        if (header != null) {
+            ImageView menuIcon = header.findViewById(R.id.ic_profile_icon);
+            if (menuIcon != null) {
+                menuIcon.setOnClickListener(v -> {
+                    PopupMenu popup = new PopupMenu(MapHandlerActivity.this, v);
+                    popup.getMenuInflater().inflate(R.menu.header_menu, popup.getMenu());
+                    popup.setOnMenuItemClickListener(item -> {
+                        int id = item.getItemId();
+                        if (id == R.id.menu_profile) {
+                            startActivity(new Intent(MapHandlerActivity.this, EditProfileActivity.class)
+                                    .putExtra("username", currentUsername));
+                            return true;
+                        } else if (id == R.id.menu_logout) {
+                            FirebaseAuth.getInstance().signOut();
+                            startActivity(new Intent(MapHandlerActivity.this, LoginActivity.class));
+                            finish();
+                            return true;
+                        }
+                        return false;
+                    });
+                    popup.show();
+                });
+            } else {
+                Log.e("MapHandlerActivity", "Menu icon (ic_profile_icon) not found within header.");
+            }
+        } else {
+            Log.e("MapHandlerActivity", "Header view not found.");
+        }
+
     }
 
 

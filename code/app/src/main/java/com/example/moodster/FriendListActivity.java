@@ -65,6 +65,14 @@ public class FriendListActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Header menu icon not found. Check layout.", Toast.LENGTH_SHORT).show();
         }
+
+        currentUsername = getIntent().getStringExtra("username");
+        if (currentUsername == null || currentUsername.isEmpty()) {
+            Toast.makeText(this, "Username not found", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
         // --- End Header Setup ----
 
         // --- Bottom Navigation Setup (using AddMoodActivity logic) ---
@@ -74,12 +82,33 @@ public class FriendListActivity extends AppCompatActivity {
         ImageButton btnCalendar = findViewById(R.id.btn_calendar);
         ImageButton btnProfile = findViewById(R.id.btn_profile);
 
-        btnHome.setOnClickListener(v -> startActivity(new Intent(FriendListActivity.this, HomeActivity.class)));
-        btnSearch.setOnClickListener(v -> startActivity(new Intent(FriendListActivity.this, SearchUsersActivity.class)));
-        btnAdd.setOnClickListener(v -> startActivity(new Intent(FriendListActivity.this, AddMoodActivity.class)));
-        btnCalendar.setOnClickListener(v -> startActivity(new Intent(FriendListActivity.this, MoodHistoryActivity.class)));
-        btnProfile.setOnClickListener(v -> startActivity(new Intent(FriendListActivity.this, EditProfileActivity.class)));
+        btnHome.setOnClickListener(v -> {
+            Intent intent = new Intent(FriendListActivity.this, HomeActivity.class);
+            intent.putExtra("username", currentUsername);
+            startActivity(intent);
+        });
+        btnSearch.setOnClickListener(v -> {
+            Intent intent = new Intent(FriendListActivity.this, SearchUsersActivity.class);
+            intent.putExtra("username", currentUsername);
+            startActivity(intent);
+        });
+        btnAdd.setOnClickListener(v -> {
+            Intent intent = new Intent(FriendListActivity.this, AddMoodActivity.class);
+            intent.putExtra("username", currentUsername);
+            startActivity(intent);
+        });
+        btnCalendar.setOnClickListener(v -> {
+            Intent intent = new Intent(FriendListActivity.this, MoodHistoryActivity.class);
+            intent.putExtra("username", currentUsername);
+            startActivity(intent);
+        });
+        btnProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(FriendListActivity.this, EditProfileActivity.class);
+            intent.putExtra("username", currentUsername);
+            startActivity(intent);
+        });
         // --- End Bottom Navigation Setup ---
+
 
         db = FirebaseFirestore.getInstance();
         recyclerUsers = findViewById(R.id.recyclerUsers);

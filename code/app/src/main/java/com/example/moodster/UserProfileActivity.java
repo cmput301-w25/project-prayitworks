@@ -62,18 +62,40 @@ public class UserProfileActivity extends AppCompatActivity {
             popup.show();
         });
 
-        // --- Set up Bottom Navigation (matches other activities) ---
+        // --- Set up Bottom Navigation ---
         ImageButton btnHome = findViewById(R.id.btn_home);
         ImageButton btnSearch = findViewById(R.id.btn_search);
         ImageButton btnAdd = findViewById(R.id.btn_add);
         ImageButton btnCalendar = findViewById(R.id.btn_calendar);
         ImageButton btnProfile = findViewById(R.id.btn_profile);
 
-        btnHome.setOnClickListener(v -> startActivity(new Intent(UserProfileActivity.this, HomeActivity.class)));
-        btnSearch.setOnClickListener(v -> startActivity(new Intent(UserProfileActivity.this, SearchUsersActivity.class)));
-        btnAdd.setOnClickListener(v -> startActivity(new Intent(UserProfileActivity.this, AddMoodActivity.class)));
-        btnCalendar.setOnClickListener(v -> startActivity(new Intent(UserProfileActivity.this, MoodHistoryActivity.class)));
-        btnProfile.setOnClickListener(v -> startActivity(new Intent(UserProfileActivity.this, EditProfileActivity.class)));
+        btnHome.setOnClickListener(v -> {
+            Intent intent = new Intent(UserProfileActivity.this, HomeActivity.class);
+            intent.putExtra("username", currentUsername);
+            startActivity(intent);
+        });
+        btnSearch.setOnClickListener(v -> {
+            Intent intent = new Intent(UserProfileActivity.this, SearchUsersActivity.class);
+            intent.putExtra("username", currentUsername);
+            startActivity(intent);
+        });
+        btnAdd.setOnClickListener(v -> {
+            Intent intent = new Intent(UserProfileActivity.this, AddMoodActivity.class);
+            intent.putExtra("username", currentUsername);
+            startActivity(intent);
+        });
+        btnCalendar.setOnClickListener(v -> {
+            Intent intent = new Intent(UserProfileActivity.this, MoodHistoryActivity.class);
+            intent.putExtra("username", currentUsername);
+            startActivity(intent);
+        });
+        btnProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(UserProfileActivity.this, EditProfileActivity.class);
+            intent.putExtra("username", currentUsername);
+            startActivity(intent);
+        });
+        // --- End Bottom Navigation Setup ---
+
 
         // --- Initialize Profile UI Elements ---
         tvDisplayName = findViewById(R.id.tv_display_name);
@@ -151,9 +173,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
     }
 
-
     /**
-     * Show a confirmation dialog, mirroring the approach used in UserAdapter.
+     * Show a confirmation dialog
      */
     private void confirmAndSendFriendRequest() {
         new AlertDialog.Builder(UserProfileActivity.this)
