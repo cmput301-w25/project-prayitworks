@@ -15,8 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -34,11 +32,21 @@ public class FriendRequestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_recieving_follower_request);
 
+        // --- Get username from intent ---
+        currentUsername = getIntent().getStringExtra("username");
+        if (currentUsername == null || currentUsername.isEmpty()) {
+            Toast.makeText(this, "Username not found", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
+
         // --- Set up the custom header ---
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         TextView tvScreenTitle = findViewById(R.id.tv_screen_title);
         tvScreenTitle.setText("Friend Requests");
+
         ImageView menuIcon = findViewById(R.id.ic_profile_icon);
         menuIcon.setOnClickListener(v -> {
             PopupMenu popup = new PopupMenu(FriendRequestActivity.this, v);
@@ -46,7 +54,9 @@ public class FriendRequestActivity extends AppCompatActivity {
             popup.setOnMenuItemClickListener(item -> {
                 int id = item.getItemId();
                 if (id == R.id.menu_profile) {
-                    startActivity(new Intent(FriendRequestActivity.this, EditProfileActivity.class));
+                    Intent intent = new Intent(FriendRequestActivity.this, EditProfileActivity.class);
+                    intent.putExtra("username", currentUsername);
+                    startActivity(intent);
                     return true;
                 } else if (id == R.id.menu_logout) {
                     FirebaseAuth.getInstance().signOut();
@@ -58,50 +68,28 @@ public class FriendRequestActivity extends AppCompatActivity {
             });
             popup.show();
         });
-        // --- End Header Setup ---
 
-        // Existing UI initialization
+        // --- UI Initialization ---
         Button btnTabFriends = findViewById(R.id.tabFriends);
         Button btnSearchUsers = findViewById(R.id.btnSearchUsers);
 
         db = FirebaseFirestore.getInstance();
         recyclerRequests = findViewById(R.id.recyclerRequests);
-
-        currentUsername = getIntent().getStringExtra("username");
-        if (currentUsername == null || currentUsername.isEmpty()) {
-            Toast.makeText(this, "Username not found", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-            return;
-        }
-
-        // Setup RecyclerView
         recyclerRequests.setLayoutManager(new LinearLayoutManager(this));
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            String email = currentUser.getEmail();
-            db.collection("Users")
-                    .whereEqualTo("email", email)
-                    .get()
-                    .addOnSuccessListener(querySnapshot -> {
-                        if (!querySnapshot.isEmpty()) {
-                            currentUsername = querySnapshot.getDocuments().get(0).getString("username");
-                            loadFriendRequests();
-                        } else {
-                            Toast.makeText(this, "User document not found", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(e ->
-                            Toast.makeText(this, "Error loading username", Toast.LENGTH_SHORT).show());
-        }
 
+        // --- Load Friend Requests ---
+        loadFriendRequests();
+
+        // --- Tab navigation ---
         btnTabFriends.setOnClickListener(v -> {
             Intent intent = new Intent(FriendRequestActivity.this, FriendListActivity.class);
+            intent.putExtra("username", currentUsername);
             startActivity(intent);
         });
 
         btnSearchUsers.setOnClickListener(v -> {
             Intent intent = new Intent(FriendRequestActivity.this, SearchUsersActivity.class);
+            intent.putExtra("username", currentUsername);
             startActivity(intent);
         });
 
@@ -118,7 +106,7 @@ public class FriendRequestActivity extends AppCompatActivity {
             startActivity(intent);
         });
         btnSearch.setOnClickListener(v -> {
-            Intent intent = new Intent(FriendRequestActivity.this, SearchUsersActivity.class);
+            Intent intent = new Intent(FriendRequestActivity.this, MapHandlerActivity.class);
             intent.putExtra("username", currentUsername);
             startActivity(intent);
         });
@@ -137,12 +125,9 @@ public class FriendRequestActivity extends AppCompatActivity {
             intent.putExtra("username", currentUsername);
             startActivity(intent);
         });
-        // --- End Bottom Navigation Setup ---
-
     }
 
     private void loadFriendRequests() {
-        // Get the current user's document to retrieve the followRequests field.
         db.collection("Users").document(currentUsername).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {

@@ -288,38 +288,34 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot userDoc : task.getResult()) {
                     String username = userDoc.getString("username");
-                    List<Long> moodEventIds = (List<Long>) userDoc.get("MoodEventIds");
-                    if (moodEventIds == null || moodEventIds.isEmpty()) {
-                        continue;
-                    }
-                    Long firstEventId = moodEventIds.get(0);
-                    db.collection("MoodEvents").document(String.valueOf(firstEventId))
-                            .get().addOnCompleteListener(eventTask -> {
-                                if (eventTask.isSuccessful()) {
-                                    DocumentSnapshot eventDoc = eventTask.getResult();
-                                    if (eventDoc.exists()) {
-                                        Double lat = eventDoc.getDouble("latitude");
-                                        Double lng = eventDoc.getDouble("longitude");
-                                        String emotionalState = eventDoc.getString("emotionalState");
+                    List<String> moodEventIds = (List<String>) userDoc.get("MoodEventIds");
 
-                                        if (lat != null && lng != null && emotionalState != null) {
-                                            LatLng loc = new LatLng(lat, lng);
-                                            String emoji = emotionToEmoji.getOrDefault(emotionalState, "😶");
-                                            String snippet = "Emotional State: " + emoji + " " + emotionalState;
+                    if (username == null || moodEventIds == null || moodEventIds.isEmpty()) continue;
 
-                                            runOnUiThread(() -> {
-                                                mMap.addMarker(new MarkerOptions()
-                                                        .position(loc)
-                                                        .icon(getEmojiBitmapDescriptor("👤")) // User emoji
-                                                        .title(username)
-                                                        .snippet(snippet));
-                                            });
-                                        }
+                    String firstEventId = moodEventIds.get(0);
+                    db.collection("MoodEvents").document(firstEventId)
+                            .get().addOnSuccessListener(eventDoc -> {
+                                if (eventDoc.exists()) {
+                                    Double lat = eventDoc.getDouble("latitude");
+                                    Double lon = eventDoc.getDouble("longitude");
+                                    String emotionalState = eventDoc.getString("emotionalState");
+
+                                    if (lat != null && lon != null && emotionalState != null) {
+                                        LatLng loc = new LatLng(lat, lon);
+                                        String emoji = emotionToEmoji.getOrDefault(emotionalState, "😶");
+
+                                        String snippet = "👤 " + username + "\n" +
+                                                "Mood: " + emoji + " " + emotionalState;
+
+                                        runOnUiThread(() -> mMap.addMarker(new MarkerOptions()
+                                                .position(loc)
+                                                .title(username)
+                                                .snippet(snippet)
+                                                .icon(getEmojiBitmapDescriptor("👤"))));
                                     }
-                                } else {
-                                    Log.e("FirestoreError", "Error getting mood event", eventTask.getException());
                                 }
-                            });
+                            })
+                            .addOnFailureListener(e -> Log.e("Firestore", "Failed to load mood: " + e.getMessage()));
                 }
             } else {
                 Log.e("FirestoreError", "Error getting users", task.getException());

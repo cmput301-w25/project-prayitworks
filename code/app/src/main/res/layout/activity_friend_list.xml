@@ -81,14 +81,18 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp">
 
-            <TextView
-                android:id="@+id/textSearchLabel"
+            <EditText
+                android:id="@+id/editSearchFriends"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Search my friends..."
+                android:background="@android:color/transparent"
+                android:hint="Search my friends..."
+                android:inputType="text"
                 android:textColor="@android:color/white"
+                android:textColorHint="@android:color/darker_gray"
                 android:textSize="16sp" />
+
 
             <ImageView
                 android:id="@+id/iconSearch"
