@@ -78,5 +78,6 @@ public class MoodDetailsActivity extends AppCompatActivity {
             intentComment.putExtra("username", currentUsername);
             startActivity(intentComment);
         });
+
     }
 }
