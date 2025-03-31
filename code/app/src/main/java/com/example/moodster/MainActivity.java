@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -117,26 +118,40 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("MoodEvent", "Error: No emotional state selected.");
                 return;
             }
+
             String trigger = editTrigger.getText().toString().trim();
             String socialSituation = editSocialSituation.getText().toString().trim();
             String explanation = editExplanation.getText().toString().trim();
-            int id = moodEventList.size();
-            Timestamp timestamp = Timestamp.now();
-            MoodEvent newMood = new MoodEvent(
-                    id,
-                    timestamp,
+
+            moodEventViewModel.addMoodEvent(
                     selectedEmotionalState,
                     trigger,
                     socialSituation,
                     explanation,
-                    null,
-                    0,
-                    0
+                    null, // image
+                    0, 0,
+                    new MoodEventViewModel.OnAddListener() {
+                        @Override
+                        public void onAddSuccess() {
+                            runOnUiThread(() -> {
+                                Toast.makeText(MainActivity.this, "Mood added!", Toast.LENGTH_SHORT).show();
+                                // Reload list from ViewModel if needed
+                                moodEventViewModel.fetchCurrentUserMoods(moods -> {
+                                    moodEventList.clear();
+                                    moodEventList.addAll(moods);
+                                    filterMoodList(spinnerFilter.getSelectedItem().toString());
+                                });
+                            });
+                        }
+
+                        @Override
+                        public void onAddFailure(String errorMessage) {
+                            Log.e("MoodEvent", "Failed to add mood: " + errorMessage);
+                            runOnUiThread(() ->
+                                    Toast.makeText(MainActivity.this, "Failed to add mood.", Toast.LENGTH_SHORT).show());
+                        }
+                    }
             );
-            moodEventViewModel.addMoodEvent(newMood);
-            moodEventList.add(newMood);
-            moodListAdapter.add(selectedEmotionalState + " - " + timestamp);
-            Log.d("MoodEvent", "All Moods: " + moodEventList);
         });
 
         // On item click => show details

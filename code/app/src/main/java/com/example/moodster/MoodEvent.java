@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MoodEvent implements Serializable {
-    private final int id; // Unique ID
+    private final String moodId;
     private String emotionalState; // Required
     private  Timestamp createdAt; // Stores date & time
     private  Timestamp lastEditAt;
@@ -30,11 +30,11 @@ public class MoodEvent implements Serializable {
     );
 
     // Constructor
-    public MoodEvent(int id, Timestamp createdAt, String emotionalState, String trigger, String socialSituation, String explanation, Uri image, double lat, double lon) {
+    public MoodEvent(String moodId, Timestamp createdAt, String emotionalState, String trigger, String socialSituation, String explanation, Uri image, double lat, double lon) {
         if (!VALID_EMOTIONAL_STATES.contains(emotionalState)) {
             throw new IllegalArgumentException("Invalid emotional state: " + emotionalState);
         }
-        this.id = id;
+        this.moodId = moodId;
         this.emotionalState = emotionalState;
         this.createdAt = createdAt; //added created At
         //if lastEditAt is not mentioned then it simply takes in the value of creatd At by default
@@ -71,7 +71,7 @@ public class MoodEvent implements Serializable {
         }
     }
 
-    public int getId() { return id; }
+    public String getMoodId() { return moodId; }
     public String getEmotionalState() { return emotionalState; }
 
     public Timestamp getCreatedAt() { return createdAt; }
@@ -118,7 +118,7 @@ public class MoodEvent implements Serializable {
     @Override
     public String toString() {
         return "MoodEvent{" +
-                "id=" + id +
+                "id=" + moodId +
                 ", emotionalState='" + emotionalState + '\'' +
                 ", createdAt=" + createdAt.toDate() +
                 ", lastEditAt=" + lastEditAt.toDate()+

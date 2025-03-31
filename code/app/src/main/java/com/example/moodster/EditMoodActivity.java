@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class EditMoodActivity extends AppCompatActivity {
     private EditText reasonValue, triggerValue;
     private Spinner spinnerMood, spinnerSocialSituation;
     private MoodEvent eventToEdit;
-    private int key, MoodEventPos;
+    private String moodId;
     private MoodEventViewModel moodEventViewModel;
 
     @Override
@@ -45,30 +44,24 @@ public class EditMoodActivity extends AppCompatActivity {
         spinnerMood = findViewById(R.id.textMoodEmoji);
         spinnerSocialSituation = findViewById(R.id.textSocialValue);
 
-        // Explanation limit
         reasonValue.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
 
-        // mood spinner
         ArrayAdapter<String> moodAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_item, VALID_EMOTIONAL_STATES
         );
         moodAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerMood.setAdapter(moodAdapter);
 
-        // social situation spinner
         ArrayAdapter<String> socialAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_item, VALID_SOCIAL_SITUATION
         );
         socialAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerSocialSituation.setAdapter(socialAdapter);
 
-
-        // get corresponding MoodEvent and key
         Intent intent = getIntent();
-        key = intent.getIntExtra("moodId", -1);
-        eventToEdit = moodEventViewModel.getMoodEvents().get(key);
+        moodId = intent.getStringExtra("moodId");
+        eventToEdit = moodEventViewModel.getMoodEvents().get(moodId);
 
-        // populating UI fields from the coressponding event
         if (eventToEdit != null) {
             reasonValue.setText(eventToEdit.getExplanation());
             triggerValue.setText(eventToEdit.getTrigger());
@@ -76,11 +69,9 @@ public class EditMoodActivity extends AppCompatActivity {
             setSpinnerSelection(spinnerSocialSituation, eventToEdit.getSocialSituation());
         }
 
-        // cancel edit
         Button buttonCancel = findViewById(R.id.buttonCancel);
         buttonCancel.setOnClickListener(v -> finish());
 
-        // save edit
         Button buttonSave = findViewById(R.id.buttonSave);
         buttonSave.setOnClickListener(v -> onSaveClicked());
     }
@@ -109,10 +100,6 @@ public class EditMoodActivity extends AppCompatActivity {
         }
     }
 
-
-    /**
-     * Setting spinner selection to match a given value from the spinner’s current adapter items.
-     */
     private void setSpinnerSelection(Spinner spinner, String value) {
         if (value == null) return;
         for (int i = 0; i < spinner.getAdapter().getCount(); i++) {
