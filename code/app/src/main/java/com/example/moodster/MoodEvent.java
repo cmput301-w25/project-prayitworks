@@ -22,6 +22,7 @@ public class MoodEvent implements Serializable {
     // For Location
     private double latitude;
     private double longitude;
+    private boolean isPublic;
 
 
     // Predefined list of valid emotional states
@@ -30,7 +31,7 @@ public class MoodEvent implements Serializable {
     );
 
     // Constructor
-    public MoodEvent(String moodId, Timestamp createdAt, String emotionalState, String trigger, String socialSituation, String explanation, Uri image, double lat, double lon) {
+    public MoodEvent(String moodId, Timestamp createdAt, String emotionalState, String trigger, String socialSituation, String explanation, Uri image, double lat, double lon, boolean isPublic) {
         if (!VALID_EMOTIONAL_STATES.contains(emotionalState)) {
             throw new IllegalArgumentException("Invalid emotional state: " + emotionalState);
         }
@@ -46,6 +47,7 @@ public class MoodEvent implements Serializable {
         this.image = image;
         this.longitude = lon;
         this.latitude = lat;
+        this.isPublic = isPublic;
     }
 
     public String getEmoji() {
@@ -87,6 +89,9 @@ public class MoodEvent implements Serializable {
 
     public double getLatitude() { return latitude; }
     public double getLongitude() { return longitude; }
+    public boolean isPublic() {
+        return isPublic;
+    }
     public void setExplanation() { this.explanation = explanation; }
 
     // Setters for editable fields
@@ -115,6 +120,11 @@ public class MoodEvent implements Serializable {
         this.image = Image;
     }
 
+    public void setPublic(boolean isPublic) {
+        this.isPublic = isPublic;
+        this.lastEditAt = Timestamp.now();
+    }
+
     @Override
     public String toString() {
         return "MoodEvent{" +
@@ -127,6 +137,7 @@ public class MoodEvent implements Serializable {
                 ", explanation='" + explanation + '\'' +
                 ", lon= " + longitude + '\'' +
                 ", lat= " + latitude + '\'' +
+                ", isPublic=" + isPublic +
                 "}";
 
     }

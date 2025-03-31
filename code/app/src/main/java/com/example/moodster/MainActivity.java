@@ -21,7 +21,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.Timestamp;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -129,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                     socialSituation,
                     explanation,
                     null, // image
-                    0, 0,
+                    0, 0, true,
                     new MoodEventViewModel.OnAddListener() {
                         @Override
                         public void onAddSuccess() {

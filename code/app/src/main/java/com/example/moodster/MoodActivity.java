@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -41,6 +42,7 @@ public class MoodActivity extends AppCompatActivity {
 
     private String selectedEmotionalState;
     private String currentUser;
+    private Switch publicToggle;
 
     public static final List<String> VALID_SOCIAL_SITUATION = Arrays.asList(
             "Alone, with one other person",
@@ -93,9 +95,11 @@ public class MoodActivity extends AppCompatActivity {
         btnCancel = findViewById(R.id.btn_cancel);
         btnViewMoodHistory = findViewById(R.id.btn_calendar);
         btnUploadImage = findViewById(R.id.btn_upload_image);
+        publicToggle = findViewById(R.id.publicToggle);
 
-        // Limit explanation
+        // Limit explanation and trigger fields to 20 characters
         editExplanation.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
+        editTrigger.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
 
         // Social spinner
         ArrayAdapter<String> socialAdapter = new ArrayAdapter<>(
@@ -113,6 +117,8 @@ public class MoodActivity extends AppCompatActivity {
             String socialSituation = spinnerSocialSituation.getSelectedItem().toString();
             String explanation = editExplanation.getText().toString().trim();
 
+            boolean isPublic = publicToggle.isChecked();
+
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
             getCurrentLocation((lat, lon) -> {
@@ -128,6 +134,7 @@ public class MoodActivity extends AppCompatActivity {
                         selectedImageUri,
                         latitude,
                         longitude,
+                        isPublic,
                         new MoodEventViewModel.OnAddListener() {
                             @Override
                             public void onAddSuccess() {

@@ -72,14 +72,15 @@
     <!-- Bottom Navigation Bar -->
 
 
-    <TextView
-        android:id="@+id/date_time"
-        android:layout_width="match_parent"
+    <Switch
+        android:id="@+id/publicToggle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/angry"
         android:layout_marginTop="-2dp"
+        android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:text="Select Date and Time"
+        android:text="Post to Public"
         android:textColor="@android:color/black"
         android:textSize="16sp" />
 
