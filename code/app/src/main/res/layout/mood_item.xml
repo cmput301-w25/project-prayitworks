@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="12dp"
-    android:background="@drawable/filter_background">
+    android:background="@drawable/filter_background"
+    android:layout_marginBottom="8dp">
 
     <!-- Happy Mood -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:elevation="4dp"
+        android:layout_marginBottom="8dp">
 
         <TextView
             android:id="@+id/mood_happy"
@@ -39,7 +43,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:elevation="4dp"
+        android:layout_marginBottom="8dp">
 
         <TextView
             android:id="@+id/mood_disappointed"
@@ -68,7 +75,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:elevation="4dp"
+        android:layout_marginBottom="8dp">
 
         <TextView
             android:id="@+id/mood_angry"
@@ -97,7 +107,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:elevation="4dp"
+        android:layout_marginBottom="8dp">
 
         <TextView
             android:id="@+id/mood_crying"
@@ -126,7 +139,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:elevation="4dp"
+        android:layout_marginBottom="8dp">
 
         <TextView
             android:id="@+id/mood_tired"
@@ -155,7 +171,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:elevation="4dp"
+        android:layout_marginBottom="8dp">
 
         <TextView
             android:id="@+id/mood_shame"

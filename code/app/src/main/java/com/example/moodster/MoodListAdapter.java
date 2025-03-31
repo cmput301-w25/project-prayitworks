@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+
 import java.util.List;
 
 public class MoodListAdapter extends BaseAdapter {
@@ -46,12 +47,14 @@ public class MoodListAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.mood_event_list_item, parent, false);
         }
+
         MoodEvent moodEvent = moodEvents.get(position);
 
         TextView textViewEmoji = convertView.findViewById(R.id.textViewMood);
         TextView textViewMoodPreview = convertView.findViewById(R.id.textViewMoodPreview);
         Button buttonViewDetails = convertView.findViewById(R.id.buttonViewDetails);
 
+        // Set the text for emoji and preview
         textViewEmoji.setText(moodEvent.getEmoji());
         textViewMoodPreview.setText(
                 "Reason: " + moodEvent.getExplanation() + "\n" +
@@ -59,6 +62,7 @@ public class MoodListAdapter extends BaseAdapter {
                         "Social Situation: " + moodEvent.getSocialSituation()
         );
 
+        // Set the details button click listener
         buttonViewDetails.setOnClickListener(v -> {
             Intent intent = new Intent(context, MoodDetailsActivity.class);
             intent.putExtra("textMoodEmoji", moodEvent.getEmoji());
@@ -73,6 +77,10 @@ public class MoodListAdapter extends BaseAdapter {
 
             context.startActivity(intent);
         });
+
+        // Fade-in effect when the item is loaded
+        convertView.setAlpha(0f);
+        convertView.animate().alpha(1f).setDuration(1000);
 
         return convertView;
     }

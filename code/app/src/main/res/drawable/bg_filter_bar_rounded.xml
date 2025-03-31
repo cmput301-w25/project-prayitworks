@@ -4,7 +4,7 @@
     android:shape="rectangle">
 
     <!-- Your chosen muted forest-green color -->
-    <solid android:color="#768D76" />
+    <solid android:color= "#FB7B8E" />
 
     <!-- Rounded corners; adjust if you want a sharper or more rounded edge -->
     <corners android:radius="40dp" />

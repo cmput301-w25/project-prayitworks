@@ -1,7 +1,12 @@
 package com.example.moodster;
 
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -29,6 +34,9 @@ public class HomeActivity extends AppCompatActivity {
     private ListView listRecentMoods;
     private MoodListAdapter adapter;
     private List<MoodEvent> masterMoodList = new ArrayList<>();
+    private Handler scrollHandler = new Handler();
+    private Runnable scrollRunnable;
+    private int scrollIndex = 0;
 
     private String currentUsername;
 
@@ -37,7 +45,6 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        // ✅ Get current username from intent
         currentUsername = getIntent().getStringExtra("username");
         if (currentUsername == null || currentUsername.isEmpty()) {
             Toast.makeText(this, "Username not found. Please log in again.", Toast.LENGTH_LONG).show();
@@ -46,11 +53,9 @@ public class HomeActivity extends AppCompatActivity {
             return;
         }
 
-        // ✅ Set username in ViewModel
         moodEventViewModel = MoodEventViewModel.getInstance();
         moodEventViewModel.setUsername(currentUsername);
 
-        // --- Custom Header Setup ---
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         TextView tvScreenTitle = findViewById(R.id.tv_screen_title);
@@ -64,7 +69,7 @@ public class HomeActivity extends AppCompatActivity {
                 int id = item.getItemId();
                 if (id == R.id.menu_profile) {
                     Intent profileIntent = new Intent(HomeActivity.this, EditProfileActivity.class);
-                    profileIntent.putExtra("username", currentUsername); // ✅
+                    profileIntent.putExtra("username", currentUsername);
                     startActivity(profileIntent);
                     return true;
                 } else if (id == R.id.menu_logout) {
@@ -84,7 +89,6 @@ public class HomeActivity extends AppCompatActivity {
         listRecentMoods = findViewById(R.id.mood_entries_scroll);
         btnManageFriends = findViewById(R.id.btnManageFriends);
 
-        // Welcome display
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             String email = currentUser.getEmail();
@@ -102,7 +106,6 @@ public class HomeActivity extends AppCompatActivity {
                             Toast.makeText(this, "Error loading user profile", Toast.LENGTH_SHORT).show());
         }
 
-        // Fetch mood events
         moodEventViewModel.fetchCurrentUserMoods(moodList -> {
             masterMoodList.clear();
             masterMoodList.addAll(moodList);
@@ -117,16 +120,26 @@ public class HomeActivity extends AppCompatActivity {
             }
 
             textMoodCount.setText("You’ve logged " + masterMoodList.size() + " moods.");
+
+            scrollRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    if (adapter != null && adapter.getCount() > 0) {
+                        listRecentMoods.smoothScrollToPosition(scrollIndex);
+                        scrollIndex = (scrollIndex + 1) % adapter.getCount();
+                        scrollHandler.postDelayed(this, 1000); // Adjust time interval as needed
+                    }
+                }
+            };
+            scrollHandler.postDelayed(scrollRunnable, 1000); // Start the scrolling
         });
 
-        // ✅ Add Mood
         btnQuickAddMood.setOnClickListener(v -> {
             Intent intent = new Intent(HomeActivity.this, AddMoodActivity.class);
             intent.putExtra("username", currentUsername);
             startActivity(intent);
         });
 
-        // ✅ Mood Details
         listRecentMoods.setOnItemClickListener((parent, view, position, id) -> {
             MoodEvent selected = masterMoodList.get(position);
             Intent intent = new Intent(HomeActivity.this, MoodDetailsActivity.class);
@@ -141,14 +154,12 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // ✅ Manage Friends
         btnManageFriends.setOnClickListener(v -> {
             Intent intent = new Intent(HomeActivity.this, SearchUsersActivity.class);
             intent.putExtra("username", currentUsername);
             startActivity(intent);
         });
 
-        // --- Bottom Navigation ---
         ImageButton btnHome = findViewById(R.id.btn_home);
         ImageButton btnSearch = findViewById(R.id.btn_search);
         ImageButton btnViewMoodHistory = findViewById(R.id.btn_calendar);
@@ -178,5 +189,85 @@ public class HomeActivity extends AppCompatActivity {
             intent.putExtra("username", currentUsername);
             startActivity(intent);
         });
+
+        setupNavBarBounceWithShadow();
+        setupNavBarHoverEffects();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        scrollHandler.removeCallbacks(scrollRunnable);  // Clean up scrolling handler
+    }
+
+    private void setupNavBarHoverEffects() {
+        int[] navButtonIds = {
+                R.id.btn_home, R.id.btn_search, R.id.btn_add, R.id.btn_calendar, R.id.btn_profile
+        };
+
+        for (int id : navButtonIds) {
+            View button = findViewById(id);
+
+            button.setOnTouchListener((v, event) -> {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        AnimatorSet lift = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.nav_hover_lift);
+                        lift.setTarget(v);
+                        lift.start();
+                        return false;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        AnimatorSet reset = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.nav_hover_reset);
+                        reset.setTarget(v);
+                        reset.start();
+                        return false;
+                }
+                return false;
+            });
+        }
+    }
+
+    private void setupNavBarBounceWithShadow() {
+        int[] navIds = {
+                R.id.btn_home, R.id.btn_search, R.id.btn_add,
+                R.id.btn_calendar, R.id.btn_profile
+        };
+
+        for (int id : navIds) {
+            ImageButton button = findViewById(id);
+
+            button.setOnClickListener(v -> {
+                for (int resetId : navIds) {
+                    ImageButton resetBtn = findViewById(resetId);
+                    resetBtn.setElevation(4f);
+                    resetBtn.setScaleX(1f);
+                    resetBtn.setScaleY(1f);
+                }
+
+                AnimatorSet bounce = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.nav_bounce);
+                bounce.setTarget(button);
+                bounce.start();
+
+                button.setElevation(12f);
+
+                Intent intent = null;
+                if (id == R.id.btn_home) {
+                    intent = new Intent(this, HomeActivity.class);
+                } else if (id == R.id.btn_search) {
+                    intent = new Intent(this, MapHandlerActivity.class);
+                } else if (id == R.id.btn_add) {
+                    intent = new Intent(this, AddMoodActivity.class);
+                } else if (id == R.id.btn_calendar) {
+                    intent = new Intent(this, MoodHistoryActivity.class);
+                } else if (id == R.id.btn_profile) {
+                    intent = new Intent(this, EditProfileActivity.class);
+                }
+
+                if (intent != null) {
+                    intent.putExtra("username", currentUsername);
+                    startActivity(intent);
+                }
+            });
+        }
     }
 }
