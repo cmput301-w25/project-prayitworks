@@ -3,16 +3,19 @@ package com.example.moodster;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -22,6 +25,16 @@ public class EditProfileActivity extends AppCompatActivity {
     private TextView tvDisplayName, tvUsername, tvEmail;
     private Button btnChangeName, btnChangeUsername;
     private ImageButton btnHome, btnSearch, btnAdd, btnCalendar, btnProfile;
+
+    // Firebase instances
+    private FirebaseFirestore db;
+    private FirebaseAuth auth;
+
+    // Bottom navigation buttons
+    private ImageView btnHome, btnSearch, btnAdd, btnCalendar, btnProfile;
+
+    // MoodEventViewModel for fetching mood count
+    private MoodEventViewModel moodEventViewModel;
 
     private FirebaseFirestore db;
     private String currentUsername;
@@ -46,6 +59,37 @@ public class EditProfileActivity extends AppCompatActivity {
         MoodEventViewModel.getInstance().setUsername(currentUsername);
 
         // Bind views
+        // --- Set up the custom header ---
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        TextView tvScreenTitle = findViewById(R.id.tv_screen_title);
+        tvScreenTitle.setText("My Profile");
+        ImageView menuIcon = findViewById(R.id.ic_profile_icon);
+        if (menuIcon != null) {
+            menuIcon.setOnClickListener(v -> {
+                PopupMenu popup = new PopupMenu(EditProfileActivity.this, v);
+                popup.getMenuInflater().inflate(R.menu.header_menu, popup.getMenu());
+                popup.setOnMenuItemClickListener(item -> {
+                    int id = item.getItemId();
+                    if (id == R.id.menu_profile) {
+                        startActivity(new Intent(EditProfileActivity.this, EditProfileActivity.class));
+                        return true;
+                    } else if (id == R.id.menu_logout) {
+                        FirebaseAuth.getInstance().signOut();
+                        startActivity(new Intent(EditProfileActivity.this, LoginActivity.class));
+                        finish();
+                        return true;
+                    }
+                    return false;
+                });
+                popup.show();
+            });
+        } else {
+            Toast.makeText(this, "Header menu icon not found. Check layout.", Toast.LENGTH_SHORT).show();
+        }
+        // --- End Header Setup ---
+
+        // Bind other views from XML
         backButton = findViewById(R.id.back_button);
         tvDisplayName = findViewById(R.id.tv_display_name);
         tvUsername = findViewById(R.id.tv_username);
@@ -53,43 +97,58 @@ public class EditProfileActivity extends AppCompatActivity {
         btnChangeName = findViewById(R.id.change_name);
         btnChangeUsername = findViewById(R.id.change_username);
 
+        // Firebase initialization
+        auth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
+        // Load current user info from Firestore
+        loadUserInfo();
+
+        // Dynamically update mood count (assumes a TextView with id tv_mood_count exists in the layout)
+        moodEventViewModel = MoodEventViewModel.getInstance();
+        moodEventViewModel.fetchCurrentUserMoods(moodList -> {
+            TextView tvMoodCount = findViewById(R.id.tv_total_moods);
+            if (tvMoodCount != null) {
+                tvMoodCount.setText("You’ve logged " + moodList.size() + " moods.");
+            }
+        });
+
+        // Set up action button listeners for updating profile fields
+        btnChangeName.setOnClickListener(v -> showChangeNameDialog());
+        btnChangeUsername.setOnClickListener(v -> showChangeUsernameDialog());
+
+        // --- Bottom Navigation Setup (using AddMoodActivity logic) ---
         btnHome = findViewById(R.id.btn_home);
         btnSearch = findViewById(R.id.btn_search);
         btnAdd = findViewById(R.id.btn_add);
         btnCalendar = findViewById(R.id.btn_calendar);
         btnProfile = findViewById(R.id.btn_profile);
 
-        backButton.setOnClickListener(v -> finish());
-
-        // Load profile
-        loadUserInfo();
-
-        // Change name / username
-        btnChangeName.setOnClickListener(v -> showChangeNameDialog());
-        btnChangeUsername.setOnClickListener(v -> showChangeUsernameDialog());
-
-        // Bottom nav
-        btnHome.setOnClickListener(v -> startActivityWithUsername(HomeActivity.class));
-        btnSearch.setOnClickListener(v -> startActivityWithUsername(MapHandlerActivity.class));
-        btnAdd.setOnClickListener(v -> startActivityWithUsername(AddMoodActivity.class));
-        btnCalendar.setOnClickListener(v -> startActivityWithUsername(MoodHistoryActivity.class));
-        btnProfile.setOnClickListener(v -> Toast.makeText(this, "Already on Profile", Toast.LENGTH_SHORT).show());
-    }
-
-    private void startActivityWithUsername(Class<?> cls) {
-        Intent intent = new Intent(EditProfileActivity.this, cls);
-        intent.putExtra("username", currentUsername);
-        startActivity(intent);
+        btnHome.setOnClickListener(v -> {
+            startActivity(new Intent(EditProfileActivity.this, HomeActivity.class));
+            finish();
+        });
+        btnSearch.setOnClickListener(v -> startActivity(new Intent(EditProfileActivity.this, MapHandlerActivity.class)));
+        btnAdd.setOnClickListener(v -> startActivity(new Intent(EditProfileActivity.this, AddMoodActivity.class)));
+        btnCalendar.setOnClickListener(v -> startActivity(new Intent(EditProfileActivity.this, MoodHistoryActivity.class)));
+        btnProfile.setOnClickListener(v ->
+                Toast.makeText(EditProfileActivity.this, "Already on Profile", Toast.LENGTH_SHORT).show()
+        );
+        // --- End Bottom Navigation Setup ---
     }
 
     private void loadUserInfo() {
-        db.collection("Users")
-                .document(currentUsername)
-                .get()
-                .addOnSuccessListener(doc -> {
-                    if (doc.exists()) {
-                        String displayName = doc.getString("displayName");
-                        String email = doc.getString("email");
+        if (auth.getCurrentUser() != null) {
+            String email = auth.getCurrentUser().getEmail();
+            db.collection("Users")
+                    .whereEqualTo("email", email)
+                    .get()
+                    .addOnSuccessListener(querySnapshot -> {
+                        if (!querySnapshot.isEmpty()) {
+                            DocumentSnapshot doc = querySnapshot.getDocuments().get(0);
+                            String displayName = doc.getString("displayName");
+                            String username = doc.getString("username");
+                            String userEmail = doc.getString("email");
 
                         tvDisplayName.setText(displayName != null ? displayName : "N/A");
                         tvUsername.setText(currentUsername);
@@ -145,14 +204,32 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void updateProfileField(String field, String newValue, String successMessage) {
-        db.collection("Users")
-                .document(currentUsername)
-                .update(field, newValue)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this, successMessage, Toast.LENGTH_SHORT).show();
-                    loadUserInfo();
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Update failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        if (auth.getCurrentUser() != null) {
+            String email = auth.getCurrentUser().getEmail();
+            db.collection("Users")
+                    .whereEqualTo("email", email)
+                    .get()
+                    .addOnSuccessListener(querySnapshot -> {
+                        if (!querySnapshot.isEmpty()) {
+                            DocumentSnapshot doc = querySnapshot.getDocuments().get(0);
+                            String docId = doc.getId();
+                            db.collection("Users")
+                                    .document(docId)
+                                    .update(field, newValue)
+                                    .addOnSuccessListener(aVoid -> {
+                                        Toast.makeText(EditProfileActivity.this, successMessage, Toast.LENGTH_SHORT).show();
+                                        loadUserInfo(); // Refresh displayed user info
+                                    })
+                                    .addOnFailureListener(e ->
+                                            Toast.makeText(EditProfileActivity.this, "Update failed: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                                    );
+                        } else {
+                            Toast.makeText(EditProfileActivity.this, "User not found", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(e ->
+                            Toast.makeText(EditProfileActivity.this, "Error updating profile: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                    );
+        }
     }
 }

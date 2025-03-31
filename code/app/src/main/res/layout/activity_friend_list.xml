@@ -10,44 +10,10 @@
     android:padding="16dp"
     tools:context=".ui.SearchParticipantResultActivity">
 
-    <!-- TOP-LEFT ICON (Mood Logo) -->
-    <ImageView
-        android:id="@+id/imageMoodLogo"
-        android:layout_width="109dp"
-        android:layout_height="87dp"
-        android:layout_marginTop="16dp"
-        android:contentDescription="Mood Logo"
-        android:src="@mipmap/ic_app_logo_foreground"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- TOP-RIGHT AVATAR -->
-    <ImageView
-        android:id="@+id/imageUserAvatar"
-        android:layout_width="99dp"
-        android:layout_height="105dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="8dp"
-        android:contentDescription="User Avatar"
-        android:src="@mipmap/ic_user_logo_foreground"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- SCREEN TITLE IN THE MIDDLE -->
-    <TextView
-        android:id="@+id/textTitleBrowseNetwork"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="48dp"
-        android:gravity="center_vertical"
-        android:text="My Friends"
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toRightOf="@+id/imageMoodLogo"
-        app:layout_constraintRight_toLeftOf="@+id/imageUserAvatar"
-        app:layout_constraintTop_toTopOf="parent" />
+    <!-- Header: App Logo and User Avatar -->
+    <include
+        android:id="@+id/header"
+        layout="@layout/custom_header" />
 
     <!-- TAB ROW (Friends / Requests) -->
 
@@ -57,13 +23,13 @@
         android:id="@+id/layoutTabRow"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="15dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textTitleBrowseNetwork">
+        app:layout_constraintTop_toBottomOf="@+id/header">
 
         <!-- FRIENDS TAB -->
         <TextView
@@ -154,15 +120,106 @@
         </LinearLayout>
     </LinearLayout>
 
+    <!-- Bottom Navigation Bar -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerUsers"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layoutSearchBarRow"
+        app:layout_constraintVertical_bias="0.0"
         tools:listItem="@layout/item_user" />
+
+    <LinearLayout
+        android:id="@+id/bottom_nav"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:background="@color/dark_green"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/btn_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_home"
+                android:background="@drawable/bottom_circle_background"
+                android:contentDescription="Home" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/btn_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_search"
+                android:background="@drawable/bottom_circle_background"
+                android:contentDescription="Search" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/btn_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/plus_circle"
+                android:background="@drawable/bottom_circle_background"
+                android:contentDescription="Add Mood" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/btn_calendar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_calendar"
+                android:background="@drawable/bottom_circle_background"
+                android:contentDescription="Calendar" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/btn_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/avatar"
+                android:background="@drawable/bottom_circle_background"
+                android:contentDescription="Profile" />
+        </FrameLayout>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
