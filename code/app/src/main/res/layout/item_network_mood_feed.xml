@@ -1,32 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_mood_request_item_1"
-    android:layout_width="366dp"
-    android:layout_height="121dp"
-    android:layout_marginBottom="12dp"
-    android:background="@drawable/filter_background"
-    android:gravity="center_vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="12dp"
-    android:layout_gravity="center_horizontal">
+    android:layout_marginBottom="12dp"
+    android:background="@drawable/filter_background">
 
     <!-- TOP ROW: Avatar, Name + Comment, Mood Emoji -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
-        <!-- User Avatar -->
         <ImageView
             android:id="@+id/imageUserAvatarItem"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginRight="12dp"
-            android:contentDescription="User Avatar"
+            android:layout_marginEnd="12dp"
             android:src="@drawable/ic_avatar_placeholder" />
 
-        <!-- Center Column: Name, Mood Comment -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -38,7 +33,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sonic the Hedgehog"
-                android:textColor="@android:color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -46,70 +40,57 @@
                 android:id="@+id/textMoodCommentItem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="Feeling accomplished after morning jog."
-                android:textColor="@android:color/white"
+                android:text="Feeling accomplished..."
                 android:textSize="14sp" />
         </LinearLayout>
 
-        <!-- Mood Emoji as Unicode (right) -->
         <TextView
             android:id="@+id/textMoodEmojiItem"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:gravity="center"
             android:text="😀"
-            android:textSize="25sp"
-            android:contentDescription="Mood Emoji" />
+            android:textSize="25sp" />
     </LinearLayout>
 
-    <!-- BOTTOM ROW: Time, then Like & Comment icons -->
+    <!-- BOTTOM ROW: Time, Like & Comment icons -->
     <LinearLayout
-        android:id="@+id/layoutActionsItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <!-- Time on the left -->
         <TextView
             android:id="@+id/textMoodTimeItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Yesterday, 5:15 PM"
-            android:textColor="@android:color/white"
             android:textSize="14sp" />
 
-        <!-- Spacer -->
         <View
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <!-- Icons container on the right -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
             <ImageView
                 android:id="@+id/iconLikeItem"
-                android:layout_width="37dp"
+                android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:layout_marginRight="12dp"
-                android:contentDescription="Like"
-                android:src="@drawable/ic_thumbs_up"
-                android:tint="@android:color/white" />
+                android:layout_marginEnd="12dp"
+                android:src="@drawable/ic_thumbs_up" />
 
             <ImageView
                 android:id="@+id/iconCommentItem"
-                android:layout_width="40dp"
+                android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:contentDescription="Comment"
-                android:src="@drawable/ic_comment"
-                android:tint="@android:color/white" />
+                android:src="@drawable/ic_comment" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

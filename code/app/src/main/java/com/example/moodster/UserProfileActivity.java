@@ -10,6 +10,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -17,14 +18,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.List;
 
-/**
- * The UserProfileActivity class displays a user's profile information including display name,
- * username, email, follower count, following count, and mood count. It also allows the current user
- * to send a follow request to the profile owner.
- */
 public class UserProfileActivity extends AppCompatActivity {
 
     private TextView tvDisplayName, tvUsername, tvEmail, tvFollowers, tvFollowing, tvMoodCount;
@@ -42,7 +40,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
-        // --- Set up Custom Header (matches other activities) ---
+        // 1) Set up Custom Header
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         TextView tvScreenTitle = findViewById(R.id.tv_screen_title);
@@ -67,7 +65,22 @@ public class UserProfileActivity extends AppCompatActivity {
             popup.show();
         });
 
-        // --- Set up Bottom Navigation ---
+        // 2) Retrieve the target username (and displayName) from the intent
+        Intent intent = getIntent();
+        targetUsername = intent.getStringExtra("username");
+        String initialDisplayName = intent.getStringExtra("displayName");
+
+        // 3) Set up the RecyclerView & its adapter
+        RecyclerView recyclerUserMoods = findViewById(R.id.recyclerUserMoods);
+        recyclerUserMoods.setLayoutManager(new LinearLayoutManager(this));
+
+        UserMoodsAdapter userMoodsAdapter = new UserMoodsAdapter();
+        recyclerUserMoods.setAdapter(userMoodsAdapter);
+
+        // 4) Call fetchTargetUserMoods(...) so it has a valid username
+        fetchTargetUserMoods(targetUsername, userMoodsAdapter);
+
+        // 5) Bottom Navigation
         ImageButton btnHome = findViewById(R.id.btn_home);
         ImageButton btnSearch = findViewById(R.id.btn_search);
         ImageButton btnAdd = findViewById(R.id.btn_add);
@@ -75,49 +88,42 @@ public class UserProfileActivity extends AppCompatActivity {
         ImageButton btnProfile = findViewById(R.id.btn_profile);
 
         btnHome.setOnClickListener(v -> {
-            Intent intent = new Intent(UserProfileActivity.this, HomeActivity.class);
-            intent.putExtra("username", currentUsername);
-            startActivity(intent);
+            Intent i = new Intent(UserProfileActivity.this, HomeActivity.class);
+            i.putExtra("username", currentUsername);
+            startActivity(i);
         });
         btnSearch.setOnClickListener(v -> {
-            Intent intent = new Intent(UserProfileActivity.this, SearchUsersActivity.class);
-            intent.putExtra("username", currentUsername);
-            startActivity(intent);
+            Intent i = new Intent(UserProfileActivity.this, SearchUsersActivity.class);
+            i.putExtra("username", currentUsername);
+            startActivity(i);
         });
         btnAdd.setOnClickListener(v -> {
-            Intent intent = new Intent(UserProfileActivity.this, AddMoodActivity.class);
-            intent.putExtra("username", currentUsername);
-            startActivity(intent);
+            Intent i = new Intent(UserProfileActivity.this, AddMoodActivity.class);
+            i.putExtra("username", currentUsername);
+            startActivity(i);
         });
         btnCalendar.setOnClickListener(v -> {
-            Intent intent = new Intent(UserProfileActivity.this, MoodHistoryActivity.class);
-            intent.putExtra("username", currentUsername);
-            startActivity(intent);
+            Intent i = new Intent(UserProfileActivity.this, MoodHistoryActivity.class);
+            i.putExtra("username", currentUsername);
+            startActivity(i);
         });
         btnProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(UserProfileActivity.this, EditProfileActivity.class);
-            intent.putExtra("username", currentUsername);
-            startActivity(intent);
+            Intent i = new Intent(UserProfileActivity.this, EditProfileActivity.class);
+            i.putExtra("username", currentUsername);
+            startActivity(i);
         });
-        // --- End Bottom Navigation Setup ---
 
-
-        // --- Initialize Profile UI Elements ---
+        // 6) Initialize Profile UI Elements
         tvDisplayName = findViewById(R.id.tv_display_name);
-        tvUsername = findViewById(R.id.tv_username);
-        tvEmail = findViewById(R.id.tv_email);
-        tvFollowers = findViewById(R.id.tv_followers);
-        tvFollowing = findViewById(R.id.tv_following);
-        tvMoodCount = findViewById(R.id.tv_mood_count);
-        ivAvatar = findViewById(R.id.iv_avatar);
+        tvUsername    = findViewById(R.id.tv_username);
+        tvEmail       = findViewById(R.id.tv_email);
+        tvFollowers   = findViewById(R.id.tv_followers);
+        tvFollowing   = findViewById(R.id.tv_following);
+        tvMoodCount   = findViewById(R.id.tv_mood_count);
+        ivAvatar      = findViewById(R.id.iv_avatar);
         btnFriendAction = findViewById(R.id.btn_friend_action);
 
-        // --- Retrieve the target username and partial data passed from UserAdapter ---
-        Intent intent = getIntent();
-        targetUsername = intent.getStringExtra("username");
-        String initialDisplayName = intent.getStringExtra("displayName");
-
-        // Set partial data right away
+        // 7) Set partial data right away
         if (targetUsername != null) {
             tvUsername.setText("@" + targetUsername);
         }
@@ -125,21 +131,20 @@ public class UserProfileActivity extends AppCompatActivity {
             tvDisplayName.setText(initialDisplayName);
         }
 
-        // Dynamically update mood count
+        // 8) Dynamically update mood count for the *current* user, if you want
         moodEventViewModel = MoodEventViewModel.getInstance();
         moodEventViewModel.fetchCurrentUserMoods(moodList -> {
-            TextView tvMoodCount = findViewById(R.id.tv_total_moods);
-            if (tvMoodCount != null) {
-                tvMoodCount.setText("You’ve logged " + moodList.size() + " moods.");
+            TextView tvTotalMoods = findViewById(R.id.tv_total_moods);
+            if (tvTotalMoods != null) {
+                tvTotalMoods.setText("You’ve logged " + moodList.size() + " moods.");
             }
         });
 
-        // --- Fetch Additional Details from Firestore ---
+        // 9) Fetch Additional Details from Firestore for the target user’s doc
         if (targetUsername != null) {
             db.collection("Users").document(targetUsername).get()
                     .addOnSuccessListener(documentSnapshot -> {
                         if (documentSnapshot.exists()) {
-                            // Update UI with real data from Firestore
                             String displayName = documentSnapshot.getString("displayName");
                             if (displayName != null) {
                                 tvDisplayName.setText(displayName);
@@ -156,34 +161,21 @@ public class UserProfileActivity extends AppCompatActivity {
                             List<String> followingList = (List<String>) documentSnapshot.get("following");
                             int followingCount = (followingList != null) ? followingList.size() : 0;
                             tvFollowing.setText("Following: " + followingCount);
-
-                            // For mood count, if you store them in a "Moods" collection or a user field
-                            // int moodCount = ...
-                            // tvMoodCount.setText(moodCount + " moods logged");
                         }
                     })
                     .addOnFailureListener(e ->
                             Toast.makeText(UserProfileActivity.this, "Error loading user data", Toast.LENGTH_SHORT).show());
         }
 
-        // --- Set up the Friend Action Button (consistent with other areas) ---
+        // 10) Friend Action Button
         btnFriendAction.setText("Send Friend Request");
         btnFriendAction.setOnClickListener(v -> confirmAndSendFriendRequest());
 
-        // Optional: Avatar click logic if needed
         ivAvatar.setOnClickListener(v -> {
             // e.g., show a larger version of the avatar or a change photo dialog
         });
-
-
     }
 
-    /**
-     * Displays a confirmation dialog to send a friend request.
-     *
-     * <p>This method shows an AlertDialog asking the user to confirm if they want to send a follow request
-     * to the profile owner.</p>
-     */
     private void confirmAndSendFriendRequest() {
         new AlertDialog.Builder(UserProfileActivity.this)
                 .setTitle("Follow Request")
@@ -193,13 +185,6 @@ public class UserProfileActivity extends AppCompatActivity {
                 .show();
     }
 
-    /**
-     * Sends a follow request to the user whose profile is being viewed.
-     *
-     * <p>This method retrieves the current user's username based on their email, and then updates the target user's
-     * Firebase document to add the current user to the followRequests array. Upon success, it disables the friend action
-     * button and updates its text to indicate that the request has been sent.</p>
-     */
     private void sendFriendRequest() {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser == null) {
@@ -213,7 +198,6 @@ public class UserProfileActivity extends AppCompatActivity {
                 .addOnSuccessListener(querySnapshot -> {
                     if (!querySnapshot.isEmpty()) {
                         currentUsername = querySnapshot.getDocuments().get(0).getString("username");
-                        // Add the current user to the target's followRequests array
                         db.collection("Users").document(targetUsername)
                                 .update("followRequests", FieldValue.arrayUnion(currentUsername))
                                 .addOnSuccessListener(aVoid -> {
@@ -229,5 +213,64 @@ public class UserProfileActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e ->
                         Toast.makeText(this, "Error fetching current user", Toast.LENGTH_SHORT).show());
+    }
+
+    /**
+     * Pull the user’s mood IDs from Firestore, then fetch each mood doc in 'MoodEvents'
+     */
+    private void fetchTargetUserMoods(String username, UserMoodsAdapter adapter) {
+        if (username == null || username.isEmpty()) return;
+
+        db.collection("Users")
+                .document(username)
+                .get()
+                .addOnSuccessListener(userDoc -> {
+                    if (!userDoc.exists()) {
+                        // No user doc found
+                        return;
+                    }
+
+                    List<String> moodIds = (List<String>) userDoc.get("MoodEventIds");
+                    if (moodIds == null || moodIds.isEmpty()) {
+                        // This user has no moods
+                        return;
+                    }
+
+                    List<MoodEvent> resultList = new ArrayList<>();
+                    for (String moodId : moodIds) {
+                        db.collection("MoodEvents")
+                                .document(moodId)
+                                .get()
+                                .addOnSuccessListener(moodDoc -> {
+                                    if (moodDoc.exists()) {
+                                        try {
+                                            MoodEvent mood = new MoodEvent(
+                                                    moodDoc.getString("id"),
+                                                    moodDoc.getTimestamp("createdAt"),
+                                                    moodDoc.getString("emotionalState"),
+                                                    moodDoc.getString("trigger"),
+                                                    moodDoc.getString("socialSituation"),
+                                                    moodDoc.getString("explanation"),
+                                                    null, // ignoring image Uri for now
+                                                    moodDoc.getDouble("latitude") != null ? moodDoc.getDouble("latitude") : 0.0,
+                                                    moodDoc.getDouble("longitude") != null ? moodDoc.getDouble("longitude") : 0.0,
+                                                    moodDoc.getBoolean("isPublic") != null ? moodDoc.getBoolean("isPublic") : true
+                                            );
+                                            resultList.add(mood);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    // If we've processed them all, update the adapter
+                                    if (resultList.size() == moodIds.size()) {
+                                        adapter.setMoods(resultList);
+                                    }
+                                });
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // handle error if needed
+                });
     }
 }
