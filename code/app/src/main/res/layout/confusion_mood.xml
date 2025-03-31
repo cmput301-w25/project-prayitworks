@@ -46,17 +46,17 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp" />
 
-    <!-- Date and Time Text -->
-    <TextView
-        android:id="@+id/date_time"
-        android:layout_width="match_parent"
+    <Switch
+        android:id="@+id/publicToggle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/confusion"
         android:layout_marginTop="-2dp"
+        android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:text="Select Date and Time"
-        android:textSize="16sp"
-        android:textColor="@android:color/black" />
+        android:text="Post to Public"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
 
     <!-- Reason Input Field with Gradient Background -->
     <LinearLayout

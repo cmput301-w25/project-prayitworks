@@ -9,7 +9,6 @@ import android.util.Log;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -92,7 +91,8 @@ public class MoodEventViewModel extends ViewModel {
                                                     doc.getString("explanation"),
                                                     null,
                                                     doc.contains("latitude") ? doc.getDouble("latitude") : 0.0,
-                                                    doc.contains("longitude") ? doc.getDouble("longitude") : 0.0
+                                                    doc.contains("longitude") ? doc.getDouble("longitude") : 0.0,
+                                                    doc.contains("isPublic") ? doc.getBoolean("isPublic") : true
                                             );
                                             fetched.add(moodEvent);
                                         } catch (Exception e) {
@@ -115,11 +115,11 @@ public class MoodEventViewModel extends ViewModel {
 
     // ----------------------- ADD -----------------------
     public void addMoodEvent(String emoState, String trigger, String social,
-                             String explanation, Uri image, double lat, double lon,
+                             String explanation, Uri image, double lat, double lon, boolean isPublic,
                              OnAddListener listener) {
 
         String id = UUID.randomUUID().toString();
-        MoodEvent newMood = new MoodEvent(id, Timestamp.now(), emoState, trigger, social, explanation, image, lat, lon);
+        MoodEvent newMood = new MoodEvent(id, Timestamp.now(), emoState, trigger, social, explanation, image, lat, lon, isPublic);
         this.onAddListener = listener;
         addMoodEvent(newMood);
         this.onAddListener = null;
@@ -143,6 +143,7 @@ public class MoodEventViewModel extends ViewModel {
         data.put("explanation", newMood.getExplanation());
         data.put("latitude", newMood.getLatitude());
         data.put("longitude", newMood.getLongitude());
+        data.put("isPublic", newMood.isPublic());
 
         db.collection("MoodEvents")
                 .document(id)
@@ -195,6 +196,7 @@ public class MoodEventViewModel extends ViewModel {
         data.put("explanation", updatedEvent.getExplanation());
         data.put("latitude", updatedEvent.getLatitude());
         data.put("longitude", updatedEvent.getLongitude());
+        data.put("isPublic", updatedEvent.isPublic());
 
         db.collection("MoodEvents").document(id).update(data)
                 .addOnSuccessListener(aVoid -> listener.onUpdateSuccess())

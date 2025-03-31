@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,6 +29,7 @@ public class EditMoodActivity extends AppCompatActivity {
 
     private EditText reasonValue, triggerValue;
     private Spinner spinnerMood, spinnerSocialSituation;
+    private Switch switchVisibility;
     private MoodEvent eventToEdit;
     private String moodId;
     private String currentUsername;
@@ -57,8 +59,11 @@ public class EditMoodActivity extends AppCompatActivity {
         triggerValue = findViewById(R.id.textTriggerValue);
         spinnerMood = findViewById(R.id.textMoodEmoji);
         spinnerSocialSituation = findViewById(R.id.textSocialValue);
+        switchVisibility = findViewById(R.id.textVisibilityValue);
 
+        // limiting reason and trigger fields to 20 characters
         reasonValue.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
+        triggerValue.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
 
         ArrayAdapter<String> moodAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_item, VALID_EMOTIONAL_STATES
@@ -79,6 +84,7 @@ public class EditMoodActivity extends AppCompatActivity {
             triggerValue.setText(eventToEdit.getTrigger());
             setSpinnerSelection(spinnerMood, eventToEdit.getEmotionalState());
             setSpinnerSelection(spinnerSocialSituation, eventToEdit.getSocialSituation());
+            switchVisibility.setChecked(eventToEdit.isPublic());
         }
 
         Button buttonCancel = findViewById(R.id.buttonCancel);
@@ -94,6 +100,7 @@ public class EditMoodActivity extends AppCompatActivity {
             eventToEdit.setTrigger(triggerValue.getText().toString());
             eventToEdit.setEmotionalState(spinnerMood.getSelectedItem().toString());
             eventToEdit.setSocialSituation(spinnerSocialSituation.getSelectedItem().toString());
+            eventToEdit.setPublic(switchVisibility.isChecked());
 
             moodEventViewModel.updateMoodEvent(eventToEdit, new MoodEventViewModel.OnUpdateListener() {
                 @Override

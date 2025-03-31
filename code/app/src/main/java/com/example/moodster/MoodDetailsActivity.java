@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MoodDetailsActivity extends AppCompatActivity {
 
     private TextView textMoodEmoji, textMoodDateTime, textReasonValue,
-            textTriggerValue, textSocialValue;
+            textTriggerValue, textSocialValue, textVisibilityValue;
     private ImageView imageMoodPhoto;
     private MoodEventViewModel moodEventViewModel;
     private String moodId;
@@ -46,6 +46,7 @@ public class MoodDetailsActivity extends AppCompatActivity {
         textReasonValue = findViewById(R.id.textReasonValue);
         textTriggerValue = findViewById(R.id.textTriggerValue);
         textSocialValue = findViewById(R.id.textSocialValue);
+        textVisibilityValue = findViewById(R.id.textVisibilityValue);
         imageMoodPhoto = findViewById(R.id.imageMoodPhoto);
         btnViewComments = findViewById(R.id.viewComments);
         btnDeleteMood = findViewById(R.id.buttonDelete);
@@ -57,6 +58,7 @@ public class MoodDetailsActivity extends AppCompatActivity {
         textReasonValue.setText(intent.getStringExtra("textReasonValue"));
         textTriggerValue.setText(intent.getStringExtra("textTriggerValue"));
         textSocialValue.setText(intent.getStringExtra("textSocialValue"));
+        textVisibilityValue.setText(intent.getStringExtra("textVisibilityValue"));
         imageMoodPhoto.setImageURI(intent.getParcelableExtra("imageMoodPhoto"));
 
         // ✅ Delete mood
