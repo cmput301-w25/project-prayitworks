@@ -6,7 +6,7 @@
     android:id="@+id/layoutViewMoodHistoryDetails"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_app_gradient"
+    android:background="@drawable/gradient_background_main"
     android:padding="16dp"
     tools:context=".ui.ViewMoodHistoryDetailsActivity">
 
@@ -59,7 +59,7 @@
         android:layout_width="289dp"
         android:layout_height="35dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/bg_filter_bar"
+        android:background="@drawable/filter_background"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingStart="16dp"
@@ -162,7 +162,7 @@
             android:layout_width="126dp"
             android:layout_height="37dp"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/bg_filter_bar_rounded"
+            android:background="@drawable/filter_background"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"

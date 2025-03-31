@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_app_gradient">
+    android:background="@drawable/gradient_background_main">
 
     <!-- Header: App Logo and User Avatar -->
     <include
@@ -15,7 +15,7 @@
         android:id="@+id/profile_image"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:src="@drawable/profile_icon"
+        android:src="@drawable/avatar"
         android:contentDescription="Profile Image"
         app:layout_constraintTop_toBottomOf="@id/header"
         android:layout_marginTop="24dp"
@@ -27,7 +27,7 @@
         android:id="@+id/add_photo"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/plus"
+        android:src="@drawable/plus_circle"
         android:contentDescription="Add Photo"
         app:layout_constraintTop_toBottomOf="@id/profile_image"
         app:layout_constraintEnd_toEndOf="@id/profile_image"
@@ -192,7 +192,7 @@
             android:text="Change Your Name"
             android:textColor="@android:color/white"
             android:background="@drawable/bg_filter_bar_rounded"
-            android:backgroundTint="@color/primary_text_color" />
+            android:backgroundTint="@color/pink_color" />
 
         <Button
             android:id="@+id/change_username"

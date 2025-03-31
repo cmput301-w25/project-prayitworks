@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:background="@drawable/bg_app_gradient"
+    android:background="@drawable/gradient_background_main"
     tools:context=".AddMoodActivity">
 
     <!-- Top Section with Mood and Avatar Icons -->

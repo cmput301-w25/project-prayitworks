@@ -6,7 +6,7 @@
     android:id="@+id/layoutSearchFriend"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_app_gradient"
+    android:background="@drawable/gradient_background_main"
     android:padding="16dp"
     tools:ignore="HardcodedText"
     tools:context=".ui.SearchFriendActivity">
@@ -71,7 +71,7 @@
         android:layout_marginTop="16dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:background="@drawable/bg_filter_bar"
+        android:background="@drawable/filter_background"
         android:paddingHorizontal="16dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

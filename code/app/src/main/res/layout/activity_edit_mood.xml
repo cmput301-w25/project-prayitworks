@@ -6,7 +6,7 @@
     android:id="@+id/layoutEditMoodDetails"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_app_gradient"
+    android:background="@drawable/gradient_background_main"
     android:padding="16dp">
 
     <!-- TITLE: "Mood History" (same as before) -->
@@ -38,7 +38,7 @@
         android:layout_height="33dp"
         android:layout_marginTop="56dp"
         android:layout_marginRight="12dp"
-        android:background="@drawable/bg_filter_bar_rounded"
+        android:background="@drawable/filter_background"
         android:orientation="horizontal"
         android:paddingHorizontal="12dp"
         android:paddingVertical="8dp"
@@ -95,7 +95,7 @@
             android:layout_width="170dp"
             android:layout_height="39dp"
             android:layout_marginRight="8dp"
-            android:background="@drawable/bg_filter_bar"
+            android:background="@drawable/filter_background"
             android:orientation="horizontal"
             android:padding="8dp">
 
@@ -122,7 +122,7 @@
             android:id="@+id/layoutDateTimePill"
             android:layout_width="179dp"
             android:layout_height="39dp"
-            android:background="@drawable/bg_filter_bar"
+            android:background="@drawable/filter_background"
             android:orientation="horizontal"
             android:padding="8dp">
 
@@ -142,7 +142,7 @@
         android:layout_width="366dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="@drawable/bg_filter_bar"
+        android:background="@drawable/filter_background"
         android:orientation="horizontal"
         android:padding="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -175,7 +175,7 @@
         android:layout_width="366dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="@drawable/bg_filter_bar"
+        android:background="@drawable/filter_background"
         android:orientation="horizontal"
         android:padding="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -208,7 +208,7 @@
         android:layout_width="366dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="@drawable/bg_filter_bar"
+        android:background="@drawable/filter_background"
         android:orientation="horizontal"
         android:padding="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -241,7 +241,7 @@
         android:layout_width="361dp"
         android:layout_height="47dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/bg_filter_bar"
+        android:background="@drawable/filter_background"
         android:orientation="horizontal"
         android:padding="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -274,7 +274,6 @@
         android:layout_width="364dp"
         android:layout_height="163dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/bg_filter_bar"
         android:gravity="center"
         android:padding="8dp"
         app:layout_constraintLeft_toLeftOf="parent"

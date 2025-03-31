@@ -74,7 +74,7 @@
             android:layout_width="0dp"
             android:layout_height="35dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_filter_bar"
+            android:background="@drawable/bg_filter_bar_rounded"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingStart="16dp"

@@ -5,7 +5,7 @@
     android:id="@+id/home_scrollview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTint="#E06842"
+    android:backgroundTint="@color/dark_green"
     android:fillViewport="true"
     tools:context=".HomeActivity">
 
@@ -13,7 +13,7 @@
         android:id="@+id/home_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_app_gradient"
+        android:background="@drawable/gradient_background_main"
         android:padding="16dp">
 
         <!-- Header: App Logo and User Avatar -->
@@ -78,7 +78,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:backgroundTint="#FB7B8E"
+            android:backgroundTint="@color/pink_color"
             android:backgroundTintMode="screen"
             android:elevation="6dp"
             android:foreground="?attr/selectableItemBackground"
@@ -147,7 +147,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:text="Manage Friends" />
+                    android:text="Manage Friends"
+                    android:backgroundTint="@color/pink_color"
+                    />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

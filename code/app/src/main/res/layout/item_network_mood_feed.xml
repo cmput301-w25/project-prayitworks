@@ -4,7 +4,7 @@
     android:layout_width="366dp"
     android:layout_height="121dp"
     android:layout_marginBottom="12dp"
-    android:background="@drawable/bg_filter_bar_rounded"
+    android:background="@drawable/filter_background"
     android:gravity="center_vertical"
     android:orientation="vertical"
     android:padding="12dp"
