@@ -91,7 +91,7 @@
         <ListView
             android:id="@+id/mood_entries_scroll"
             android:layout_width="374dp"
-            android:layout_height="160dp"
+            android:layout_height="145dp"
             android:layout_marginTop="16dp"
             android:divider="@android:color/darker_gray"
             android:dividerHeight="1dp"

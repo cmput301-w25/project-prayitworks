@@ -3,14 +3,20 @@ package com.example.moodster;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -28,6 +34,33 @@ public class FriendRequestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_recieving_follower_request);
 
+        // --- Set up the custom header ---
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        TextView tvScreenTitle = findViewById(R.id.tv_screen_title);
+        tvScreenTitle.setText("Friend Requests");
+        ImageView menuIcon = findViewById(R.id.ic_profile_icon);
+        menuIcon.setOnClickListener(v -> {
+            PopupMenu popup = new PopupMenu(FriendRequestActivity.this, v);
+            popup.getMenuInflater().inflate(R.menu.header_menu, popup.getMenu());
+            popup.setOnMenuItemClickListener(item -> {
+                int id = item.getItemId();
+                if (id == R.id.menu_profile) {
+                    startActivity(new Intent(FriendRequestActivity.this, EditProfileActivity.class));
+                    return true;
+                } else if (id == R.id.menu_logout) {
+                    FirebaseAuth.getInstance().signOut();
+                    startActivity(new Intent(FriendRequestActivity.this, LoginActivity.class));
+                    finish();
+                    return true;
+                }
+                return false;
+            });
+            popup.show();
+        });
+        // --- End Header Setup ---
+
+        // Existing UI initialization
         Button btnTabFriends = findViewById(R.id.tabFriends);
         Button btnSearchUsers = findViewById(R.id.btnSearchUsers);
 
@@ -63,6 +96,20 @@ public class FriendRequestActivity extends AppCompatActivity {
             Intent intent = new Intent(FriendRequestActivity.this, SearchUsersActivity.class);
             startActivity(intent);
         });
+
+        // --- Bottom Navigation Setup ---
+        ImageButton btnHome = findViewById(R.id.btn_home);
+        ImageButton btnSearch = findViewById(R.id.btn_search);
+        ImageButton btnAdd = findViewById(R.id.btn_add);
+        ImageButton btnCalendar = findViewById(R.id.btn_calendar);
+        ImageButton btnProfile = findViewById(R.id.btn_profile);
+
+        btnHome.setOnClickListener(v -> startActivity(new Intent(FriendRequestActivity.this, HomeActivity.class)));
+        btnSearch.setOnClickListener(v -> startActivity(new Intent(FriendRequestActivity.this, SearchUsersActivity.class)));
+        btnAdd.setOnClickListener(v -> startActivity(new Intent(FriendRequestActivity.this, AddMoodActivity.class)));
+        btnCalendar.setOnClickListener(v -> startActivity(new Intent(FriendRequestActivity.this, MoodHistoryActivity.class)));
+        btnProfile.setOnClickListener(v -> startActivity(new Intent(FriendRequestActivity.this, EditProfileActivity.class)));
+        // --- End Bottom Navigation Setup ---
     }
 
     private void loadFriendRequests() {
@@ -82,5 +129,4 @@ public class FriendRequestActivity extends AppCompatActivity {
                 .addOnFailureListener(e ->
                         Toast.makeText(FriendRequestActivity.this, "Error loading friend requests", Toast.LENGTH_SHORT).show());
     }
-
 }

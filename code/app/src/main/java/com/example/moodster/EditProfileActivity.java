@@ -3,18 +3,19 @@ package com.example.moodster;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -26,22 +27,51 @@ public class EditProfileActivity extends AppCompatActivity {
     private Button btnChangeName, btnChangeUsername;
 
     // Firebase instances
-    private FirebaseAuth auth;
     private FirebaseFirestore db;
+    private FirebaseAuth auth;
 
     // Bottom navigation buttons
-    private ImageButton btnHome, btnSearch, btnAdd, btnCalendar, btnProfile;
+    private ImageView btnHome, btnSearch, btnAdd, btnCalendar, btnProfile;
+
+    // MoodEventViewModel for fetching mood count
+    private MoodEventViewModel moodEventViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_profile_screen);
 
-        // Initialize Firebase
-        auth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
+        // --- Set up the custom header ---
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        TextView tvScreenTitle = findViewById(R.id.tv_screen_title);
+        tvScreenTitle.setText("My Profile");
+        ImageView menuIcon = findViewById(R.id.ic_profile_icon);
+        if (menuIcon != null) {
+            menuIcon.setOnClickListener(v -> {
+                PopupMenu popup = new PopupMenu(EditProfileActivity.this, v);
+                popup.getMenuInflater().inflate(R.menu.header_menu, popup.getMenu());
+                popup.setOnMenuItemClickListener(item -> {
+                    int id = item.getItemId();
+                    if (id == R.id.menu_profile) {
+                        startActivity(new Intent(EditProfileActivity.this, EditProfileActivity.class));
+                        return true;
+                    } else if (id == R.id.menu_logout) {
+                        FirebaseAuth.getInstance().signOut();
+                        startActivity(new Intent(EditProfileActivity.this, LoginActivity.class));
+                        finish();
+                        return true;
+                    }
+                    return false;
+                });
+                popup.show();
+            });
+        } else {
+            Toast.makeText(this, "Header menu icon not found. Check layout.", Toast.LENGTH_SHORT).show();
+        }
+        // --- End Header Setup ---
 
-        // Bind views from the XML layout
+        // Bind other views from XML
         backButton = findViewById(R.id.back_button);
         tvDisplayName = findViewById(R.id.tv_display_name);
         tvUsername = findViewById(R.id.tv_username);
@@ -49,24 +79,33 @@ public class EditProfileActivity extends AppCompatActivity {
         btnChangeName = findViewById(R.id.change_name);
         btnChangeUsername = findViewById(R.id.change_username);
 
-        // Bind bottom navigation buttons
+        // Firebase initialization
+        auth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
+        // Load current user info from Firestore
+        loadUserInfo();
+
+        // Dynamically update mood count (assumes a TextView with id tv_mood_count exists in the layout)
+        moodEventViewModel = MoodEventViewModel.getInstance();
+        moodEventViewModel.fetchCurrentUserMoods(moodList -> {
+            TextView tvMoodCount = findViewById(R.id.tv_total_moods);
+            if (tvMoodCount != null) {
+                tvMoodCount.setText("You’ve logged " + moodList.size() + " moods.");
+            }
+        });
+
+        // Set up action button listeners for updating profile fields
+        btnChangeName.setOnClickListener(v -> showChangeNameDialog());
+        btnChangeUsername.setOnClickListener(v -> showChangeUsernameDialog());
+
+        // --- Bottom Navigation Setup (using AddMoodActivity logic) ---
         btnHome = findViewById(R.id.btn_home);
         btnSearch = findViewById(R.id.btn_search);
         btnAdd = findViewById(R.id.btn_add);
         btnCalendar = findViewById(R.id.btn_calendar);
         btnProfile = findViewById(R.id.btn_profile);
 
-        // Back button: finish activity
-        backButton.setOnClickListener(v -> finish());
-
-        // Load current user info from Firestore
-        loadUserInfo();
-
-        // Set up action button listeners
-        btnChangeName.setOnClickListener(v -> showChangeNameDialog());
-        btnChangeUsername.setOnClickListener(v -> showChangeUsernameDialog());
-
-        // Bottom navigation listeners, consistent with other screens
         btnHome.setOnClickListener(v -> {
             startActivity(new Intent(EditProfileActivity.this, HomeActivity.class));
             finish();
@@ -77,13 +116,12 @@ public class EditProfileActivity extends AppCompatActivity {
         btnProfile.setOnClickListener(v ->
                 Toast.makeText(EditProfileActivity.this, "Already on Profile", Toast.LENGTH_SHORT).show()
         );
+        // --- End Bottom Navigation Setup ---
     }
 
-    // Loads the current user’s profile information from Firestore
     private void loadUserInfo() {
-        FirebaseUser currentUser = auth.getCurrentUser();
-        if (currentUser != null) {
-            String email = currentUser.getEmail();
+        if (auth.getCurrentUser() != null) {
+            String email = auth.getCurrentUser().getEmail();
             db.collection("Users")
                     .whereEqualTo("email", email)
                     .get()
@@ -107,7 +145,6 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
-    // Opens a dialog to change the user's display name
     private void showChangeNameDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Change Your Name");
@@ -128,7 +165,6 @@ public class EditProfileActivity extends AppCompatActivity {
         builder.show();
     }
 
-    // Opens a dialog to change the user's username
     private void showChangeUsernameDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Change Your Username");
@@ -140,7 +176,6 @@ public class EditProfileActivity extends AppCompatActivity {
         builder.setPositiveButton("Update", (dialog, which) -> {
             String newUsername = input.getText().toString().trim();
             if (!newUsername.isEmpty()) {
-                // Note: Changing username might require extra handling if used as a document ID.
                 updateProfileField("username", newUsername, "Username updated successfully");
             } else {
                 Toast.makeText(EditProfileActivity.this, "Username cannot be empty", Toast.LENGTH_SHORT).show();
@@ -150,11 +185,9 @@ public class EditProfileActivity extends AppCompatActivity {
         builder.show();
     }
 
-    // Updates a profile field in Firestore and refreshes the UI upon success
     private void updateProfileField(String field, String newValue, String successMessage) {
-        FirebaseUser currentUser = auth.getCurrentUser();
-        if (currentUser != null) {
-            String email = currentUser.getEmail();
+        if (auth.getCurrentUser() != null) {
+            String email = auth.getCurrentUser().getEmail();
             db.collection("Users")
                     .whereEqualTo("email", email)
                     .get()
@@ -167,7 +200,7 @@ public class EditProfileActivity extends AppCompatActivity {
                                     .update(field, newValue)
                                     .addOnSuccessListener(aVoid -> {
                                         Toast.makeText(EditProfileActivity.this, successMessage, Toast.LENGTH_SHORT).show();
-                                        loadUserInfo(); // Refresh the displayed user info
+                                        loadUserInfo(); // Refresh displayed user info
                                     })
                                     .addOnFailureListener(e ->
                                             Toast.makeText(EditProfileActivity.this, "Update failed: " + e.getMessage(), Toast.LENGTH_SHORT).show()

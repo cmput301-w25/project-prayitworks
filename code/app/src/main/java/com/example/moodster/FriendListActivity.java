@@ -1,10 +1,15 @@
 package com.example.moodster;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,6 +36,50 @@ public class FriendListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_list);
+
+        // --- Set up the custom header ---
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        TextView tvScreenTitle = findViewById(R.id.tv_screen_title);
+        tvScreenTitle.setText("My Friends");
+        ImageView menuIcon = findViewById(R.id.ic_profile_icon);
+        if (menuIcon != null) {
+            menuIcon.setOnClickListener(v -> {
+                PopupMenu popup = new PopupMenu(FriendListActivity.this, v);
+                popup.getMenuInflater().inflate(R.menu.header_menu, popup.getMenu());
+                popup.setOnMenuItemClickListener(item -> {
+                    int id = item.getItemId();
+                    if (id == R.id.menu_profile) {
+                        startActivity(new Intent(FriendListActivity.this, EditProfileActivity.class));
+                        return true;
+                    } else if (id == R.id.menu_logout) {
+                        FirebaseAuth.getInstance().signOut();
+                        startActivity(new Intent(FriendListActivity.this, LoginActivity.class));
+                        finish();
+                        return true;
+                    }
+                    return false;
+                });
+                popup.show();
+            });
+        } else {
+            Toast.makeText(this, "Header menu icon not found. Check layout.", Toast.LENGTH_SHORT).show();
+        }
+        // --- End Header Setup ----
+
+        // --- Bottom Navigation Setup (using AddMoodActivity logic) ---
+        ImageButton btnHome = findViewById(R.id.btn_home);
+        ImageButton btnSearch = findViewById(R.id.btn_search);
+        ImageButton btnAdd = findViewById(R.id.btn_add);
+        ImageButton btnCalendar = findViewById(R.id.btn_calendar);
+        ImageButton btnProfile = findViewById(R.id.btn_profile);
+
+        btnHome.setOnClickListener(v -> startActivity(new Intent(FriendListActivity.this, HomeActivity.class)));
+        btnSearch.setOnClickListener(v -> startActivity(new Intent(FriendListActivity.this, SearchUsersActivity.class)));
+        btnAdd.setOnClickListener(v -> startActivity(new Intent(FriendListActivity.this, AddMoodActivity.class)));
+        btnCalendar.setOnClickListener(v -> startActivity(new Intent(FriendListActivity.this, MoodHistoryActivity.class)));
+        btnProfile.setOnClickListener(v -> startActivity(new Intent(FriendListActivity.this, EditProfileActivity.class)));
+        // --- End Bottom Navigation Setup ---
 
         db = FirebaseFirestore.getInstance();
         recyclerUsers = findViewById(R.id.recyclerUsers);
@@ -125,7 +174,7 @@ public class FriendListActivity extends AppCompatActivity {
     // Update RecyclerView adapter based on selected tab.
     private void updateAdapter(boolean showFollowing) {
         showingFollowing = showFollowing;
-        if (showFollowing) {
+        if (showingFollowing) {
             adapter = new FriendListAdapter(followingList);
         } else {
             adapter = new FriendListAdapter(followersList);

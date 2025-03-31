@@ -6,9 +6,13 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,11 +35,52 @@ public class SearchUsersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_searching_for_participant_result_screen);
 
+        // --- Setup Custom Header ---
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        // Set the screen title dynamically
+        ((android.widget.TextView) findViewById(R.id.tv_screen_title)).setText("Search Users");
+        // click listener to the menu icon to open the popup menu
+        ImageView menuIcon = findViewById(R.id.ic_profile_icon);
+        menuIcon.setOnClickListener(v -> {
+            PopupMenu popup = new PopupMenu(SearchUsersActivity.this, v);
+            popup.getMenuInflater().inflate(R.menu.header_menu, popup.getMenu());
+            popup.setOnMenuItemClickListener(item -> {
+                int id = item.getItemId();
+                if (id == R.id.menu_profile) {
+                    startActivity(new Intent(SearchUsersActivity.this, EditProfileActivity.class));
+                    return true;
+                    //} else if (id == R.id.menu_settings) {
+                    //startActivity(new Intent(AddMoodActivity.this, SettingsActivity.class));
+                    //return true;
+                } else if (id == R.id.menu_logout) {
+                    FirebaseAuth.getInstance().signOut();
+                    startActivity(new Intent(SearchUsersActivity.this, LoginActivity.class));
+                    finish();
+                    return true;
+                }
+                return false;
+            });
+            popup.show();
+        });;
 
+        // --- Setup Bottom Navigation ---
+        ImageButton btnHome = findViewById(R.id.btn_home);
+        ImageButton btnSearch = findViewById(R.id.btn_search);
+        ImageButton btnAdd = findViewById(R.id.btn_add);
+        ImageButton btnCalendar = findViewById(R.id.btn_calendar);
+        ImageButton btnProfile = findViewById(R.id.btn_profile);
+
+        btnHome.setOnClickListener(v -> startActivity(new Intent(SearchUsersActivity.this, HomeActivity.class)));
+        btnSearch.setOnClickListener(v -> startActivity(new Intent(SearchUsersActivity.this, MapHandlerActivity.class)));
+        btnAdd.setOnClickListener(v -> startActivity(new Intent(SearchUsersActivity.this, AddMoodActivity.class)));
+        btnCalendar.setOnClickListener(v -> startActivity(new Intent(SearchUsersActivity.this, MoodHistoryActivity.class)));
+        btnProfile.setOnClickListener(v -> startActivity(new Intent(SearchUsersActivity.this, EditProfileActivity.class)));
+
+        // --- Setup Other UI Elements ---
         Button btnExploreMap = findViewById(R.id.exploreMap);
         Button btnTabFriends = findViewById(R.id.tabFriends);
         Button btnTabRequests = findViewById(R.id.tabRequests);
-
 
         db = FirebaseFirestore.getInstance();
         editSearch = findViewById(R.id.editSearch);
@@ -62,33 +107,20 @@ public class SearchUsersActivity extends AppCompatActivity {
                             Toast.makeText(this, "Error loading username", Toast.LENGTH_SHORT).show());
         }
 
-        btnExploreMap.setOnClickListener(v -> {
-            Intent intent = new Intent(SearchUsersActivity.this, MapHandlerActivity.class);
-            startActivity(intent);
-        });
+        btnExploreMap.setOnClickListener(v -> startActivity(new Intent(SearchUsersActivity.this, MapHandlerActivity.class)));
+        btnTabRequests.setOnClickListener(v -> startActivity(new Intent(SearchUsersActivity.this, FriendRequestActivity.class)));
+        btnTabFriends.setOnClickListener(v -> startActivity(new Intent(SearchUsersActivity.this, FriendListActivity.class)));
 
-        btnTabRequests.setOnClickListener(v -> {
-            Intent intent = new Intent(SearchUsersActivity.this, FriendRequestActivity.class);
-            startActivity(intent);
-        });
-
-        btnTabFriends.setOnClickListener(v -> {
-            Intent intent = new Intent(SearchUsersActivity.this, FriendListActivity.class);
-            startActivity(intent);
-        });
-
-        // Search functionality
+        // --- Search Functionality ---
         editSearch.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 searchUsers(s.toString());
             }
-
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) { }
         });
     }
 
@@ -110,9 +142,6 @@ public class SearchUsersActivity extends AppCompatActivity {
                     }
                     adapter.setUsers(users);
                 })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Search failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+                .addOnFailureListener(e -> Toast.makeText(this, "Search failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
-
 }

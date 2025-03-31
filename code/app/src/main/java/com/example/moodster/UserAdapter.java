@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.Context;
+import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -48,6 +50,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         holder.textDisplayName.setText(user.getDisplayName());
         holder.textUsername.setText("@" + user.getUsername());
 
+        // NEW: Launch the UserProfileActivity on row click
+        holder.itemView.setOnClickListener(v -> {
+            Context context = v.getContext();
+            Intent intent = new Intent(context, UserProfileActivity.class);
+            // Pass along basic data; the rest can be fetched in the activity
+            intent.putExtra("username", user.getUsername());
+            intent.putExtra("displayName", user.getDisplayName());
+            context.startActivity(intent);
+        });
+
         holder.addUserBtn.setOnClickListener(v -> {
             String targetUsername = user.getUsername();
             Context context = v.getContext();
@@ -79,6 +91,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             }).addOnFailureListener(e ->
                     Toast.makeText(context, "error checking follow status", Toast.LENGTH_SHORT).show());
         });
+
+
     }
 
     @Override

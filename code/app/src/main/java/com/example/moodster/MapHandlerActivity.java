@@ -1,5 +1,6 @@
 package com.example.moodster;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -18,12 +19,14 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -32,6 +35,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -71,7 +76,39 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
         initializeUIComponents();
         setupMap();
         setupFirestoreQuery();
+
+        // --- Set up the custom header ---
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        // Set header title
+        TextView tvScreenTitle = findViewById(R.id.tv_screen_title);
+        tvScreenTitle.setText("Mood Map");
+
+        // click listener to the menu icon to open the popup menu
+        ImageView menuIcon = findViewById(R.id.ic_profile_icon);
+        menuIcon.setOnClickListener(v -> {
+            PopupMenu popup = new PopupMenu(MapHandlerActivity.this, v);
+            popup.getMenuInflater().inflate(R.menu.header_menu, popup.getMenu());
+            popup.setOnMenuItemClickListener(item -> {
+                int id = item.getItemId();
+                if (id == R.id.menu_profile) {
+                    startActivity(new Intent(MapHandlerActivity.this, EditProfileActivity.class));
+                    return true;
+                    //} else if (id == R.id.menu_settings) {
+                    //startActivity(new Intent(AddMoodActivity.this, SettingsActivity.class));
+                    //return true;
+                } else if (id == R.id.menu_logout) {
+                    FirebaseAuth.getInstance().signOut();
+                    startActivity(new Intent(MapHandlerActivity.this, LoginActivity.class));
+                    finish();
+                    return true;
+                }
+                return false;
+            });
+            popup.show();
+        });
     }
+
 
     private void initializeEmojiMappings() {
         emotionToEmoji.put("Anger", "😡");
@@ -311,3 +348,4 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
         return location1.distanceTo(location2);
     }
 }
+
