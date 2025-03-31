@@ -38,7 +38,7 @@ public class MoodActivity extends AppCompatActivity {
     private Spinner spinnerSocialSituation;
     private EditText editTrigger, editExplanation;
     private Button btnSave, btnCancel, btnUploadImage;
-    private ImageButton btnViewMoodHistory;
+    private ImageButton btnViewMoodHistory, btnSearch, btnHome, btnAddMood;
 
     private String selectedEmotionalState;
     private String currentUser;
@@ -96,6 +96,10 @@ public class MoodActivity extends AppCompatActivity {
         btnViewMoodHistory = findViewById(R.id.btn_calendar);
         btnUploadImage = findViewById(R.id.btn_upload_image);
         publicToggle = findViewById(R.id.publicToggle);
+
+        btnSearch = findViewById(R.id.btn_search);
+        btnHome = findViewById(R.id.btn_home);
+        btnAddMood = findViewById(R.id.btn_add);
 
         // Limit explanation and trigger fields to 20 characters
         editExplanation.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
@@ -162,6 +166,24 @@ public class MoodActivity extends AppCompatActivity {
         btnViewMoodHistory.setOnClickListener(v -> {
             Intent intent = new Intent(MoodActivity.this, MoodHistoryActivity.class);
             intent.putExtra("username", currentUser); // ✅
+            startActivity(intent);
+        });
+
+        btnSearch.setOnClickListener(v -> {
+            Intent intent = new Intent(MoodActivity.this, SearchUsersActivity.class);
+            intent.putExtra("username", currentUser);
+            startActivity(intent);
+        });
+
+        btnHome.setOnClickListener(v -> {
+            Intent intent = new Intent(MoodActivity.this, HomeActivity.class);
+            intent.putExtra("username", currentUser);
+            startActivity(intent);
+        });
+
+        btnAddMood.setOnClickListener(v -> {
+            Intent intent = new Intent(MoodActivity.this, AddMoodActivity.class);
+            intent.putExtra("username", currentUser);
             startActivity(intent);
         });
 
