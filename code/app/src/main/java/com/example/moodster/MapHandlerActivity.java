@@ -137,7 +137,7 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
         });
 
         // Set initial user location
-        Map<Integer, MoodEvent> moodEvents = moodEventViewModel.getMoodEvents();
+        Map<String, MoodEvent> moodEvents = moodEventViewModel.getMoodEvents();
         if (moodEvents != null && !moodEvents.isEmpty()) {
             MoodEvent firstEvent = moodEvents.values().iterator().next();
             userLocation = new LatLng(firstEvent.getLatitude(), firstEvent.getLongitude());
@@ -197,7 +197,7 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
         }
 
         // Rest of existing mood event handling...
-        Map<Integer, MoodEvent> moodEvents = moodEventViewModel.getMoodEvents();
+        Map<String, MoodEvent> moodEvents = moodEventViewModel.getMoodEvents();
         if (moodEvents == null || moodEvents.isEmpty()) return;
 
         for (MoodEvent event : moodEvents.values()) {
