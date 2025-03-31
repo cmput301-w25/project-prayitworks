@@ -1,5 +1,6 @@
 package com.example.moodster;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
@@ -39,19 +40,25 @@ public class CommentsActivity extends AppCompatActivity {
         inputComment = findViewById(R.id.inputComment);
         btnPostComment = findViewById(R.id.btnPostComment);
 
+        // ✅ Validate and grab data from intent
         currentUsername = getIntent().getStringExtra("username");
-        if (currentUsername == null) {
-            Toast.makeText(this, "Username not found!", Toast.LENGTH_SHORT).show();
-            finish(); // or fallback
+        moodEventId = getIntent().getStringExtra("moodEventId");
+
+        if (currentUsername == null || moodEventId == null) {
+            Toast.makeText(this, "Missing username or mood ID!", Toast.LENGTH_SHORT).show();
+            finish();
             return;
         }
 
-        moodEventId = getIntent().getStringExtra("moodEventId");
+        // ✅ Set username in ViewModel for consistency
+        MoodEventViewModel.getInstance().setUsername(currentUsername);
 
+        // ✅ Initialize adapter
         commentList = new ArrayList<>();
         adapter = new CommentAdapter(this, commentList, currentUsername, moodEventId);
         commentListView.setAdapter(adapter);
 
+        // ✅ Post comment
         btnPostComment.setOnClickListener(v -> {
             String commentText = inputComment.getText().toString().trim();
             if (TextUtils.isEmpty(commentText)) return;
@@ -76,10 +83,9 @@ public class CommentsActivity extends AppCompatActivity {
 
         db.collection("Comments").document(moodEventId)
                 .update("comments", FieldValue.arrayUnion(commentMap))
-                .addOnSuccessListener(unused -> {
-                    loadCommentsFromFirestore();
-                })
+                .addOnSuccessListener(unused -> loadCommentsFromFirestore())
                 .addOnFailureListener(e -> {
+                    // Create document if it doesn't exist
                     Map<String, Object> newDoc = new HashMap<>();
                     List<Map<String, Object>> list = new ArrayList<>();
                     list.add(commentMap);
@@ -87,9 +93,7 @@ public class CommentsActivity extends AppCompatActivity {
 
                     db.collection("Comments").document(moodEventId)
                             .set(newDoc)
-                            .addOnSuccessListener(unused2 -> {
-                                loadCommentsFromFirestore();
-                            })
+                            .addOnSuccessListener(unused2 -> loadCommentsFromFirestore())
                             .addOnFailureListener(ex ->
                                     Toast.makeText(this, "Failed to save comment", Toast.LENGTH_SHORT).show()
                             );
@@ -123,7 +127,6 @@ public class CommentsActivity extends AppCompatActivity {
                 .addOnFailureListener(e ->
                         Toast.makeText(this, "Failed to load comments", Toast.LENGTH_SHORT).show());
     }
-
 
     private void sortAndRefresh() {
         Collections.sort(commentList, (a, b) -> {

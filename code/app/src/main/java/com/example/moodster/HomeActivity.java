@@ -37,8 +37,18 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        // Get current username from intent
+        // ✅ Get current username from intent
         currentUsername = getIntent().getStringExtra("username");
+        if (currentUsername == null || currentUsername.isEmpty()) {
+            Toast.makeText(this, "Username not found. Please log in again.", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
+
+        // ✅ Set username in ViewModel
+        moodEventViewModel = MoodEventViewModel.getInstance();
+        moodEventViewModel.setUsername(currentUsername);
 
         // --- Custom Header Setup ---
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -53,7 +63,9 @@ public class HomeActivity extends AppCompatActivity {
             popup.setOnMenuItemClickListener(item -> {
                 int id = item.getItemId();
                 if (id == R.id.menu_profile) {
-                    startActivity(new Intent(HomeActivity.this, EditProfileActivity.class));
+                    Intent profileIntent = new Intent(HomeActivity.this, EditProfileActivity.class);
+                    profileIntent.putExtra("username", currentUsername); // ✅
+                    startActivity(profileIntent);
                     return true;
                 } else if (id == R.id.menu_logout) {
                     FirebaseAuth.getInstance().signOut();
@@ -91,7 +103,6 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         // Fetch mood events
-        moodEventViewModel = MoodEventViewModel.getInstance();
         moodEventViewModel.fetchCurrentUserMoods(moodList -> {
             masterMoodList.clear();
             masterMoodList.addAll(moodList);
@@ -100,7 +111,6 @@ public class HomeActivity extends AppCompatActivity {
 
             if (adapter == null) {
                 adapter = new MoodListAdapter(HomeActivity.this, masterMoodList, currentUsername);
-
                 listRecentMoods.setAdapter(adapter);
             } else {
                 adapter.updateList(masterMoodList);
@@ -109,15 +119,16 @@ public class HomeActivity extends AppCompatActivity {
             textMoodCount.setText("You’ve logged " + masterMoodList.size() + " moods.");
         });
 
+        // ✅ Add Mood
         btnQuickAddMood.setOnClickListener(v -> {
             Intent intent = new Intent(HomeActivity.this, AddMoodActivity.class);
+            intent.putExtra("username", currentUsername);
             startActivity(intent);
         });
 
-        // ✅ Forward username to MoodDetailsActivity
+        // ✅ Mood Details
         listRecentMoods.setOnItemClickListener((parent, view, position, id) -> {
             MoodEvent selected = masterMoodList.get(position);
-
             Intent intent = new Intent(HomeActivity.this, MoodDetailsActivity.class);
             intent.putExtra("username", currentUsername);
             intent.putExtra("moodId", selected.getMoodId());
@@ -126,13 +137,14 @@ public class HomeActivity extends AppCompatActivity {
             intent.putExtra("textReasonValue", selected.getExplanation());
             intent.putExtra("textTriggerValue", selected.getTrigger());
             intent.putExtra("textSocialValue", selected.getSocialSituation());
-            intent.putExtra("imageMoodPhoto", selected.getImage()); // Optional
-
+            intent.putExtra("imageMoodPhoto", selected.getImage());
             startActivity(intent);
         });
 
+        // ✅ Manage Friends
         btnManageFriends.setOnClickListener(v -> {
             Intent intent = new Intent(HomeActivity.this, SearchUsersActivity.class);
+            intent.putExtra("username", currentUsername);
             startActivity(intent);
         });
 
@@ -143,9 +155,24 @@ public class HomeActivity extends AppCompatActivity {
         ImageButton btnAdd = findViewById(R.id.btn_add);
         ImageButton btnProfile = findViewById(R.id.btn_profile);
 
-        btnAdd.setOnClickListener(v -> startActivity(new Intent(HomeActivity.this, AddMoodActivity.class)));
-        btnSearch.setOnClickListener(v -> startActivity(new Intent(HomeActivity.this, MapHandlerActivity.class)));
-        btnProfile.setOnClickListener(v -> startActivity(new Intent(HomeActivity.this, EditProfileActivity.class)));
+        btnAdd.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, AddMoodActivity.class);
+            intent.putExtra("username", currentUsername);
+            startActivity(intent);
+        });
+
+        btnSearch.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, MapHandlerActivity.class);
+            intent.putExtra("username", currentUsername);
+            startActivity(intent);
+        });
+
+        btnProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, EditProfileActivity.class);
+            intent.putExtra("username", currentUsername);
+            startActivity(intent);
+        });
+
         btnViewMoodHistory.setOnClickListener(v -> {
             Intent intent = new Intent(HomeActivity.this, MoodHistoryActivity.class);
             intent.putExtra("username", currentUsername);

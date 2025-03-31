@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,6 +41,15 @@ public class MoodHistoryActivity extends AppCompatActivity {
         setContentView(R.layout.mood_history_main);
 
         currentUsername = getIntent().getStringExtra("username");
+        if (currentUsername == null || currentUsername.isEmpty()) {
+            Toast.makeText(this, "Username not found. Please log in again.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
+
+        moodEventViewModel = MoodEventViewModel.getInstance();
+        moodEventViewModel.setUsername(currentUsername);
 
         // --- Set up the custom header ---
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -55,7 +63,9 @@ public class MoodHistoryActivity extends AppCompatActivity {
             popup.setOnMenuItemClickListener(item -> {
                 int id = item.getItemId();
                 if (id == R.id.menu_profile) {
-                    startActivity(new Intent(MoodHistoryActivity.this, EditProfileActivity.class));
+                    Intent intent = new Intent(MoodHistoryActivity.this, EditProfileActivity.class);
+                    intent.putExtra("username", currentUsername);
+                    startActivity(intent);
                     return true;
                 } else if (id == R.id.menu_logout) {
                     FirebaseAuth.getInstance().signOut();
@@ -74,9 +84,7 @@ public class MoodHistoryActivity extends AppCompatActivity {
         spinnerFilterType = findViewById(R.id.spinnerFilterType);
         searchEditText = findViewById(R.id.editSearch);
 
-        moodEventViewModel = MoodEventViewModel.getInstance();
-
-        // 1) Fetch moods
+        // Fetch moods
         moodEventViewModel.fetchCurrentUserMoods(moodList -> {
             masterMoodList.clear();
             masterMoodList.addAll(moodList);
@@ -86,14 +94,13 @@ public class MoodHistoryActivity extends AppCompatActivity {
 
             if (adapter == null) {
                 adapter = new MoodListAdapter(this, masterMoodList, currentUsername);
-
                 listView.setAdapter(adapter);
             } else {
                 adapter.updateList(masterMoodList);
             }
         });
 
-        // Spinner change => update hint & filter
+        // Spinner filter change
         spinnerFilterType.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(android.widget.AdapterView<?> parent, android.view.View view, int position, long id) {
@@ -106,7 +113,7 @@ public class MoodHistoryActivity extends AppCompatActivity {
             public void onNothingSelected(android.widget.AdapterView<?> parent) {}
         });
 
-        // Search text change
+        // Search bar logic
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -115,11 +122,15 @@ public class MoodHistoryActivity extends AppCompatActivity {
             @Override public void afterTextChanged(Editable s) {}
         });
 
-        // "+" button => AddMoodActivity
+        // "+" Add Mood
         ImageButton btnAddMood = findViewById(R.id.btn_add);
-        btnAddMood.setOnClickListener(v -> startActivity(new Intent(this, AddMoodActivity.class)));
+        btnAddMood.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AddMoodActivity.class);
+            intent.putExtra("username", currentUsername);
+            startActivity(intent);
+        });
 
-        // 🔥 FIX: Item click => pass username to MoodDetailsActivity
+        // Click on mood => view details
         listView.setOnItemClickListener((parent, view, position, id) -> {
             MoodEvent selected = masterMoodList.get(position);
             Intent intent = new Intent(MoodHistoryActivity.this, MoodDetailsActivity.class);
@@ -138,13 +149,13 @@ public class MoodHistoryActivity extends AppCompatActivity {
         findViewById(R.id.btn_home).setOnClickListener(v ->
                 startActivity(new Intent(this, HomeActivity.class).putExtra("username", currentUsername)));
         findViewById(R.id.btn_search).setOnClickListener(v ->
-                startActivity(new Intent(this, MapHandlerActivity.class)));
+                startActivity(new Intent(this, MapHandlerActivity.class).putExtra("username", currentUsername)));
         findViewById(R.id.btn_calendar).setOnClickListener(v ->
                 startActivity(new Intent(this, MoodHistoryActivity.class).putExtra("username", currentUsername)));
         findViewById(R.id.btn_add).setOnClickListener(v ->
-                startActivity(new Intent(this, AddMoodActivity.class)));
+                startActivity(new Intent(this, AddMoodActivity.class).putExtra("username", currentUsername)));
         findViewById(R.id.btn_profile).setOnClickListener(v ->
-                startActivity(new Intent(this, EditProfileActivity.class)));
+                startActivity(new Intent(this, EditProfileActivity.class).putExtra("username", currentUsername)));
     }
 
     private void filterMoodList(String keyword, String filterType) {
@@ -161,18 +172,10 @@ public class MoodHistoryActivity extends AppCompatActivity {
             } else {
                 String fieldToMatch = "";
                 switch (filterType) {
-                    case "Reason":
-                        fieldToMatch = event.getExplanation();
-                        break;
-                    case "Emotional State":
-                        fieldToMatch = event.getEmotionalState();
-                        break;
-                    case "Social Situation":
-                        fieldToMatch = event.getSocialSituation();
-                        break;
+                    case "Reason": fieldToMatch = event.getExplanation(); break;
+                    case "Emotional State": fieldToMatch = event.getEmotionalState(); break;
+                    case "Social Situation": fieldToMatch = event.getSocialSituation(); break;
                 }
-
-
                 matches = fieldToMatch != null && fieldToMatch.toLowerCase().contains(keyword.toLowerCase());
             }
 
@@ -187,23 +190,11 @@ public class MoodHistoryActivity extends AppCompatActivity {
     private void updateSearchHint(String filterType) {
         String hint = "";
         switch (filterType) {
-            case "Reason":
-                hint = "Search by reason...";
-                break;
-            case "Emotional State":
-                hint = "Search by emotional state...";
-                break;
-            case "Social Situation":
-                hint = "Search by social situation...";
-                break;
-            case "Most Recent Week":
-                hint = "Search by most recent week...";
-                break;
+            case "Reason": hint = "Search by reason..."; break;
+            case "Emotional State": hint = "Search by emotional state..."; break;
+            case "Social Situation": hint = "Search by social situation..."; break;
+            case "Most Recent Week": hint = "Search by most recent week..."; break;
         }
-        searchEditText.setHint(hint);
-
-        searchEditText.setHint(hint);
-
         searchEditText.setHint(hint);
     }
 }

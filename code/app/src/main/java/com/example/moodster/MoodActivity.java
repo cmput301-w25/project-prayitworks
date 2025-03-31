@@ -40,6 +40,8 @@ public class MoodActivity extends AppCompatActivity {
     private ImageButton btnViewMoodHistory;
 
     private String selectedEmotionalState;
+    private String currentUser;
+
     public static final List<String> VALID_SOCIAL_SITUATION = Arrays.asList(
             "Alone, with one other person",
             "With two to several people",
@@ -56,9 +58,18 @@ public class MoodActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        selectedEmotionalState = getIntent().getStringExtra("mood");
 
-        // Choose layout based on the mood
+        selectedEmotionalState = getIntent().getStringExtra("mood");
+        currentUser = getIntent().getStringExtra("username");
+
+        if (currentUser == null || currentUser.isEmpty()) {
+            Toast.makeText(this, "Username not found. Please log in again.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
+
+        // Set correct layout for mood
         switch (Objects.requireNonNull(selectedEmotionalState)) {
             case "Anger": setContentView(R.layout.angry_mood); break;
             case "Confusion": setContentView(R.layout.confusion_mood); break;
@@ -68,35 +79,35 @@ public class MoodActivity extends AppCompatActivity {
             case "Fear": setContentView(R.layout.fear_mood); break;
             case "Happiness": setContentView(R.layout.happy_mood); break;
             case "Surprise": setContentView(R.layout.surprise_mood); break;
-            default: setContentView(R.layout.happy_mood); // fallback
+            default: setContentView(R.layout.happy_mood); break;
         }
 
         moodEventViewModel = MoodEventViewModel.getInstance();
+        moodEventViewModel.setUsername(currentUser);
         moodEventViewModel.setContext(this);
 
         editExplanation = findViewById(R.id.edit_reason);
         editTrigger = findViewById(R.id.edit_trigger);
         spinnerSocialSituation = findViewById(R.id.spinner_social);
-
         btnSave = findViewById(R.id.btn_save);
         btnCancel = findViewById(R.id.btn_cancel);
         btnViewMoodHistory = findViewById(R.id.btn_calendar);
         btnUploadImage = findViewById(R.id.btn_upload_image);
 
-        // Explanation limit
+        // Limit explanation
         editExplanation.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
 
-        // Social situation spinner
+        // Social spinner
         ArrayAdapter<String> socialAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_item, VALID_SOCIAL_SITUATION
         );
         socialAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerSocialSituation.setAdapter(socialAdapter);
 
-        // Upload image
+        // Image upload
         btnUploadImage.setOnClickListener(v -> openImageChooser());
 
-        // Save button => calls the Firestore-enabled method
+        // Save mood
         btnSave.setOnClickListener(v -> {
             String trigger = editTrigger.getText().toString().trim();
             String socialSituation = spinnerSocialSituation.getSelectedItem().toString();
@@ -123,6 +134,7 @@ public class MoodActivity extends AppCompatActivity {
                                 Toast.makeText(MoodActivity.this, "Mood saved to Firestore!", Toast.LENGTH_SHORT).show();
                                 finish();
                             }
+
                             @Override
                             public void onAddFailure(String errorMessage) {
                                 Toast.makeText(MoodActivity.this, "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
@@ -131,15 +143,18 @@ public class MoodActivity extends AppCompatActivity {
                 );
 
                 Intent intentDone = new Intent(MoodActivity.this, AddMoodActivity.class);
+                intentDone.putExtra("username", currentUser); // ✅ Pass username
                 startActivity(intentDone);
+
                 Log.d("MoodEvent Added!", moodEventViewModel.getMoodEvents().toString());
                 Log.d("Location", "Lat=" + latitude + ", Lon=" + longitude);
             });
         });
 
-        // Calendar button => see history
+        // View mood history
         btnViewMoodHistory.setOnClickListener(v -> {
             Intent intent = new Intent(MoodActivity.this, MoodHistoryActivity.class);
+            intent.putExtra("username", currentUser); // ✅
             startActivity(intent);
         });
 

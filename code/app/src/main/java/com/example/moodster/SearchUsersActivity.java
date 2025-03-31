@@ -12,8 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -26,69 +24,62 @@ public class SearchUsersActivity extends AppCompatActivity {
     private UserAdapter adapter;
     private FirebaseFirestore db;
 
+    private String currentUsername;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_searching_for_participant_result_screen);
 
-
         Button btnExploreMap = findViewById(R.id.exploreMap);
         Button btnTabFriends = findViewById(R.id.tabFriends);
         Button btnTabRequests = findViewById(R.id.tabRequests);
-
 
         db = FirebaseFirestore.getInstance();
         editSearch = findViewById(R.id.editSearch);
         recyclerUsers = findViewById(R.id.recyclerUsers);
 
-        // Setup RecyclerView
-        recyclerUsers.setLayoutManager(new LinearLayoutManager(this));
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            String email = currentUser.getEmail();
-            db.collection("Users")
-                    .whereEqualTo("email", email)
-                    .get()
-                    .addOnSuccessListener(querySnapshot -> {
-                        if (!querySnapshot.isEmpty()) {
-                            String currentUsername = querySnapshot.getDocuments().get(0).getString("username");
-                            adapter = new UserAdapter(currentUsername);
-                            recyclerUsers.setAdapter(adapter);
-                        } else {
-                            Toast.makeText(this, "User document not found", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(e ->
-                            Toast.makeText(this, "Error loading username", Toast.LENGTH_SHORT).show());
+        // ✅ Get current username from Intent
+        currentUsername = getIntent().getStringExtra("username");
+        if (currentUsername == null || currentUsername.isEmpty()) {
+            Toast.makeText(this, "Username not found", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
         }
 
+        // ✅ Setup RecyclerView and adapter
+        recyclerUsers.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new UserAdapter(currentUsername);
+        recyclerUsers.setAdapter(adapter);
+
+        // ✅ Button: Explore Map
         btnExploreMap.setOnClickListener(v -> {
             Intent intent = new Intent(SearchUsersActivity.this, MapHandlerActivity.class);
+            intent.putExtra("username", currentUsername);
             startActivity(intent);
         });
 
+        // ✅ Button: Friend Requests
         btnTabRequests.setOnClickListener(v -> {
             Intent intent = new Intent(SearchUsersActivity.this, FriendRequestActivity.class);
+            intent.putExtra("username", currentUsername);
             startActivity(intent);
         });
 
+        // ✅ Button: Friend List
         btnTabFriends.setOnClickListener(v -> {
             Intent intent = new Intent(SearchUsersActivity.this, FriendListActivity.class);
+            intent.putExtra("username", currentUsername);
             startActivity(intent);
         });
 
-        // Search functionality
+        // ✅ Search Users (by username)
         editSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
                 searchUsers(s.toString());
             }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
+            @Override public void afterTextChanged(Editable s) {}
         });
     }
 
@@ -114,5 +105,4 @@ public class SearchUsersActivity extends AppCompatActivity {
                     Toast.makeText(this, "Search failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
-
 }
