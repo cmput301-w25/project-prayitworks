@@ -55,12 +55,12 @@
         <activity android:name=".EditMoodActivity" />
         <activity android:name=".MapHandlerActivity" />
         <activity android:name=".EditProfileActivity" />
+        <activity android:name=".CommentsActivity" />
 
         <!-- ✅ User Related -->
         <activity android:name=".SearchUsersActivity" />
         <activity android:name=".FriendRequestActivity" />
         <activity android:name=".FriendListActivity" />
-
 
     </application>
 </manifest>
