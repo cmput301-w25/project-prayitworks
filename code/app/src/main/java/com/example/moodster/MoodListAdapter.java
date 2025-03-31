@@ -65,7 +65,7 @@ public class MoodListAdapter extends BaseAdapter {
             intent.putExtra("textTriggerValue", moodEvent.getTrigger());
             intent.putExtra("textSocialValue", moodEvent.getSocialSituation());
             intent.putExtra("imageMoodPhoto", moodEvent.getImage());
-            intent.putExtra("moodId", moodEvent.getId());
+            intent.putExtra("moodId", moodEvent.getMoodId());
             context.startActivity(intent);
         });
 
