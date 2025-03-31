@@ -5,7 +5,7 @@
     android:id="@+id/layoutNetworkMoods"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_app_gradient"
+    android:background="@drawable/gradient_background_main"
     android:padding="16dp"
     tools:context=".ui.NetworkMoodsActivity">
 
@@ -69,7 +69,7 @@
             android:id="@+id/layoutFilterBar"
             android:layout_width="224dp"
             android:layout_height="35dp"
-            android:background="@drawable/bg_filter_bar"
+            android:background="@drawable/filter_background"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingStart="16dp"
@@ -103,7 +103,7 @@
             android:layout_width="66dp"
             android:layout_height="35dp"
             android:layout_marginLeft="8dp"
-            android:background="@drawable/bg_filter_bar_rounded"
+            android:background="@drawable/filter_background"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingHorizontal="12dp"
@@ -123,7 +123,7 @@
             android:layout_width="67dp"
             android:layout_height="35dp"
             android:layout_marginRight="8dp"
-            android:background="@drawable/bg_filter_bar_rounded"
+            android:background="@drawable/filter_background"
             android:gravity="center"
             android:paddingHorizontal="16dp"
             android:paddingVertical="8dp"
@@ -156,7 +156,7 @@
                 android:layout_width="366dp"
                 android:layout_height="121dp"
                 android:layout_marginBottom="12dp"
-                android:background="@drawable/bg_filter_bar_rounded"
+                android:background="@drawable/filter_background"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
                 android:padding="12dp"
@@ -269,14 +269,14 @@
             <!-- MOOD-REQUEST ITEM #2 -->
             <LinearLayout
                 android:id="@+id/layout_mood_request_item_2"
-                android:layout_width="366dp"
+                android:layout_width="359dp"
                 android:layout_height="121dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="12dp"
-                android:background="@drawable/bg_filter_bar_rounded"
+                android:background="@drawable/filter_background"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
-                android:padding="12dp"
-                android:layout_gravity="center_horizontal">
+                android:padding="12dp">
 
                 <!-- TOP ROW: Avatar, Name + Comment, Mood Emoji -->
                 <LinearLayout
@@ -325,10 +325,10 @@
                         android:id="@+id/textMoodEmojiItem2"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
+                        android:contentDescription="Mood Emoji"
                         android:gravity="center"
                         android:text="🤪"
-                        android:textSize="25sp"
-                        android:contentDescription="Mood Emoji" />
+                        android:textSize="25sp" />
                 </LinearLayout>
 
                 <!-- BOTTOM ROW: Time, then Like & Comment icons -->
@@ -337,8 +337,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <!-- Time on the left -->
                     <TextView
@@ -388,7 +388,7 @@
                 android:layout_width="366dp"
                 android:layout_height="121dp"
                 android:layout_marginBottom="12dp"
-                android:background="@drawable/bg_filter_bar_rounded"
+                android:background="@drawable/filter_background"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
                 android:padding="12dp"

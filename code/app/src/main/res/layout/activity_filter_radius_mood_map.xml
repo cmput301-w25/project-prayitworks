@@ -6,7 +6,7 @@
     android:id="@+id/layoutNetworkMoods"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_app_gradient"
+    android:background="@drawable/gradient_background_main"
     android:padding="16dp"
     tools:context=".ui.NetworkMoodsActivity">
 
@@ -33,7 +33,7 @@
             android:layout_height="35dp"
             android:layout_weight="1"
             android:hint="Search..."
-            android:background="@drawable/bg_filter_bar"
+            android:background="@drawable/filter_background"
             android:textColor="@android:color/white"
             android:padding="8dp"
             android:textSize="16sp"/>
@@ -44,7 +44,7 @@
             android:layout_width="150dp"
             android:layout_height="35dp"
             android:layout_marginLeft="8dp"
-            android:background="@drawable/bg_filter_bar_rounded"
+            android:background="@drawable/filter_background"
             android:entries="@array/filter_options"
             android:popupBackground="@drawable/bg_filter_bar"
             android:spinnerMode="dropdown"/>
@@ -86,7 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/bg_filter_bar_rounded"
+            android:background="@drawable/filter_background"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="12dp">

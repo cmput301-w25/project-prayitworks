@@ -6,7 +6,7 @@
     android:id="@+id/layoutSearchParticipantResult"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_app_gradient"
+    android:background="@drawable/gradient_background_main"
     android:padding="16dp">
 
     <!-- Include the custom header -->
@@ -35,8 +35,8 @@
             android:id="@+id/exploreMap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:background="#137C6E"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/filter_background"
             android:gravity="center"
             android:paddingHorizontal="16dp"
             android:paddingVertical="8dp"
@@ -58,20 +58,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
-                android:background="#FB7B8E"
+                android:background="@drawable/filter_background"
                 android:gravity="center"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="8dp"
                 android:text="Friends"
                 android:textColor="@android:color/white"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
             <!-- REQUESTS TAB -->
             <Button
                 android:id="@+id/tabRequests"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#FB7B8E"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/filter_background"
                 android:gravity="center"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="8dp"
@@ -98,7 +99,7 @@
             android:layout_width="0dp"
             android:layout_height="35dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_filter_bar"
+            android:background="@drawable/filter_background"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingStart="16dp"
@@ -129,7 +130,7 @@
             android:layout_width="51dp"
             android:layout_height="35dp"
             android:layout_marginLeft="8dp"
-            android:background="@drawable/bg_filter_bar_rounded"
+            android:background="@drawable/filter_background"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingHorizontal="12dp"

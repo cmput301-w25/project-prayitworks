@@ -6,7 +6,7 @@
     android:id="@+id/layoutSearchParticipantResult"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_app_gradient"
+    android:background="@drawable/gradient_background_main"
     android:padding="16dp">
 
     <!-- Header: App Logo and User Avatar -->
@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="8dp"
-            android:background="@drawable/bg_filter_bar_rounded"
+            android:background="@drawable/filter_background"
             android:gravity="center"
             android:paddingHorizontal="16dp"
             android:paddingVertical="8dp"
@@ -50,7 +50,7 @@
             android:id="@+id/btnSearchUsers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_filter_bar_rounded"
+            android:background="@drawable/filter_background"
             android:gravity="center"
             android:paddingHorizontal="16dp"
             android:paddingVertical="8dp"

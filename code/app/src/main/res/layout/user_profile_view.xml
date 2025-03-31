@@ -6,7 +6,7 @@
     android:id="@+id/layoutUserProfile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_app_gradient"
+    android:background="@drawable/gradient_background_main"
     android:padding="16dp"
     tools:context=".UserProfileActivity">
 
