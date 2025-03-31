@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:background="@drawable/bottom_nav_gradient"
+    android:elevation="10dp"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:weightSum="5"
+    android:padding="8dp">
+
+    <!-- Home Button -->
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center">
+        <ImageButton
+            android:id="@+id/btn_home"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@drawable/ic_home"
+            android:background="@drawable/nav_item_selector"
+            android:padding="12dp"
+            android:scaleType="centerInside" />
+    </FrameLayout>
+
+    <!-- Search Button -->
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center">
+        <ImageButton
+            android:id="@+id/btn_search"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@drawable/ic_search"
+            android:background="@drawable/nav_item_selector"
+            android:padding="12dp"
+            android:scaleType="centerInside" />
+    </FrameLayout>
+
+    <!-- Add Mood Button -->
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center">
+        <ImageButton
+            android:id="@+id/btn_add"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@drawable/ic_add"
+            android:background="@drawable/nav_item_selector"
+            android:padding="12dp"
+            android:scaleType="centerInside" />
+    </FrameLayout>
+
+    <!-- Calendar Button -->
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center">
+        <ImageButton
+            android:id="@+id/btn_calendar"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@drawable/ic_calendar"
+            android:background="@drawable/nav_item_selector"
+            android:padding="12dp"
+            android:scaleType="centerInside" />
+    </FrameLayout>
+
+    <!-- Profile Button -->
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center">
+        <ImageButton
+            android:id="@+id/btn_profile"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@drawable/ic_avatar_placeholder"
+            android:background="@drawable/nav_item_selector"
+            android:padding="12dp"
+            android:scaleType="centerInside" />
+    </FrameLayout>
+
+</LinearLayout>

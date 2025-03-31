@@ -3,6 +3,8 @@ package com.example.moodster;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -103,6 +105,14 @@ public class AddMoodActivity extends AppCompatActivity {
             intent.putExtra("username", currentUsername);
             startActivity(intent);
         });
+
+        // --- Apply Bouncing Animation to Text Views ---
+        TextView titleTextView = findViewById(R.id.title);
+        TextView subtitleTextView = findViewById(R.id.subtitle);
+
+        Animation bounce = AnimationUtils.loadAnimation(this, R.anim.scale_bounce);
+        titleTextView.startAnimation(bounce);
+        subtitleTextView.startAnimation(bounce);
     }
 
     private void openMoodActivity(String mood) {
