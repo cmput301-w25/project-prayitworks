@@ -13,10 +13,12 @@ import java.util.List;
 public class MoodListAdapter extends BaseAdapter {
     private Context context;
     private List<MoodEvent> moodEvents;
+    private String currentUsername;
 
-    public MoodListAdapter(Context context, List<MoodEvent> moodEvents) {
+    public MoodListAdapter(Context context, List<MoodEvent> moodEvents, String currentUsername) {
         this.context = context;
         this.moodEvents = moodEvents;
+        this.currentUsername = currentUsername;
     }
 
     @Override
@@ -66,6 +68,8 @@ public class MoodListAdapter extends BaseAdapter {
             intent.putExtra("textSocialValue", moodEvent.getSocialSituation());
             intent.putExtra("imageMoodPhoto", moodEvent.getImage());
             intent.putExtra("moodId", moodEvent.getMoodId());
+            intent.putExtra("username", currentUsername);
+
             context.startActivity(intent);
         });
 

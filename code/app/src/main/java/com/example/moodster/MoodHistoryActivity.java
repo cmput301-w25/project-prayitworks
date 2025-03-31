@@ -34,10 +34,14 @@ public class MoodHistoryActivity extends AppCompatActivity {
     private TextView emptyStateTextView;
     private MoodEventViewModel moodEventViewModel;
 
+    private String currentUsername;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mood_history_main);
+
+        currentUsername = getIntent().getStringExtra("username");
 
         // --- Set up the custom header ---
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -53,9 +57,6 @@ public class MoodHistoryActivity extends AppCompatActivity {
                 if (id == R.id.menu_profile) {
                     startActivity(new Intent(MoodHistoryActivity.this, EditProfileActivity.class));
                     return true;
-                //} else if (id == R.id.menu_settings) {
-                    //startActivity(new Intent(MoodHistoryActivity.this, SettingsActivity.class));
-                    //return true;
                 } else if (id == R.id.menu_logout) {
                     FirebaseAuth.getInstance().signOut();
                     startActivity(new Intent(MoodHistoryActivity.this, LoginActivity.class));
@@ -75,23 +76,24 @@ public class MoodHistoryActivity extends AppCompatActivity {
 
         moodEventViewModel = MoodEventViewModel.getInstance();
 
-        // 1) Fetch from Firestore if online, else local
+        // 1) Fetch moods
         moodEventViewModel.fetchCurrentUserMoods(moodList -> {
             masterMoodList.clear();
             masterMoodList.addAll(moodList);
 
-            // Sort the mood events in reverse chronological order (most recent first)
-            Collections.sort(masterMoodList, (m1, m2) -> m2.getCreatedAt().toDate().compareTo(m1.getCreatedAt().toDate()));
+            Collections.sort(masterMoodList, (m1, m2) ->
+                    m2.getCreatedAt().toDate().compareTo(m1.getCreatedAt().toDate()));
 
             if (adapter == null) {
-                adapter = new MoodListAdapter(this, masterMoodList);
+                adapter = new MoodListAdapter(this, masterMoodList, currentUsername);
+
                 listView.setAdapter(adapter);
             } else {
                 adapter.updateList(masterMoodList);
             }
         });
 
-        // Spinner change => update hint & apply filter
+        // Spinner change => update hint & filter
         spinnerFilterType.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(android.widget.AdapterView<?> parent, android.view.View view, int position, long id) {
@@ -104,64 +106,50 @@ public class MoodHistoryActivity extends AppCompatActivity {
             public void onNothingSelected(android.widget.AdapterView<?> parent) {}
         });
 
-        // Typing triggers filtering
+        // Search text change
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String query = s.toString();
-                String selectedFilter = spinnerFilterType.getSelectedItem().toString();
-                filterMoodList(query, selectedFilter);
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterMoodList(s.toString(), spinnerFilterType.getSelectedItem().toString());
             }
             @Override public void afterTextChanged(Editable s) {}
         });
 
-
         // "+" button => AddMoodActivity
         ImageButton btnAddMood = findViewById(R.id.btn_add);
-        btnAddMood.setOnClickListener(v -> {
-            Intent intent = new Intent(MoodHistoryActivity.this, AddMoodActivity.class);
+        btnAddMood.setOnClickListener(v -> startActivity(new Intent(this, AddMoodActivity.class)));
+
+        // 🔥 FIX: Item click => pass username to MoodDetailsActivity
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            MoodEvent selected = masterMoodList.get(position);
+            Intent intent = new Intent(MoodHistoryActivity.this, MoodDetailsActivity.class);
+            intent.putExtra("username", currentUsername);
+            intent.putExtra("moodId", selected.getMoodId());
+            intent.putExtra("textMoodEmoji", selected.getEmoji());
+            intent.putExtra("textMoodDateTime", selected.getCreatedAt().toDate().toString());
+            intent.putExtra("textReasonValue", selected.getExplanation());
+            intent.putExtra("textTriggerValue", selected.getTrigger());
+            intent.putExtra("textSocialValue", selected.getSocialSituation());
+            intent.putExtra("imageMoodPhoto", selected.getImage());
             startActivity(intent);
         });
 
-        // --- Bottom Navigation Buttons ---
-        ImageButton btnHome = findViewById(R.id.btn_home);
-        ImageButton btnSearch = findViewById(R.id.btn_search);
-        ImageButton btnCalendar = findViewById(R.id.btn_calendar);
-        ImageButton btnAdd = findViewById(R.id.btn_add);
-        ImageButton btnProfile = findViewById(R.id.btn_profile);
-
-        btnHome.setOnClickListener(v -> {
-            Intent intent = new Intent(MoodHistoryActivity.this, HomeActivity.class);
-            startActivity(intent);
-        });
-
-        btnSearch.setOnClickListener(v -> {
-            Intent intent = new Intent(MoodHistoryActivity.this, MapHandlerActivity.class);
-            startActivity(intent);
-        });
-
-        btnAdd.setOnClickListener(v -> {
-            Intent intent = new Intent(MoodHistoryActivity.this, AddMoodActivity.class);
-            startActivity(intent);
-        });
-
-        btnCalendar.setOnClickListener(v -> {
-            Intent intent = new Intent(MoodHistoryActivity.this, MoodHistoryActivity.class);
-            startActivity(intent);
-        });
-
-        btnProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(MoodHistoryActivity.this, EditProfileActivity.class);
-            startActivity(intent);
-        });
+        // --- Bottom Nav Buttons ---
+        findViewById(R.id.btn_home).setOnClickListener(v ->
+                startActivity(new Intent(this, HomeActivity.class).putExtra("username", currentUsername)));
+        findViewById(R.id.btn_search).setOnClickListener(v ->
+                startActivity(new Intent(this, MapHandlerActivity.class)));
+        findViewById(R.id.btn_calendar).setOnClickListener(v ->
+                startActivity(new Intent(this, MoodHistoryActivity.class).putExtra("username", currentUsername)));
+        findViewById(R.id.btn_add).setOnClickListener(v ->
+                startActivity(new Intent(this, AddMoodActivity.class)));
+        findViewById(R.id.btn_profile).setOnClickListener(v ->
+                startActivity(new Intent(this, EditProfileActivity.class)));
     }
 
-    // Main filtering logic
     private void filterMoodList(String keyword, String filterType) {
         if (adapter == null) return;
         List<MoodEvent> filtered = new ArrayList<>();
-
         long now = System.currentTimeMillis();
         long sevenDaysAgo = now - 7L * 24 * 60 * 60 * 1000;
 
@@ -169,8 +157,7 @@ public class MoodHistoryActivity extends AppCompatActivity {
             boolean matches = false;
 
             if (filterType.equals("Most Recent Week")) {
-                long eventTime = event.getCreatedAt().toDate().getTime();
-                matches = (eventTime >= sevenDaysAgo);
+                matches = event.getCreatedAt().toDate().getTime() >= sevenDaysAgo;
             } else {
                 String fieldToMatch = "";
                 switch (filterType) {
@@ -185,41 +172,38 @@ public class MoodHistoryActivity extends AppCompatActivity {
                         break;
                 }
 
-                if (fieldToMatch != null && fieldToMatch.toLowerCase().contains(keyword.toLowerCase())) {
-                    matches = true;
-                }
+
+                matches = fieldToMatch != null && fieldToMatch.toLowerCase().contains(keyword.toLowerCase());
             }
 
-            if (matches) {
-                filtered.add(event);
-            }
+            if (matches) filtered.add(event);
         }
 
-        if (filtered.isEmpty()) {
-            emptyStateTextView.setVisibility(TextView.VISIBLE);
-            emptyStateTextView.setText("No results found");
-        } else {
-            emptyStateTextView.setVisibility(TextView.GONE);
-        }
-
+        emptyStateTextView.setVisibility(filtered.isEmpty() ? TextView.VISIBLE : TextView.GONE);
+        emptyStateTextView.setText("No results found");
         adapter.updateList(filtered);
     }
 
-    // Dynamically update EditText hint
     private void updateSearchHint(String filterType) {
+        String hint = "";
         switch (filterType) {
             case "Reason":
-                searchEditText.setHint("Search by reason...");
+                hint = "Search by reason...";
                 break;
             case "Emotional State":
-                searchEditText.setHint("Search by emotional state...");
+                hint = "Search by emotional state...";
                 break;
             case "Social Situation":
-                searchEditText.setHint("Search by social situation...");
+                hint = "Search by social situation...";
                 break;
             case "Most Recent Week":
-                searchEditText.setHint("Search by most recent week...");
+                hint = "Search by most recent week...";
                 break;
         }
+        searchEditText.setHint(hint);
+
+        searchEditText.setHint(hint);
+
+        searchEditText.setHint(hint);
     }
 }
