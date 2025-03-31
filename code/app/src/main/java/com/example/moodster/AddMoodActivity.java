@@ -16,19 +16,30 @@ import androidx.appcompat.widget.Toolbar;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class AddMoodActivity extends AppCompatActivity {
+
+    private String currentUsername;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_mood);
 
+        // ✅ Get username from intent and set in ViewModel
+        currentUsername = getIntent().getStringExtra("username");
+        if (currentUsername == null || currentUsername.isEmpty()) {
+            Toast.makeText(this, "Username not found. Please log in again.", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
+        MoodEventViewModel.getInstance().setUsername(currentUsername);
+
         // --- Set up the custom header ---
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Set header title to "Add Mood"
         TextView tvScreenTitle = findViewById(R.id.tv_screen_title);
         tvScreenTitle.setText("Add Mood");
 
-        // click listener to the menu icon to open the popup menu
         ImageView menuIcon = findViewById(R.id.ic_profile_icon);
         menuIcon.setOnClickListener(v -> {
             PopupMenu popup = new PopupMenu(AddMoodActivity.this, v);
@@ -36,11 +47,10 @@ public class AddMoodActivity extends AppCompatActivity {
             popup.setOnMenuItemClickListener(item -> {
                 int id = item.getItemId();
                 if (id == R.id.menu_profile) {
-                    startActivity(new Intent(AddMoodActivity.this, EditProfileActivity.class));
+                    Intent intent = new Intent(AddMoodActivity.this, EditProfileActivity.class);
+                    intent.putExtra("username", currentUsername); // ✅
+                    startActivity(intent);
                     return true;
-                //} else if (id == R.id.menu_settings) {
-                    //startActivity(new Intent(AddMoodActivity.this, SettingsActivity.class));
-                    //return true;
                 } else if (id == R.id.menu_logout) {
                     FirebaseAuth.getInstance().signOut();
                     startActivity(new Intent(AddMoodActivity.this, LoginActivity.class));
@@ -52,7 +62,7 @@ public class AddMoodActivity extends AppCompatActivity {
             popup.show();
         });
 
-        // ---  AddMoodActivity functionality ---
+        // --- Mood buttons ---
         Button btnAngry = findViewById(R.id.btn_angry);
         Button btnConfusion = findViewById(R.id.btn_confusion);
         Button btnDisgust = findViewById(R.id.btn_disgust);
@@ -75,18 +85,22 @@ public class AddMoodActivity extends AppCompatActivity {
         btnHappy.setOnClickListener(view -> openMoodActivity("Happiness"));
         btnSurprise.setOnClickListener(view -> openMoodActivity("Surprise"));
 
+        // ✅ Pass username to each destination
         btnViewMoodHistory.setOnClickListener(v -> {
             Intent intent = new Intent(AddMoodActivity.this, MoodHistoryActivity.class);
+            intent.putExtra("username", currentUsername);
             startActivity(intent);
         });
 
         btnSearch.setOnClickListener(v -> {
             Intent intent = new Intent(AddMoodActivity.this, SearchUsersActivity.class);
+            intent.putExtra("username", currentUsername);
             startActivity(intent);
         });
 
         btnHome.setOnClickListener(v -> {
             Intent intent = new Intent(AddMoodActivity.this, HomeActivity.class);
+            intent.putExtra("username", currentUsername);
             startActivity(intent);
         });
     }
@@ -94,6 +108,7 @@ public class AddMoodActivity extends AppCompatActivity {
     private void openMoodActivity(String mood) {
         Intent intent = new Intent(AddMoodActivity.this, MoodActivity.class);
         intent.putExtra("mood", mood);
+        intent.putExtra("username", currentUsername); // ✅
         startActivity(intent);
     }
 }

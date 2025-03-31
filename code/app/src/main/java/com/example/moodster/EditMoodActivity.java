@@ -30,6 +30,7 @@ public class EditMoodActivity extends AppCompatActivity {
     private Spinner spinnerMood, spinnerSocialSituation;
     private MoodEvent eventToEdit;
     private String moodId;
+    private String currentUsername;
     private MoodEventViewModel moodEventViewModel;
 
     @Override
@@ -38,6 +39,19 @@ public class EditMoodActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_mood);
 
         moodEventViewModel = MoodEventViewModel.getInstance();
+
+        // ✅ Grab and validate username
+        Intent intent = getIntent();
+        currentUsername = intent.getStringExtra("username");
+        moodId = intent.getStringExtra("moodId");
+
+        if (currentUsername == null || currentUsername.isEmpty()) {
+            Toast.makeText(this, "Username not found. Please log in again.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
+        moodEventViewModel.setUsername(currentUsername);
 
         reasonValue = findViewById(R.id.textReasonValue);
         triggerValue = findViewById(R.id.textTriggerValue);
@@ -58,8 +72,6 @@ public class EditMoodActivity extends AppCompatActivity {
         socialAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerSocialSituation.setAdapter(socialAdapter);
 
-        Intent intent = getIntent();
-        moodId = intent.getStringExtra("moodId");
         eventToEdit = moodEventViewModel.getMoodEvents().get(moodId);
 
         if (eventToEdit != null) {
@@ -87,6 +99,7 @@ public class EditMoodActivity extends AppCompatActivity {
                 @Override
                 public void onUpdateSuccess() {
                     Intent backToHistory = new Intent(EditMoodActivity.this, MoodHistoryActivity.class);
+                    backToHistory.putExtra("username", currentUsername); // ✅
                     backToHistory.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(backToHistory);
                     finish();

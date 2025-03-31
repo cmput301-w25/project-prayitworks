@@ -1,5 +1,6 @@
 package com.example.moodster;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -35,6 +36,7 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,19 +60,45 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
     private String currentFilterType = "Emotional State";
     private String currentSearchKeyword = "";
 
-    // Firestore
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference usersRef = db.collection("Users");
+
+    // ✅ Username tracking
+    private String currentUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter_radius_mood_map);
 
+        currentUsername = getIntent().getStringExtra("username");
+        if (currentUsername == null || currentUsername.isEmpty()) {
+            Toast.makeText(this, "Username missing. Please log in again.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
+
         initializeEmojiMappings();
         initializeUIComponents();
         setupMap();
         setupFirestoreQuery();
+
+        // ✅ Handle bottom nav
+        setupBottomNavigation();
+    }
+
+    private void setupBottomNavigation() {
+        findViewById(R.id.btn_home).setOnClickListener(v ->
+                startActivity(new Intent(this, HomeActivity.class).putExtra("username", currentUsername)));
+        findViewById(R.id.btn_search).setOnClickListener(v ->
+                Toast.makeText(this, "Already on Map", Toast.LENGTH_SHORT).show());
+        findViewById(R.id.btn_add).setOnClickListener(v ->
+                startActivity(new Intent(this, AddMoodActivity.class).putExtra("username", currentUsername)));
+        findViewById(R.id.btn_calendar).setOnClickListener(v ->
+                startActivity(new Intent(this, MoodHistoryActivity.class).putExtra("username", currentUsername)));
+        findViewById(R.id.btn_profile).setOnClickListener(v ->
+                startActivity(new Intent(this, EditProfileActivity.class).putExtra("username", currentUsername)));
     }
 
     private void initializeEmojiMappings() {
