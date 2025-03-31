@@ -47,6 +47,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The MapHandlerActivity class displays a Google Map with markers that represent mood events and users.
+ * It allows filtering of mood events by various criteria (emotional state, reason, social situation)
+ * and provides a radius filter via a SeekBar.
+ */
 public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private LatLng userLocation;
@@ -92,6 +97,12 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
         setupBottomNavigation();
     }
 
+    /**
+     * Sets up the bottom navigation and custom header.
+     *
+     * <p>This method configures the toolbar with a title and a popup menu that allows the user to
+     * navigate to the profile or logout.</p>
+     */
     private void setupBottomNavigation() {
         // --- Set up the custom header ---
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -135,6 +146,11 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
     }
 
 
+    /**
+     * Initializes the mapping between emotional states and emoji.
+     *
+     * <p>This method populates the emotionToEmoji HashMap with predefined mappings.</p>
+     */
     private void initializeEmojiMappings() {
         emotionToEmoji.put("Anger", "😡");
         emotionToEmoji.put("Confusion", "😵‍💫");
@@ -146,6 +162,13 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
         emotionToEmoji.put("Surprise", "😮");
     }
 
+    /**
+     * Binds and initializes UI components.
+     *
+     * <p>This method binds the SeekBar, Spinner, EditText, and TextView components from the layout.
+     * It also sets up listeners for spinner selection, text changes, and SeekBar progress changes.
+     * The user location is set based on the first mood event available or defaults to Edmonton.</p>
+     */
     private void initializeUIComponents() {
         seekBar = findViewById(R.id.seekBarRadius);
         radiusText = findViewById(R.id.textRadiusValue);
@@ -208,12 +231,22 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 
+    /**
+     * Sets up the Google Map by initializing the SupportMapFragment.
+     *
+     * <p>This method obtains the map fragment from the layout and registers the OnMapReadyCallback.</p>
+     */
     private void setupMap() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
+    /**
+     * Sets up a basic Firebase query for users.
+     *
+     * <p>This method queries the Users collection in Firebase and logs the list of usernames.</p>
+     */
     private void setupFirestoreQuery() {
         usersRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -229,6 +262,15 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
         });
     }
 
+    /**
+     * Called when the Google Map is ready.
+     *
+     * <p>This method initializes the map's camera position, draws the initial radius circle,
+     * and calls updateMapMarkers to display mood events or user markers based on the current filter.</p>
+     *
+     * @param googleMap
+     *      the GoogleMap object ready for use
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -241,6 +283,15 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
         updateMapMarkers(seekBar.getProgress());
     }
 
+    /**
+     * Updates the map markers based on the specified radius and current filter criteria.
+     *
+     * <p>This method clears the existing markers, redraws the radius circle, and then either fetches
+     * user markers or iterates over mood events to add markers that satisfy the distance and filter criteria.</p>
+     *
+     * @param radius
+     *      the radius in kilometers for filtering mood events
+     */
     private void updateMapMarkers(int radius) {
         if (mMap == null) return;
 
@@ -283,6 +334,12 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 
+    /**
+     * Fetches users from Firebase and adds markers to the map.
+     *
+     * <p>This method queries the Users collection and for each user, retrieves the first mood event.
+     * A marker is added at the location of that mood event with an icon representing a user.</p>
+     */
     private void fetchUsersAndAddMarkers() {
         usersRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -323,6 +380,17 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
         });
     }
 
+    /**
+     * Determines if a MoodEvent matches the current filter criteria.
+     *
+     * <p>This method checks if the MoodEvent's field corresponding to the current filter type
+     * contains the current search keyword.</p>
+     *
+     * @param event
+     *      the MoodEvent to check
+     * @return
+     *      true if the event matches the search criteria or if no keyword is specified; false ow
+     */
     private boolean matchesFilterCriteria(MoodEvent event) {
         if (currentSearchKeyword.isEmpty()) return true;
 
@@ -344,6 +412,17 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
         return fieldValue.contains(currentSearchKeyword);
     }
 
+    /**
+     * Creates a BitmapDescriptor from an emoji string.
+     *
+     * <p>This method draws the specified emoji onto a bitmap and returns a BitmapDescriptor that can be
+     * used as a marker icon on the Google Map.</p>
+     *
+     * @param emoji
+     *      the emoji to be drawn
+     * @return
+     *      a BitmapDescriptor representing the emoji
+     */
     private BitmapDescriptor getEmojiBitmapDescriptor(String emoji) {
         Paint paint = new Paint();
         paint.setTextSize(100);
@@ -357,6 +436,18 @@ public class MapHandlerActivity extends AppCompatActivity implements OnMapReadyC
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
+    /**
+     * Calculates the distance between two geographical points.
+     *
+     * <p>This method uses the Android Location class to compute the distance between two lat and long points.</p>
+     *
+     * @param point1
+     *      the first geographical point
+     * @param point2
+     *      the second geographical point
+     * @return
+     *      the distance in meters between the two points
+     */
     private double calculateDistance(LatLng point1, LatLng point2) {
         Location location1 = new Location("point1");
         location1.setLatitude(point1.latitude);

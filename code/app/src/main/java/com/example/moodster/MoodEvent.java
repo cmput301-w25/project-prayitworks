@@ -7,6 +7,12 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The MoodEvent class represents an individual mood event in the Moodster app.
+ * A MoodEvent stores details about an emotional event including its unique identifier, emotional state,
+ * timestamps for creation and last edit, a trigger, social situation, an explanation, an optional image, location
+ * coordinates, and its public visibility status.
+ */
 public class MoodEvent implements Serializable {
     private final String moodId;
     private String emotionalState; // Required
@@ -30,7 +36,33 @@ public class MoodEvent implements Serializable {
             "Anger", "Confusion", "Disgust", "Fear", "Happiness", "Sadness", "Shame", "Surprise"
     );
 
-    // Constructor
+    /**
+     * Constructor for MoodEvent
+     *
+     * @param moodId
+     *      the unique identifier for the mood event
+     * @param createdAt
+     *      the timestamp when the mood event was created
+     * @param emotionalState
+     *      the emotional state of the event
+     * @param trigger
+     *      an optional trigger for the mood event
+     * @param socialSituation
+     *      an optional description of the social situation during the event
+     * @param explanation
+     *      an optional explanation for the mood event
+     * @param image
+     *      the URI of an image associated with the event
+     * @param lat
+     *      he latitude where the event occurred
+     * @param lon
+     *      the longitude where the event occurred
+     * @param isPublic
+     *      true if the mood event is public; false otherwise
+     *
+     * @throws IllegalArgumentException
+     *      if the provided emotional state is not valid
+     */
     public MoodEvent(String moodId, Timestamp createdAt, String emotionalState, String trigger, String socialSituation, String explanation, Uri image, double lat, double lon, boolean isPublic) {
         if (!VALID_EMOTIONAL_STATES.contains(emotionalState)) {
             throw new IllegalArgumentException("Invalid emotional state: " + emotionalState);
@@ -50,6 +82,12 @@ public class MoodEvent implements Serializable {
         this.isPublic = isPublic;
     }
 
+    /**
+     * Returns the emoji representation corresponding to the mood event's emotional state.
+     *
+     * @return
+     *      a String containing an emoji that coressponds the emotional state
+     */
     public String getEmoji() {
         switch (emotionalState) {
             case "Anger":
@@ -73,28 +111,108 @@ public class MoodEvent implements Serializable {
         }
     }
 
+    /**
+     * Returns the unique identifier for this mood event.
+     *
+     * @return
+     *      the mood event ID
+     */
     public String getMoodId() { return moodId; }
+
+    /**
+     * Returns the emotional state of this mood event.
+     *
+     * @return
+     *      the emotional state as a String
+     */
     public String getEmotionalState() { return emotionalState; }
 
+    /**
+     * Returns the timestamp when this mood event was created.
+     *
+     * @return
+     *      the createdAt Timestamp
+     */
     public Timestamp getCreatedAt() { return createdAt; }
 
+    /**
+     * Returns the timestamp when this mood event was last edited.
+     *
+     * @return
+     *      the lastEditAt Timestamp
+     */
     public Timestamp getLastEditAt() {return lastEditAt;
     }
 
+    /**
+     * Returns the trigger associated with this mood event.
+     *
+     * @return
+     *      the trigger as a String
+     */
     public String getTrigger() { return trigger; }
+
+    /**
+     * Returns the social situation during this mood event.
+     *
+     * @return
+     *      the social situation as a String
+     */
     public String getSocialSituation() { return socialSituation; }
+
+    /**
+     * Returns the explanation for this mood event.
+     *
+     * @return
+     *      the explanation as a String
+     */
     public String getExplanation() { return explanation; }
 
+    /**
+     * Returns the URI of the image associated with this mood event.
+     *
+     * @return
+     *      the image URI
+     */
     public Uri getImage(){return image; }
 
+    /**
+     * Returns the latitude of the location where the mood event occurred.
+     *
+     * @return
+     *      the latitude as a double
+     */
     public double getLatitude() { return latitude; }
+
+    /**
+     * Returns the longitude of the location where the mood event occurred.
+     *
+     * @return
+     *      the longitude as a double
+     */
     public double getLongitude() { return longitude; }
+
+    /**
+     * Returns the public visibility status of this mood event.
+     *
+     * @return
+     *      true if the event is public, false otherwise
+     */
     public boolean isPublic() {
         return isPublic;
     }
-    public void setExplanation() { this.explanation = explanation; }
 
-    // Setters for editable fields
+    /**
+     * Updates the emotional state of this mood event.
+     *
+     * <p>If the provided emotional state is valid, it sets the new emotional state and updates the last edited timestamp.</p>
+     *
+     * @param emotionalState
+     *      the new emotional state
+     *
+     * @throws IllegalArgumentException
+     *      if the provided emotional state is invalid
+     */
     public void setEmotionalState(String emotionalState) {
         if (VALID_EMOTIONAL_STATES.contains(emotionalState)) {
             this.emotionalState = emotionalState;
@@ -103,19 +221,52 @@ public class MoodEvent implements Serializable {
             throw new IllegalArgumentException("Invalid emotional state: " + emotionalState);
         }
     }
+
+    /**
+     * Updates the trigger of this mood event.
+     *
+     * <p>This method sets the new trigger and updates the last edited timestamp.</p>
+     *
+     * @param trigger
+     *      the new trigger as a String
+     */
     public void setTrigger(String trigger) {
         this.trigger = trigger;
         this.lastEditAt = Timestamp.now(); // Update lastEditedAt on change
     }
+
+    /**
+     * Updates the social situation of this mood event.
+     *
+     * <p>This method sets the new social situation and updates the last edited timestamp.</p>
+     *
+     * @param socialSituation
+     *      the new social situation as a String
+     */
     public void setSocialSituation(String socialSituation) {
         this.socialSituation = socialSituation;
         this.lastEditAt = Timestamp.now(); // Update lastEditedAt on change
     }
+
+    /**
+     * Updates the explanation for this mood event.
+     *
+     * <p>This method sets the new explanation and updates the last edited timestamp.</p>
+     *
+     * @param explanation
+     *      the new explanation as a String
+     */
     public void setExplanation(String explanation) {
         this.explanation = explanation;
         this.lastEditAt = Timestamp.now(); // Update lastEditedAt on change
     }
 
+    /**
+     * Sets the image URI for this mood event.
+     *
+     * @param Image
+     *      the new image URI
+     */
     public void setImage(Uri Image){
         this.image = Image;
     }
@@ -125,6 +276,12 @@ public class MoodEvent implements Serializable {
         this.lastEditAt = Timestamp.now();
     }
 
+    /**
+     * Returns a string representation of the mood event.
+     *
+     * @return
+     *      a String containing details about the mood event
+     */
     @Override
     public String toString() {
         return "MoodEvent{" +

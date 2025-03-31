@@ -14,6 +14,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * The LoginActivity class allows a user to log in by entering a username and password.
+ * It retrieves the user's email from Firebase based on the provided username and then
+ * uses Firebase Authentication to sign in.</p>
+ */
 public class LoginActivity extends AppCompatActivity {
     private EditText etUsername, etPassword;
     private MaterialButton btnLogin;
@@ -52,6 +57,14 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Logs in the user with the provided username and password.
+     *
+     * <p>This method retrieves the username and password from the input fields.
+     * It checks for empty input fields and then queries Firebase for the user's document based on the username.
+     * If the document exists and contains an email, Firebase Authentication is used to sign in.
+     * Upon a successful login, the user is navigated to the HomeActivity./p>
+     */
     private void loginUser() {
         String username = etUsername.getText().toString().trim();
         String password = etPassword.getText().toString().trim();

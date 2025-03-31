@@ -20,6 +20,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The CommentsActivity class retrieves the current user's username and the mood event ID from the
+ * Intent. It initializes a CommentAdapter to display the list of comments, allows the posting of
+ * new comments, and handles the sorting and refreshing of comments by interacting with Firebase.
+ */
 public class CommentsActivity extends AppCompatActivity {
 
     private ListView commentListView;
@@ -73,6 +78,15 @@ public class CommentsActivity extends AppCompatActivity {
         loadCommentsFromFirestore();
     }
 
+    /**
+     * Saves a comment to Firebase Firestore.
+     *
+     * <p>This method attempts to update an existing document for the mood event by adding the new comment
+     * to the "comments" array. If the document does not exist, it creates a new document containing the comment.</p>
+     *
+     * @param commentItem
+     *      the CommentItem object representing the comment to be saved
+     */
     private void saveCommentToFirestore(CommentItem commentItem) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -100,6 +114,13 @@ public class CommentsActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Loads comments for the mood event from Firebase Firestore.
+     *
+     * <p>This method retrieves the document corresponding to the mood event ID from the "Comments" collection.
+     * If the document exists and contains a "comments" field, the comments are parsed and added to the local
+     * comment list. The comments are then sorted and UI is refreshed.</p>
+     */
     private void loadCommentsFromFirestore() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -128,6 +149,13 @@ public class CommentsActivity extends AppCompatActivity {
                         Toast.makeText(this, "Failed to load comments", Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * Loads comments for the mood event from Firebase Firestore.
+     *
+     * <p>Sorts the comment list by prioritizing comments from the current user to appear at the top,
+     * followed by comments from other users sorted by timestamp in descending order, then notifies
+     * the adapter to refresh</p>
+     */
     private void sortAndRefresh() {
         Collections.sort(commentList, (a, b) -> {
             boolean isAUser = a.getUsername().equals(currentUsername);

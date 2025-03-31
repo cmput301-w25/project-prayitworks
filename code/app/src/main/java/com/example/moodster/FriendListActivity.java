@@ -22,6 +22,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The FriendListActivity presents a tabbed interface to show both the list of users the current user is following
+ * and its followers. It also includes a search bar to filter the friend list.
+ */
 public class FriendListActivity extends AppCompatActivity {
 
     private RecyclerView recyclerUsers;
@@ -167,6 +171,19 @@ public class FriendListActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Loads the friend details for the given list of usernames.
+     *
+     * <p>This method queries Firebase for users whose usernames are included in the provided list.
+     * The retrieved user details are added to either the followingList or followersList based on the
+     * isFollowing flag. After loading, if the currently displayed tab matches the type loaded, the
+     * adapter is updated.</p>
+     *
+     * @param usernames
+     *      the list of usernames for which to load friend details
+     * @param isFollowing
+     *      if true, the list represents users that the current user is following; if false, users who are following the current user
+     */
     private void loadFriendDetails(List<String> usernames, boolean isFollowing) {
         db.collection("Users")
                 .whereIn("username", usernames)
@@ -194,6 +211,15 @@ public class FriendListActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> Toast.makeText(this, "Error loading friend details", Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * Updates the RecyclerView adapter with either the following or followers list.
+     *
+     * <p>This method sets the adapter for the RecyclerView based on whether the "Following" tab or "Followers"
+     * tab is active. It also updates the internal state variable to reflect the currently displayed list.</p>
+     *
+     * @param showFollowing
+     *      if true, the adapter is updated with the list of following users; otherwise, with followers
+     */
     private void updateAdapter(boolean showFollowing) {
         showingFollowing = showFollowing;
         adapter = new FriendListAdapter(showingFollowing ? followingList : followersList);

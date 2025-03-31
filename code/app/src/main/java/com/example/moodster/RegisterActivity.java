@@ -20,6 +20,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The RegisterActivity class handles user registration by collecting user input for email, username,
+ * display name, password, and backup password. It validates the input, checks for username uniqueness
+ * in Firebase and creates a new user account using Firebase Authentication, and saves the user's
+ * profile details to Firebase.
+ */
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText etEmail, etUsername, etDisplayName, etPassword, etConfirmPassword, etBackupPassword;
@@ -56,6 +62,12 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Attempts to register a new user by validating input fields and checking for username uniqueness.
+     *
+     * <p>If all fields are filled and the passwords match, the method queries Firebase to ensure the username
+     * is not already taken. If the username is unique, it registers the user with Firebase.</p>
+     */
     private void attemptRegistration() {
         String email = etEmail.getText().toString().trim();
         String username = etUsername.getText().toString().trim();
@@ -91,6 +103,24 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Registers a new user using Firebase Authentication and saves the user profile to Firebase.
+     *
+     * <p>This method creates a new user with the provided email and password, then hashes the backup password
+     * using SHA-256. The user profile, including display name, email, username, and empty lists for followers,
+     * following, and mood events, is then stored in Firebase.</p>
+     *
+     * @param email
+     *      the user's email address
+     * @param password
+     *      the user's password
+     * @param backupPassword
+     *      the backup password for account recovery
+     * @param username
+     *      the desired username
+     * @param displayName
+     *      the user's display name
+     */
     private void registerUserWithFirebase(String email, String password, String backupPassword, String username, String displayName) {
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener(authResult -> {
@@ -126,6 +156,20 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Computes the SHA-256 hash of the given input string.
+     *
+     * <p>This method takes an input string, hashes it using the SHA-256 algorithm, and returns its
+     * hex representation. This hash is used to verify the backup password against the stored hash
+     * in Firebase.</p>
+     *
+     * @param input
+     *      the string to hash
+     * @return
+     *      the SHA-256 hash of the input in hex
+     * @throws RuntimeException
+     *      if an error occurs during hashing
+     */
     private String hashSHA256(String input) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");

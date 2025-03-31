@@ -15,6 +15,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The EditMoodActivity class gets the current mood event using the provided mood event ID, displays its current
+ * details, and allows the user to make edits. It validates the user input, applies character limits to text fields,
+ * and updates the mood event via the MoodEventViewModel. If the update is successful, the activity navigates back
+ * to the MoodHistoryActivity.
+ */
 public class EditMoodActivity extends AppCompatActivity {
 
     public static final List<String> VALID_EMOTIONAL_STATES = Arrays.asList(
@@ -94,6 +100,13 @@ public class EditMoodActivity extends AppCompatActivity {
         buttonSave.setOnClickListener(v -> onSaveClicked());
     }
 
+    /**
+     * Handles the save button click event.
+     *
+     * <p>This method extracts the updated mood event details from the UI components and updates the current
+     * mood event. It then calls the MoodEventViewModel to save the changes. If the update is successful,
+     * the activity navigates back to the MoodHistoryActivity.</p>
+     */
     private void onSaveClicked() {
         if (eventToEdit != null) {
             eventToEdit.setExplanation(reasonValue.getText().toString());
@@ -120,6 +133,17 @@ public class EditMoodActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Sets the spinner selection to the item matching the provided value.
+     *
+     * <p>This helper method iterates through the spinner's adapter items and selects the item that
+     * matches the specified value. If no match found, the spinner's selection is unchanged.</p>
+     *
+     * @param spinner
+     *      the Spinner whose selection is to be updated
+     * @param value
+     *      the value to match for selecting an item in the spinner
+     */
     private void setSpinnerSelection(Spinner spinner, String value) {
         if (value == null) return;
         for (int i = 0; i < spinner.getAdapter().getCount(); i++) {

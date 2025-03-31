@@ -19,6 +19,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * The EditProfileActivity allows a user to view their profile details and update fields such as display name
+ * and username. It retrieves user information from Firebase and updates the profile data based off user actions
+ */
 public class EditProfileActivity extends AppCompatActivity {
 
     // Header & Profile UI
@@ -148,7 +152,11 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * Loads user info from Firestore based on the logged-in user's email.
+     * Loads user profile information from Firestore.
+     *
+     * <p>This method gets the current user's email from Firebase Authentication and queries the "Users"
+     * collection in Firestore for the corresponding document. If found, it updates the UI components with the
+     * retrieved data.</p>
      */
     private void loadUserInfo() {
         if (auth.getCurrentUser() != null) {
@@ -208,7 +216,6 @@ public class EditProfileActivity extends AppCompatActivity {
             String newUsername = input.getText().toString().trim();
             if (!newUsername.isEmpty()) {
                 updateProfileField("username", newUsername, "Username updated successfully");
-                // 🔥 TODO: If you rename the user document ID in Firestore, handle that here
             } else {
                 Toast.makeText(this, "Username cannot be empty", Toast.LENGTH_SHORT).show();
             }
@@ -218,7 +225,18 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * Generic helper to update a single profile field in Firestore and refresh.
+     * Updates a specified profile field in Firestore and refreshes the user information.
+     *
+     * <p>This generic helper method queries Firestore for the current user's document using their email.
+     * It then updates the specified field with the provided new value. Upon a successful update,
+     * a success message is displayed and loadUserInfo() is called to refresh the UI.</p>
+     *
+     * @param field
+     *      the name of the profile field to update
+     * @param newValue
+     *      the new value to set for the specified field
+     * @param successMessage
+     *      the message to display upon a successful update
      */
     private void updateProfileField(String field, String newValue, String successMessage) {
         if (auth.getCurrentUser() != null) {

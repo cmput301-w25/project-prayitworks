@@ -26,6 +26,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * The HomeActivity class displays a welcome message, mood count, and a list of recent mood entries.
+ * It handles navigation through the app using both a custom header with a popup menu.</p>
+ */
 public class HomeActivity extends AppCompatActivity {
 
     private MoodEventViewModel moodEventViewModel;
@@ -194,12 +198,22 @@ public class HomeActivity extends AppCompatActivity {
         setupNavBarHoverEffects();
     }
 
+    /**
+     * Called when the activity is destroyed.
+     *
+     * <p>This method removes any pending callbacks in the scroll handler to prevent memory leaks.</p>
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
         scrollHandler.removeCallbacks(scrollRunnable);  // Clean up scrolling handler
     }
 
+    /**
+     * Sets up hover effects for bottom navigation buttons.
+     *
+     * <p>This method assigns touch listeners to the navigation buttons to apply a lift animation on press and reset the animation on release.</p>
+     */
     private void setupNavBarHoverEffects() {
         int[] navButtonIds = {
                 R.id.btn_home, R.id.btn_search, R.id.btn_add, R.id.btn_calendar, R.id.btn_profile
@@ -227,6 +241,13 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Sets up bounce animation with shadow effect for bottom navigation buttons.
+     *
+     * <p>This method assigns click listeners to the navigation buttons to apply a bounce animation.
+     * It resets the scale and elevation of all buttons, then applies a bounce effect to the clicked button,
+     * and then navigates to the corresponding activity.</p>
+     */
     private void setupNavBarBounceWithShadow() {
         int[] navIds = {
                 R.id.btn_home, R.id.btn_search, R.id.btn_add,

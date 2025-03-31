@@ -32,6 +32,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * The MoodActivity selects the appropriate layout based on the selected emotional state passed via the intent.
+ * It provides UI elements for entering trigger and explanation (both limited to 20 characters), selecting a social situation,
+ * toggling public visibility, and uploading an image. It also obtains the user's current location and saves the mood event
+ * via MoodEventViewModel.</p>
+ */
 public class MoodActivity extends AppCompatActivity {
 
     private MoodEventViewModel moodEventViewModel;
@@ -194,6 +200,9 @@ public class MoodActivity extends AppCompatActivity {
     // -----------------------------------
     // Image picking
     // -----------------------------------
+    /**
+     * ActivityResultLauncher for handling image picking result.
+     */
     private final ActivityResultLauncher<Intent> imagePickerLauncher =
             registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(),
@@ -209,11 +218,23 @@ public class MoodActivity extends AppCompatActivity {
                         }
                     });
 
+    /**
+     * Opens the image chooser to allow the user to pick an image from external storage.
+     */
     private void openImageChooser() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         imagePickerLauncher.launch(intent);
     }
 
+    /**
+     * Processes the selected image by checking its size and storing its URI if valid.
+     *
+     * <p>If the image size exceeds the maximum size, a message is displayed.
+     * Otherwise, the selected image URI is stored for later use when saving the mood event.</p>
+     *
+     * @param
+     *      imageUri the URI of the selected image
+     */
     private void processSelectedImage(Uri imageUri) {
         try {
             InputStream inputStream = getContentResolver().openInputStream(imageUri);
@@ -238,6 +259,15 @@ public class MoodActivity extends AppCompatActivity {
     // -----------------------------------
     // Location
     // -----------------------------------
+    /**
+     * Retrieves the user's current location and passes it to the provided callback.
+     *
+     * <p>If the location permission is granted, the last known location is obtained using FusedLocationProviderClient.
+     * Otherwise, a permission request is made.</p>
+     *
+     * @param callback
+     *      a LocationCallback to handle the received latitude and longitude
+     */
     private void getCurrentLocation(LocationCallback callback) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -256,10 +286,23 @@ public class MoodActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Callback interface for receiving location data.
+     */
     public interface LocationCallback {
         void onLocationReceived(double latitude, double longitude);
     }
 
+    /**
+     * Handles the result of location permission requests.
+     *
+     * @param requestCode
+     *      the request code passed in requestPermissions
+     * @param perms
+     *      the requested permissions
+     * @param grantResults
+     *      the grant results for the corresponding permissions
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] perms,
