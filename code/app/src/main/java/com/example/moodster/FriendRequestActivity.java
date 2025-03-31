@@ -20,6 +20,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The FriendRequestActivity retrieves friend requests from Firebase and displays them in a RecyclerView.
+ */
 public class FriendRequestActivity extends AppCompatActivity {
     private RecyclerView recyclerRequests;
     private FriendRequestAdapter adapter;
@@ -127,6 +130,12 @@ public class FriendRequestActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Loads friend requests for the current user from Firebase.
+     *
+     * <p>This method retrieves the friend request list from the followRequests field of the current user's document.
+     * If requests are found, the list is updated and the RecyclerView adapter is set to display the friend requests.</p>
+     */
     private void loadFriendRequests() {
         db.collection("Users").document(currentUsername).get()
                 .addOnSuccessListener(documentSnapshot -> {

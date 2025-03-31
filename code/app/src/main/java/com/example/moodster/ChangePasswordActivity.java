@@ -14,6 +14,12 @@ import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+/**
+ * The ChangePasswordActivity class implements an activity that allows a user to change their
+ * password as part of the password reset process initiated in ForgotPasswordActivity. The activity
+ * validates user input and uses Firebase Authentication to update the password. After a successful
+ * update, the user is signed out and redirected to the LoginActivity,
+ */
 public class ChangePasswordActivity extends AppCompatActivity {
 
     private EditText etNewPassword, etConfirmPassword;

@@ -21,21 +21,47 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The UserAdapter class adapts a list of SearchUser objects for display in a RecyclerView. Each list item shows
+ * the user's display name and username, and allows the current user to view the target user's profile
+ * or send a follow request via a confirmation dialog.
+ */
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     private List<SearchUser> SearchUsers = new ArrayList<>();
     private String currentUsername;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    /**
+     * Sets the list of SearchUser objects to be displayed.
+     *
+     * @param SearchUsers
+     *      a List of SearchUser objects
+     */
     public void setUsers(List<SearchUser> SearchUsers) {
         this.SearchUsers = SearchUsers;
         notifyDataSetChanged();
     }
 
-    // Constructor to accept the current user's username
+    /**
+     * UserAdapter Constructor
+     *
+     * @param currentUsername
+     *      the username of the current user; used for follow request logic
+     */
     public UserAdapter(String currentUsername) {
         this.currentUsername = currentUsername;
     }
 
+    /**
+     * Inflates the view for an individual user list item.
+     *
+     * @param parent
+     *      the parent ViewGroup
+     * @param viewType
+     *      the view type (unused)
+     * @return
+     *      a new ViewHolder containing the inflated layout
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -44,6 +70,19 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         return new ViewHolder(view);
     }
 
+    /**
+     * Binds a SearchUser object to the list item view.
+     *
+     * <p>This method sets the display name and username text. It sets a click listener on the entire item
+     * to launch UserProfileActivity, and another on the Add User button to send a follow request.
+     * The follow request button checks if the current user already follows the target user,
+     * and if not, prompts the user for confirmation before sending a follow request.</p>
+     *
+     * @param holder
+     *      the ViewHolder for the item
+     * @param position
+     *      the position of the item in the list
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         SearchUser user = SearchUsers.get(position);
@@ -95,11 +134,20 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     }
 
+    /**
+     * Returns the total number of user items in the list.
+     *
+     * @return
+     *      the size of the SearchUsers list
+     */
     @Override
     public int getItemCount() {
         return SearchUsers.size();
     }
 
+    /**
+     * ViewHolder class that holds the views for each user list item.
+     */
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textDisplayName, textUsername;
         ImageView imageAddFriend;

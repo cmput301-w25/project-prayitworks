@@ -9,6 +9,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+/**
+ * The MoodDetailsActivity class shows the mood event's emoji, date/time, reason, trigger, social situation,
+ * visibility, and image (if available). It also provides options to delete the mood event,
+ * edit the mood event, or view its comments.</p>
+ */
 public class MoodDetailsActivity extends AppCompatActivity {
 
     private TextView textMoodEmoji, textMoodDateTime, textReasonValue,

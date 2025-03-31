@@ -14,6 +14,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.security.MessageDigest;
 
+/**
+ * The ForgotPasswordActivity allows users to input their username/email along with a backup password.
+ * It then verifies the backup password against the stored hash in Firestore. If the backup
+ * password is correct, the user is forwarded to ChangePasswordActivity to proceed with resetting
+ * their password.</p>
+ */
 public class ForgotPasswordActivity extends AppCompatActivity {
 
     private EditText etUsernameOrEmail, etBackupPassword;
@@ -91,6 +97,15 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Redirects the user to the ChangePasswordActivity.
+     *
+     * <p>This method creates an intent to start the ChangePasswordActivity, passing along the user's
+     * email as an extra.</p>
+     *
+     * @param email
+     *      the email address associated with the user whose password is to be changed
+     */
     private void goToChangePassword(String email) {
         Intent intent = new Intent(this, ChangePasswordActivity.class);
         intent.putExtra("email", email);
@@ -98,6 +113,20 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Computes the SHA-256 hash of the given input string.
+     *
+     * <p>This method takes an input string, hashes it using the SHA-256 algorithm, and returns its
+     * hex representation. This hash is used to verify the backup password against the stored hash
+     * in Firebase.</p>
+     *
+     * @param input
+     *      the string to hash
+     * @return
+     *      the SHA-256 hash of the input in hex
+     * @throws RuntimeException
+     *      if an error occurs during hashing
+     */
     private String hashSHA256(String input) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");

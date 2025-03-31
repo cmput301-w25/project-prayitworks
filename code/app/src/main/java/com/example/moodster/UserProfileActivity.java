@@ -20,6 +20,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
+/**
+ * The UserProfileActivity class displays a user's profile information including display name,
+ * username, email, follower count, following count, and mood count. It also allows the current user
+ * to send a follow request to the profile owner.
+ */
 public class UserProfileActivity extends AppCompatActivity {
 
     private TextView tvDisplayName, tvUsername, tvEmail, tvFollowers, tvFollowing, tvMoodCount;
@@ -174,7 +179,10 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * Show a confirmation dialog
+     * Displays a confirmation dialog to send a friend request.
+     *
+     * <p>This method shows an AlertDialog asking the user to confirm if they want to send a follow request
+     * to the profile owner.</p>
      */
     private void confirmAndSendFriendRequest() {
         new AlertDialog.Builder(UserProfileActivity.this)
@@ -186,7 +194,11 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * Sends a friend request by adding the current user to the target's followRequests array in Firestore.
+     * Sends a follow request to the user whose profile is being viewed.
+     *
+     * <p>This method retrieves the current user's username based on their email, and then updates the target user's
+     * Firebase document to add the current user to the followRequests array. Upon success, it disables the friend action
+     * button and updates its text to indicate that the request has been sent.</p>
      */
     private void sendFriendRequest() {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();

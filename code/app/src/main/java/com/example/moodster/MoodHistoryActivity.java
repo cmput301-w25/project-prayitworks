@@ -22,6 +22,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * The MoodHistoryActivity class displays a history of the current user's mood events in a ListView,
+ * and provides filtering options via a Spinner and a search EditText. Users can view detailed
+ * info about a mood event by tapping on the details button.
+ */
 public class MoodHistoryActivity extends AppCompatActivity {
 
     private ListView listView;
@@ -158,6 +163,19 @@ public class MoodHistoryActivity extends AppCompatActivity {
                 startActivity(new Intent(this, EditProfileActivity.class).putExtra("username", currentUsername)));
     }
 
+    /**
+     * Filters the mood event list based on the search keyword and filter type.
+     *
+     * <p>The method checks each MoodEvent in the master list. For the Most Recent Week filter,
+     * it includes events from the last seven days. For other filter types, it matches the keyword
+     * against the corresponding field of the MoodEvent. The adapter is then updated with the
+     * filtered list, and an empty state message is shown if no results match.</p>
+     *
+     * @param keyword
+     *      the search keyword entered by the user
+     * @param filterType
+     *      the selected filter type from the spinner
+     */
     private void filterMoodList(String keyword, String filterType) {
         if (adapter == null) return;
         List<MoodEvent> filtered = new ArrayList<>();
@@ -187,6 +205,12 @@ public class MoodHistoryActivity extends AppCompatActivity {
         adapter.updateList(filtered);
     }
 
+    /**
+     * Updates the hint text of the search EditText based on the selected filter type.
+     *
+     * @param filterType
+     *      the selected filter type
+     */
     private void updateSearchHint(String filterType) {
         String hint = "";
         switch (filterType) {

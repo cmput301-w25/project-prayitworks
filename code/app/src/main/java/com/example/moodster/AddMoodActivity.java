@@ -17,6 +17,12 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+/**
+ * The AddMoodActivity class presents the user with a screen to create
+ * and record a new mood entry based off of 8 predefined mood icons.
+ * After a predefined mood is clicked on, the class hands over the
+ * selected mood to the MoodActivity class.
+ */
 public class AddMoodActivity extends AppCompatActivity {
 
     private String currentUsername;
@@ -115,6 +121,16 @@ public class AddMoodActivity extends AppCompatActivity {
         subtitleTextView.startAnimation(bounce);
     }
 
+    /**
+     * Opens the MoodActivity corresponding to the selected mood.
+     *
+     * <p>
+     * This helper method creates an Intent to start the MoodActivity, passes the selected mood and
+     * current username to the target activity, and starts the activity.
+     * </p>
+     *
+     * @param mood A String representing the mood icon selected by the user.
+     */
     private void openMoodActivity(String mood) {
         Intent intent = new Intent(AddMoodActivity.this, MoodActivity.class);
         intent.putExtra("mood", mood);

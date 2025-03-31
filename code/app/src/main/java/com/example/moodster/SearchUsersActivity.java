@@ -23,6 +23,11 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The SearchUsersActivity class enables users to search for other users by username. The activity
+ * provides live search functionality using Firebase. Search results are displayed via a RecyclerView
+ * managed by a UserAdapter.
+ */
 public class SearchUsersActivity extends AppCompatActivity {
     private EditText editSearch;
     private RecyclerView recyclerUsers;
@@ -148,6 +153,16 @@ public class SearchUsersActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Searches for users in Firebase based on the provided query.
+     *
+     * <p>This method performs a range query on the username field in the Users collection to find
+     * users whose usernames match the query string. The results are converted into SearchUser objects
+     * and passed to the UserAdapter to update the displayed list.</p>
+     *
+     * @param query
+     *      the search string entered by the user
+     */
     private void searchUsers(String query) {
         if (query.isEmpty()) {
             adapter.setUsers(new ArrayList<>());
