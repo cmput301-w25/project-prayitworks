@@ -12,9 +12,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/app_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/app_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Moodster"
         tools:targetApi="31">
@@ -25,18 +25,21 @@
             android:value="AIzaSyBTUwhf02LwTpPG5dSE1WIwnmhRiehhlsM" />
 
         <!-- ✅ Launcher Activity: Login -->
+
         <activity
-            android:name=".LoginActivity"
-            android:exported="true"
-            android:theme="@style/Theme.Moodster">
+            android:name=".SplashActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- ✅ Register Activity -->
+
+
+        <!-- ✅ Register + Login Activity -->
         <activity android:name=".RegisterActivity" />
+        <activity android:name=".LoginActivity" />
 
         <!-- ✅ Forgot Password Activity -->
         <activity android:name=".ForgotPasswordActivity" />
@@ -62,6 +65,7 @@
         <activity android:name=".FriendRequestActivity" />
         <activity android:name=".FriendListActivity" />
         <activity android:name=".UserProfileActivity" />
+        <activity android:name=".LoginOrRegisterActivity" />
 
     </application>
 </manifest>

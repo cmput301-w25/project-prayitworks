@@ -1,5 +1,7 @@
 package com.example.moodster;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,8 +35,18 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
         holder.textDisplayName.setText(friend.getDisplayName());
         holder.textUsername.setText("@" + friend.getUsername());
 
-        // Hide the "add friend" icon since these users are already friends.
+        // Since these are already friends, hide the "add friend" icon
         holder.imageAddFriend.setVisibility(View.GONE);
+
+        // 1) Launch the UserProfileActivity on row (itemView) click
+        holder.itemView.setOnClickListener(v -> {
+            Context context = v.getContext();
+            Intent intent = new Intent(context, UserProfileActivity.class);
+            // 2) Pass along the friend's username & displayName so the profile can load properly
+            intent.putExtra("username", friend.getUsername());
+            intent.putExtra("displayName", friend.getDisplayName());
+            context.startActivity(intent);
+        });
     }
 
     @Override

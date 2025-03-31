@@ -40,9 +40,10 @@
         android:id="@+id/frame_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Frame 7"
+        android:text="Track your mood, share your story, and connect with friends."
         android:textSize="18sp"
-        android:textColor="@color/light_gray"
+        android:textAlignment="center"
+        android:textColor="@color/dark_green"
         android:layout_below="@id/welcome_text"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp" />
@@ -74,18 +75,7 @@
         android:textSize="18sp" />
 
 
-    <!-- Continue as a Guest Link -->
-    <TextView
-        android:id="@+id/guest_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/guest_text"
-        android:textSize="14sp"
-        android:textColor="#0088A8"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
-        android:textStyle="italic" />
+
 
 
 </RelativeLayout>
